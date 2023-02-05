@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  postgresql:
+    image: postgres:latest
+    env_file: .env
+    restart: on-failure
+    volumes:
+      - queuemusic_postgresql:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+
+volumes:
+  queuemusic_postgresql:
