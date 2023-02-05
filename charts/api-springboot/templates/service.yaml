@@ -1,0 +1,38 @@
+{{- if .Values.service.enabled -}}
+kind: Service
+apiVersion: v1
+metadata:
+  labels: {{ include "labels" . | indent 4 }}
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+      {{ $key }}: {{ default "" $value | quote }}
+      {{- end }}
+  name: {{ .Values.name }}
+spec:
+  selector: {{ include "selector-labels" . | indent 6 }}
+  {{- if .Values.service.clusterIP }}
+  clusterIP: {{ .Values.service.clusterIP }}
+  {{- end }}
+  {{- if .Values.service.externalIPs }}
+  externalIPs:
+{{ toYaml .Values.service.externalIPs | indent 4 }}
+  {{- end }}
+  ports:
+  - name: http
+    port: {{ .Values.service.servicePort }}
+    protocol: TCP
+    {{- if .Values.service.targetPort }}
+    targetPort: {{ .Values.service.targetPort }}
+    {{- else }}
+    targetPort: {{ .Values.port }}
+    {{- end }}
+  {{- if .Values.service.ports }}
+  {{- range $index, $port :=  .Values.service.ports }}
+  - name: {{ $port.name }}
+    port: {{ $port.port }}
+    protocol: {{ $port.protocol | default "TCP" }}
+    targetPort: {{ $port.targetPort | default $port.port }}
+  {{- end }}
+  {{- end }}
+  type: "{{ .Values.service.type }}"
+{{- end }}

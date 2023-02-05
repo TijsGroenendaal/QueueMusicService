@@ -1,0 +1,13 @@
+apiVersion: v1
+description: Template for Springboot based API's.
+name: api-springboot
+version: 1.0.0
+sources:
+  - https://github.com/TijsGroenendaal/QueueMusicService
+keywords:
+  - api
+  - services
+  - spring boot
+maintainers:
+  - name: Tijs Groenendaal
+    email: tijs.groenendaal@gmail.com
