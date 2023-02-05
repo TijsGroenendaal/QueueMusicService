@@ -1,0 +1,9 @@
+name: session-service
+releaseName: ''
+project: default
+namespace: default
+appPath: SessionService
+targetRevision: v4.0.0-session-service
+helm:
+  chartVersion: 1.0.0
+  envValues: helm/values.yaml

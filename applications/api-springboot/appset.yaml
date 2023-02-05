@@ -1,0 +1,55 @@
+---
+#
+# Sets up a stable/api-springboot based Application.
+#
+#
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: applicationset-api-springboot
+  namespace: argocd
+spec:
+  goTemplate: true
+  generators:
+    - git:
+        repoURL: "https://github.com/TijsGroenendaal/QueueMusicService"
+        revision: k8s/argocd-apps
+        files:
+          - path: appsets/api-springboot/*.yaml
+  syncPolicy:
+    preserveResourcesOnDeletion: true
+  template:
+    # An Argo CD Application template, with support for parameter substitution
+    # with values from parameters generated above.
+    metadata:
+      name: "{{ .name }}"
+    spec:
+      project: "{{ .project }}"
+      sources:
+        - repoURL: "https://github.com/TijsGroenendaal/QueueMusicService"
+          targetRevision: "{{ .targetRevision }}"
+          path: "{{ .appPath }}"
+          ref: values
+        - chart: api-springboot
+          repoURL: https://tijsgroenendaal.github.io/QueueMusicService/
+          targetRevision: "{{ .helm.chartVersion }}"
+          helm:
+            releaseName: "{{ .releaseName }}"
+            valueFiles:
+              # Gotemplate limits us to doing single-line templating and only returns strings, hence we cannot simply build an array of values files.
+              # Since we know there will be at most 3 value files (root, cluster-specific and instance-specific), we can hardcode the logic here.
+              # The templating does not accept an empty string in case of a missing value file, so we fall back to the previous value file in case of a missing value file.
+              # We do this, as the precedence of the value files is important. If we would have used a root value file, it would have been applied after the cluster-specific value file for example.
+              - "$values/{{ .appPath }}{{ $envs := splitList \",\" .helm.envValues }}{{ if ge (len $envs) 1 }}/{{ index $envs 0 }}{{ end }}"
+              - "$values/{{ .appPath }}{{ $envs := splitList \",\" .helm.envValues }}{{ if ge (len $envs) 2 }}/{{ index $envs 1 }}{{ else if ge (len $envs) 1 }}/{{ index $envs 0 }}{{ end }}"
+              - "$values/{{ .appPath }}{{ $envs := splitList \",\" .helm.envValues }}{{ if ge (len $envs) 3 }}/{{ index $envs 2 }}{{ else if ge (len $envs) 2 }}/{{ index $envs 1 }}{{ else if ge (len $envs) 1 }}/{{ index $envs 0 }}{{ end }}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{ .namespace }}"
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - validate=false
+        automated:
+          prune: false
+          selfHeal: false
