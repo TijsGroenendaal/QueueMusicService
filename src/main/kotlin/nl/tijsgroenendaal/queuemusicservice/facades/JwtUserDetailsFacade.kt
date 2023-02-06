@@ -1,5 +1,6 @@
 package nl.tijsgroenendaal.queuemusicservice.facades
 
+import nl.tijsgroenendaal.queuemusicservice.security.Authorities
 import nl.tijsgroenendaal.queuemusicservice.services.UserService
 
 import org.springframework.security.core.userdetails.User
@@ -14,6 +15,7 @@ import java.util.UUID
 class JwtUserDetailsFacade(
     private val userService: UserService
 ): UserDetailsService {
+
     override fun loadUserByUsername(username: String): UserDetails {
         val id = try {
             UUID.fromString(username)
@@ -22,6 +24,15 @@ class JwtUserDetailsFacade(
         }
         val user = userService.findByUsername(id)
 
-        return User(user.id.toString(), "", mutableListOf())
+        val authorities = mutableListOf<Authorities>()
+        if (user.userLink != null) {
+            authorities.add(Authorities.SPOTIFY)
+        }
+
+        return User.builder()
+            .username(user.id.toString())
+            .password("")
+            .authorities(*authorities.map { it.name }.toTypedArray())
+            .build()
     }
 }

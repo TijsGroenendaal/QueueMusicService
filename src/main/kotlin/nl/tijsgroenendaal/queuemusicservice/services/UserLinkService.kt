@@ -1,6 +1,7 @@
 package nl.tijsgroenendaal.queuemusicservice.services
 
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.RefreshedAccessTokenModel
+import jakarta.transaction.Transactional
+import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.RefreshedAccessTokenResponseModel
 import nl.tijsgroenendaal.queuemusicservice.exceptions.AccessTokenExpiredException
 import nl.tijsgroenendaal.queuemusicservice.exceptions.UnAuthorizedException
 import nl.tijsgroenendaal.queuemusicservice.repositories.UserLinkRepository
@@ -34,12 +35,13 @@ class UserLinkService(
         return userLink?.linkRefreshToken ?: throw UnAuthorizedException()
     }
 
-    fun updateLink(userId: UUID, refreshedToken: RefreshedAccessTokenModel) {
+    @Transactional
+    fun updateLink(userId: UUID, refreshedToken: RefreshedAccessTokenResponseModel) {
         val userLink = userLinkRepository.findByUserModelId(userId) ?: throw UnAuthorizedException()
 
         userLink.apply {
             this.linkAccessToken = refreshedToken.accessToken
-            this.linkExpireTime = LocalDateTime.now(ZoneOffset.UTC).plusSeconds((refreshedToken.expiresIn).toLong())
+            this.linkExpireTime = LocalDateTime.now(ZoneOffset.UTC).plusSeconds((refreshedToken.expiresIn))
         }
 
         userLinkRepository.save(userLink)

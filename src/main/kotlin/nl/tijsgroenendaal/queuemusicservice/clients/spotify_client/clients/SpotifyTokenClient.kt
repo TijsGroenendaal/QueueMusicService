@@ -1,48 +1,56 @@
 package nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.clients
 
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.configuration.SpotifyTokenClientConfiguration
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.RefreshedAccessTokenModel
+import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.RefreshedAccessTokenResponseModel
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.configuration.FormEncodedConfiguration
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.AccessTokenModel
-
-import com.fasterxml.jackson.annotation.JsonProperty
+import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.AccessTokenResponseModel
+import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.configuration.FeignConfig
 
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 
 @FeignClient(
-    url = "\${clients.spotify-api}/v1/token",
+    url = "\${clients.account-spotify-api}",
     name = "spotify-token-client",
-    configuration = [SpotifyTokenClientConfiguration::class, FormEncodedConfiguration::class]
+    configuration = [SpotifyTokenClientConfiguration::class, FormEncodedConfiguration::class, FeignConfig::class]
 )
 interface SpotifyTokenClient {
 
     @PostMapping(consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
     fun getRefreshAccessToken(
-        @RequestBody tokenRequest: RefreshTokenRequest
-    ): RefreshedAccessTokenModel
+        form: Map<String, Any>
+    ): RefreshedAccessTokenResponseModel
 
     @PostMapping(consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
     fun getAccessToken(
-        @RequestBody tokenRequest: AccessTokenRequest
-    ): AccessTokenModel
+        form: Map<String, Any>
+    ): AccessTokenResponseModel
 
 }
 
 data class RefreshTokenRequest(
-    @JsonProperty("refresh_token")
     val refreshToken: String,
-    @JsonProperty("grant_type")
     val grantType: String = "refresh_token"
-)
+) {
+    fun toForm(): Map<String, Any> {
+        return mapOf(
+            Pair("refresh_token", refreshToken),
+            Pair("grant_type", grantType)
+        )
+    }
+}
 
 data class AccessTokenRequest(
-    @JsonProperty("code")
     val code: String,
-    @JsonProperty("redirect_uri")
     val redirectUri: String = "https://www.google.com",
-    @JsonProperty("grant_type")
     val grantType: String = "authorization_code"
-)
+) {
+    fun toForm(): Map<String, Any> {
+        return mapOf(
+            Pair("code", code),
+            Pair("redirect_uri", redirectUri),
+            Pair("grant_type", grantType)
+        )
+    }
+}

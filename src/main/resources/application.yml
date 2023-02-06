@@ -1,5 +1,6 @@
 clients:
   spotify-api: https://api.spotify.com
+  account-spotify-api: https://accounts.spotify.com/api/token
 
 spring:
   datasource:
@@ -21,6 +22,12 @@ spring:
 queuemusic:
   jwt:
     secret: ${QUEUEMUSIC_JWT_SECRET}
+    refresh:
+      secret: ${QUEUEMUSIC_REFRESH_JWT_SECRET}
   spotify:
     id: ${SPOTIFY_CLIENT_ID}
     secret: ${SPOTIFY_CLIENT_SECRET}
+
+logging:
+  level:
+    nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.clients.SpotifyTokenClient: debug
