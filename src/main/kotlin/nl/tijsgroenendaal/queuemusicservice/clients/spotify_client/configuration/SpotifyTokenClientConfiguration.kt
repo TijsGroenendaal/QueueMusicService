@@ -17,7 +17,10 @@ class SpotifyTokenClientRequestInterceptor(
 ): RequestInterceptor {
 
     override fun apply(requestTemplate: RequestTemplate) {
-        requestTemplate.header("Authorization", clientIdConfiguration.getBasicAuth())
+        val basicAuth = clientIdConfiguration.getBasicAuth()
+
+        requestTemplate.header("Authorization", "Basic $basicAuth")
+        requestTemplate.header("Content-Type","application/x-www-form-urlencoded")
     }
 
 }

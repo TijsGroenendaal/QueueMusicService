@@ -8,7 +8,7 @@ import feign.RequestTemplate
 
 import org.springframework.context.annotation.Bean
 
-class SpotifyClientConfiguration {
+class SpotifyApiClientConfiguration {
 
     @Bean
     fun feignRequestInterceptor(userLinkFacade: UserLinkFacade) = SpotifyApiClientRequestInterceptor(userLinkFacade)
@@ -20,6 +20,8 @@ class SpotifyApiClientRequestInterceptor(
 ) : RequestInterceptor {
 
     override fun apply(requestTemplate: RequestTemplate) {
-        userLinkFacade.getAccessToken(getAuthenticationContextSubject())
+        val accessToken = userLinkFacade.getAccessToken(getAuthenticationContextSubject())
+
+        requestTemplate.header("Authorization", "Bearer $accessToken")
     }
 }

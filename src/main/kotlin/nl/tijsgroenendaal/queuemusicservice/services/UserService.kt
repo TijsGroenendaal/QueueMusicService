@@ -1,5 +1,6 @@
 package nl.tijsgroenendaal.queuemusicservice.services
 
+import nl.tijsgroenendaal.queuemusicservice.exceptions.NotFoundException
 import nl.tijsgroenendaal.queuemusicservice.models.UserModel
 import nl.tijsgroenendaal.queuemusicservice.repositories.UserRepository
 
@@ -19,6 +20,15 @@ class UserService(
             .findById(username)
             .let {
                 if (it.isEmpty) throw UsernameNotFoundException("User not found with id: $username")
+                it.get()
+            }
+    }
+
+    fun findById(id: UUID): UserModel {
+        return userRepository
+            .findById(id)
+            .let {
+                if(it.isEmpty) throw NotFoundException(id.toString())
                 it.get()
             }
     }
