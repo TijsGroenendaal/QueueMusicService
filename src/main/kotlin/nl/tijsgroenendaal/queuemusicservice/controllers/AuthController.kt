@@ -23,8 +23,8 @@ class AuthController(
     @PostMapping("/refresh")
     fun refresh(
         @RequestParam("token") refreshToken: String
-    ) {
-
+    ): LoginQueryResponse {
+        return authFacade.refresh(refreshToken)
     }
 
     @PostMapping("/logout")

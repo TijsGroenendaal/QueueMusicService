@@ -1,10 +1,18 @@
 package nl.tijsgroenendaal.queuemusicservice.helper
 
 import nl.tijsgroenendaal.queuemusicservice.security.JwtTypes
+import nl.tijsgroenendaal.queuemusicservice.exceptions.InvalidJwtException
 
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.Header
+import io.jsonwebtoken.Jwt
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.SignatureException
+import io.jsonwebtoken.UnsupportedJwtException
+
+import jakarta.servlet.http.HttpServletRequest
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
@@ -21,17 +29,19 @@ class JwtTokenUtil(
     private val refreshSecret: String
 ): Serializable {
 
-    fun getSubjectFromToken(token: String, jwtType: JwtTypes): String {
-        return getClaimFromToken(token, jwtType, Claims::getSubject)
-    }
+    private val refreshUri = "/v1/auth/refresh"
 
-    fun getExpirationDateFromToken(token: String, jwtType: JwtTypes): Date {
-        return getClaimFromToken(token, jwtType, Claims::getExpiration)
-    }
+    fun getTokenFromHeader(request: HttpServletRequest): Jwt<Header<*>, Claims> {
+        val authenticationHeader = request.getHeader("Authorization")
 
-    private fun <T> getClaimFromToken(token: String, jwtType: JwtTypes, claimsResolver: (Claims) -> T): T {
-        val claims = getAllClaimsFromToken(token, jwtType)
-        return claimsResolver.invoke(claims)
+        if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {
+            throw InvalidJwtException()
+        }
+
+        val jwtType = if (request.requestURI == refreshUri) JwtTypes.REFRESH else JwtTypes.ACCESS
+
+        val jwtToken = authenticationHeader.substring(7)
+        return parseToken(jwtToken, jwtType)
     }
 
     fun generateToken(userDetails: UserDetails, jwtType: JwtTypes): String {
@@ -41,16 +51,21 @@ class JwtTokenUtil(
         }
     }
 
-    fun getAllClaimsFromToken(token: String, jwtType: JwtTypes): Claims {
-        return when(jwtType) {
-            JwtTypes.REFRESH -> Jwts.parser().setSigningKey(refreshSecret).parseClaimsJwt(token).body
-            JwtTypes.ACCESS -> Jwts.parser().setSigningKey(jwtSecret).parseClaimsJwt(token).body
+    fun parseToken(token: String, jwtType: JwtTypes): Jwt<Header<*>, Claims> {
+        return try {
+            when(jwtType) {
+                JwtTypes.REFRESH -> Jwts.parser().setSigningKey(refreshSecret).parseClaimsJwt(token)
+                JwtTypes.ACCESS -> Jwts.parser().setSigningKey(jwtSecret).parseClaimsJwt(token)
+            }
+        } catch (e: Exception) {
+            when(e) {
+                is MalformedJwtException -> throw InvalidJwtException()
+                is IllegalArgumentException -> throw InvalidJwtException()
+                is SignatureException -> throw InvalidJwtException()
+                is UnsupportedJwtException -> throw InvalidJwtException()
+                else -> throw e
+            }
         }
-    }
-
-    fun validateToken(token: String, jwtType: JwtTypes, userDetails: UserDetails): Boolean {
-        val username = getSubjectFromToken(token, jwtType)
-        return username == userDetails.username && !isTokenExpired(token, jwtType)
     }
 
     private fun generateAccessToken(userDetails: UserDetails): String {
@@ -90,11 +105,6 @@ class JwtTokenUtil(
             .setExpiration(Date(System.currentTimeMillis() + validity * 1000))
             .signWith(SignatureAlgorithm.HS256, secret)
             .compact()
-    }
-
-    private fun isTokenExpired(token: String, jwtType: JwtTypes): Boolean {
-        val expiration = getExpirationDateFromToken(token, jwtType)
-        return expiration.after(Date())
     }
 
     companion object {

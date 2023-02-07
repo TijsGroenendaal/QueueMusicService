@@ -1,6 +1,9 @@
 package nl.tijsgroenendaal.queuemusicservice.helper
 
+import nl.tijsgroenendaal.queuemusicservice.exceptions.InvalidJwtSubjectException
 import nl.tijsgroenendaal.queuemusicservice.security.QueueMusicAuthentication
+
+import io.jsonwebtoken.Claims
 
 import org.springframework.security.core.context.SecurityContextHolder
 
@@ -12,3 +15,17 @@ fun getAuthenticationContext(): QueueMusicAuthentication =
 
 fun getAuthenticationContextSubject(): UUID =
     getAuthenticationContext().principal.qmId
+
+
+fun Claims.getUserIdFromSubject(): UUID {
+    return getUserIdFromSubject(this.subject)
+}
+
+@Throws(InvalidJwtSubjectException::class)
+fun getUserIdFromSubject(subject: String): UUID {
+    return try {
+        UUID.fromString(subject)
+    } catch (e: IllegalArgumentException) {
+        throw InvalidJwtSubjectException(subject)
+    }
+}

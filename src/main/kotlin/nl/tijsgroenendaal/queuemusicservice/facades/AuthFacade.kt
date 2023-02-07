@@ -4,6 +4,7 @@ import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.Spot
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.SpotifyTokenClientService
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil.Companion.JWT_REFRESH_TOKEN_VALIDITY
+import nl.tijsgroenendaal.queuemusicservice.helper.getUserIdFromSubject
 import nl.tijsgroenendaal.queuemusicservice.models.UserRefreshTokenModel
 import nl.tijsgroenendaal.queuemusicservice.query.responses.LoginQueryResponse
 import nl.tijsgroenendaal.queuemusicservice.security.JwtTypes
@@ -47,5 +48,16 @@ class AuthFacade(
             jwtToken,
             user.userRefreshToken?.refreshToken!!
         )
+    }
+
+    fun refresh(refreshToken: String): LoginQueryResponse {
+        val jwt = jwtTokenUtil.parseToken(refreshToken, JwtTypes.REFRESH)
+
+        val user = userService.findByUsername(jwt.body.getUserIdFromSubject())
+
+        if (user.userRefreshToken?.refreshToken != refreshToken)
+            TODO() // Throw Invalid RefreshToken Exception
+
+        TODO() // Generate new jwt + save new refresh to database (split loginLinkUser into reusable functions)
     }
 }

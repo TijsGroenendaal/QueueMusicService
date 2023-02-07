@@ -1,6 +1,5 @@
 package nl.tijsgroenendaal.queuemusicservice.security
 
-import nl.tijsgroenendaal.queuemusicservice.exceptions.UnAuthenticatedException
 import nl.tijsgroenendaal.queuemusicservice.facades.JwtUserDetailsFacade
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil
 
@@ -25,33 +24,14 @@ class JwtRequestFilter(
         "/v1/auth/login"
     )
 
-    private val refreshUri = "/v1/auth/refresh"
-
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authenticationHeader = request.getHeader("Authorization")
-
-        if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response)
-        }
-
-        val jwtType = if (request.requestURI == refreshUri) JwtTypes.REFRESH else JwtTypes.ACCESS
-
-        val jwtToken = authenticationHeader.substring(7)
-        val username = try {
-             jwtTokenUtil.getSubjectFromToken(jwtToken, jwtType)
-        } catch (e: Exception) {
-            throw UnAuthenticatedException()
-        }
+       val username = jwtTokenUtil.getTokenFromHeader(request).body.subject
 
         val userDetails = jwtUserDetailsFacade.loadUserByUsername(username)
-
-        if (!jwtTokenUtil.validateToken(jwtToken, jwtType, userDetails)) {
-            filterChain.doFilter(request, response)
-        }
 
         val authentication = QueueMusicAuthentication(
             QueueMusicPrincipalAuthentication(
