@@ -2,13 +2,16 @@ package nl.tijsgroenendaal.queuemusicservice.facades
 
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.SpotifyApiClientService
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.SpotifyTokenClientService
+import nl.tijsgroenendaal.queuemusicservice.exceptions.InvalidRefreshJwtException
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil.Companion.JWT_REFRESH_TOKEN_VALIDITY
 import nl.tijsgroenendaal.queuemusicservice.helper.getUserIdFromSubject
+import nl.tijsgroenendaal.queuemusicservice.models.UserModel
 import nl.tijsgroenendaal.queuemusicservice.models.UserRefreshTokenModel
 import nl.tijsgroenendaal.queuemusicservice.query.responses.LoginQueryResponse
 import nl.tijsgroenendaal.queuemusicservice.security.JwtTypes
 import nl.tijsgroenendaal.queuemusicservice.services.UserService
+import org.springframework.security.core.userdetails.UserDetails
 
 import org.springframework.stereotype.Service
 
@@ -29,9 +32,24 @@ class AuthFacade(
         val linkUser = spotifyApiClientService.getMe(accessToken.accessToken)
 
         val user = userService.createUser(linkUser, accessToken)
-
         val userDetails = jwtUserDetailsFacade.loadUserByUsername(user.id.toString())
 
+        return createNewAccessTokens(user, userDetails)
+    }
+
+    fun refresh(refreshToken: String): LoginQueryResponse {
+        val jwt = jwtTokenUtil.parseToken(refreshToken, JwtTypes.REFRESH)
+
+        val user = userService.findByUsername(jwt.body.getUserIdFromSubject())
+        val userDetails = jwtUserDetailsFacade.loadUserByUsername(user.id.toString())
+
+        if (user.userRefreshToken?.refreshToken != refreshToken)
+            throw InvalidRefreshJwtException()
+
+        return createNewAccessTokens(user, userDetails)
+    }
+
+    private fun createNewAccessTokens(user: UserModel, userDetails: UserDetails): LoginQueryResponse {
         user.apply {
             this.userRefreshToken = UserRefreshTokenModel(
                 this,
@@ -48,16 +66,5 @@ class AuthFacade(
             jwtToken,
             user.userRefreshToken?.refreshToken!!
         )
-    }
-
-    fun refresh(refreshToken: String): LoginQueryResponse {
-        val jwt = jwtTokenUtil.parseToken(refreshToken, JwtTypes.REFRESH)
-
-        val user = userService.findByUsername(jwt.body.getUserIdFromSubject())
-
-        if (user.userRefreshToken?.refreshToken != refreshToken)
-            TODO() // Throw Invalid RefreshToken Exception
-
-        TODO() // Generate new jwt + save new refresh to database (split loginLinkUser into reusable functions)
     }
 }
