@@ -1,21 +1,13 @@
 package nl.tijsgroenendaal.queuemusicservice.helper
 
+import io.jsonwebtoken.*
 import nl.tijsgroenendaal.queuemusicservice.security.JwtTypes
 import nl.tijsgroenendaal.queuemusicservice.exceptions.InvalidJwtException
-
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.Header
-import io.jsonwebtoken.Jwt
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.MalformedJwtException
-import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.SignatureException
-import io.jsonwebtoken.UnsupportedJwtException
+import nl.tijsgroenendaal.queuemusicservice.models.QueueMusicUserDetails
 
 import jakarta.servlet.http.HttpServletRequest
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 
 import java.io.Serializable
@@ -31,7 +23,7 @@ class JwtTokenUtil(
 
     private val refreshUri = "/v1/auth/refresh"
 
-    fun getTokenFromHeader(request: HttpServletRequest): Jwt<Header<*>, Claims> {
+    fun getTokenFromRequest(request: HttpServletRequest): Claims {
         val authenticationHeader = request.getHeader("Authorization")
 
         if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {
@@ -40,22 +32,25 @@ class JwtTokenUtil(
 
         val jwtType = if (request.requestURI == refreshUri) JwtTypes.REFRESH else JwtTypes.ACCESS
 
-        val jwtToken = authenticationHeader.substring(7)
-        return parseToken(jwtToken, jwtType)
+        return parseToken(getTokenFromHeader(authenticationHeader), jwtType)
     }
 
-    fun generateToken(userDetails: UserDetails, jwtType: JwtTypes): String {
+    fun getTokenFromHeader(header: String): String {
+        return header.substring(7)
+    }
+
+    fun generateToken(userDetails: QueueMusicUserDetails, jwtType: JwtTypes): String {
         return when (jwtType) {
             JwtTypes.REFRESH -> generateRefreshToken(userDetails)
             JwtTypes.ACCESS -> generateAccessToken(userDetails)
         }
     }
 
-    fun parseToken(token: String, jwtType: JwtTypes): Jwt<Header<*>, Claims> {
+    fun parseToken(token: String, jwtType: JwtTypes): Claims {
         return try {
             when(jwtType) {
-                JwtTypes.REFRESH -> Jwts.parser().setSigningKey(refreshSecret).parseClaimsJwt(token)
-                JwtTypes.ACCESS -> Jwts.parser().setSigningKey(jwtSecret).parseClaimsJwt(token)
+                JwtTypes.REFRESH -> Jwts.parser().setSigningKey(refreshSecret).parseClaimsJws(token).body
+                JwtTypes.ACCESS -> Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).body
             }
         } catch (e: Exception) {
             when(e) {
@@ -68,9 +63,9 @@ class JwtTokenUtil(
         }
     }
 
-    private fun generateAccessToken(userDetails: UserDetails): String {
+    private fun generateAccessToken(userDetails: QueueMusicUserDetails): String {
         val claims = mapOf<String, Any>(
-            Pair("subs", userDetails.authorities.map { it.authority })
+            Pair("subs", userDetails.authorities)
         )
         return doGenerateToken(
             claims,
@@ -80,7 +75,7 @@ class JwtTokenUtil(
         )
     }
 
-    private fun generateRefreshToken(userDetails: UserDetails): String {
+    private fun generateRefreshToken(userDetails: QueueMusicUserDetails): String {
         return doGenerateToken(
             mapOf(),
             userDetails.username,
@@ -93,11 +88,9 @@ class JwtTokenUtil(
     private fun doGenerateToken(
         claims: Map<String, Any>,
         subject: String,
-        validity: Int,
+        validity: Long,
         secret: String
     ): String {
-        JWT_TOKEN_VALIDITY
-
         return Jwts.builder()
             .setClaims(claims.toMutableMap())
             .setSubject(subject)
@@ -108,8 +101,8 @@ class JwtTokenUtil(
     }
 
     companion object {
-        const val JWT_TOKEN_VALIDITY = 60 * 60 * 1 * 0 // = 3600 seconds = 1 hour
-        const val JWT_REFRESH_TOKEN_VALIDITY = 60 * 60 * 24 * 90 // 90 days
+        const val JWT_TOKEN_VALIDITY = (60 * 60 * 1 * 1).toLong() // = 3600 seconds = 1 hour
+        const val JWT_REFRESH_TOKEN_VALIDITY = (60 * 60 * 24 * 90).toLong() // 90 days
     }
 
 }

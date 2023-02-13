@@ -23,4 +23,8 @@ class SpotifyApiClientService(
         return spotifyApiClient.getMe()
     }
 
+    fun getMyPlaylists(): Any {
+        return spotifyApiClient.getMyPlaylists()
+    }
+
 }

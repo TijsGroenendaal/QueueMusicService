@@ -5,7 +5,7 @@ import org.springframework.security.core.GrantedAuthority
 
 class QueueMusicAuthentication(
     private val principal: QueueMusicPrincipalAuthentication,
-    authorities: Collection<GrantedAuthority>
+    authorities: Set<GrantedAuthority>
 ): AbstractAuthenticationToken(authorities) {
 
     override fun getCredentials(): String {

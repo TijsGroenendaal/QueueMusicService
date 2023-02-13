@@ -20,6 +20,9 @@ spring:
     show-sql: false
 
 queuemusic:
+  encryption:
+    algorithme: ${QUEUEMUSIC_ENCRYPTION_ALGORITHME}
+    secret: ${QUEUEMUSIC_ENCRYPTION_SECRET}
   jwt:
     secret: ${QUEUEMUSIC_JWT_SECRET}
     refresh:
@@ -30,4 +33,7 @@ queuemusic:
 
 logging:
   level:
+    org:
+      springframework:
+        security: DEBUG
     nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.clients.SpotifyTokenClient: debug

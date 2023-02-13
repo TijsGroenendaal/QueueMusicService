@@ -2,7 +2,9 @@ package nl.tijsgroenendaal.queuemusicservice.controllers
 
 import nl.tijsgroenendaal.queuemusicservice.facades.AuthFacade
 import nl.tijsgroenendaal.queuemusicservice.query.responses.LoginQueryResponse
+
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -22,14 +24,14 @@ class AuthController(
 
     @PostMapping("/refresh")
     fun refresh(
-        @RequestParam("token") refreshToken: String
+        @RequestHeader("Authorization") refreshToken: String
     ): LoginQueryResponse {
         return authFacade.refresh(refreshToken)
     }
 
     @PostMapping("/logout")
     fun logout() {
-
+        authFacade.logout()
     }
 
 }

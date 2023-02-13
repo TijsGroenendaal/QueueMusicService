@@ -8,5 +8,5 @@ data class LoginQueryResponse(
     @JsonProperty("refresh_token")
     val refreshToken: String,
     @JsonProperty("expires_in")
-    val expiresIn: Int = JWT_TOKEN_VALIDITY
+    val expiresIn: Long = JWT_TOKEN_VALIDITY
 )

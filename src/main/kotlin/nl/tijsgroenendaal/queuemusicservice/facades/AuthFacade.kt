@@ -5,13 +5,12 @@ import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.Spot
 import nl.tijsgroenendaal.queuemusicservice.exceptions.InvalidRefreshJwtException
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil.Companion.JWT_REFRESH_TOKEN_VALIDITY
-import nl.tijsgroenendaal.queuemusicservice.helper.getUserIdFromSubject
-import nl.tijsgroenendaal.queuemusicservice.models.UserModel
+import nl.tijsgroenendaal.queuemusicservice.helper.getAuthenticationContextSubject
+import nl.tijsgroenendaal.queuemusicservice.models.QueueMusicUserDetails
 import nl.tijsgroenendaal.queuemusicservice.models.UserRefreshTokenModel
 import nl.tijsgroenendaal.queuemusicservice.query.responses.LoginQueryResponse
 import nl.tijsgroenendaal.queuemusicservice.security.JwtTypes
 import nl.tijsgroenendaal.queuemusicservice.services.UserService
-import org.springframework.security.core.userdetails.UserDetails
 
 import org.springframework.stereotype.Service
 
@@ -24,7 +23,6 @@ class AuthFacade(
     private val userService: UserService,
     private val spotifyTokenClientService: SpotifyTokenClientService,
     private val spotifyApiClientService: SpotifyApiClientService,
-    private val jwtUserDetailsFacade: JwtUserDetailsFacade
 ) {
 
     fun loginLinkUser(code: String): LoginQueryResponse {
@@ -32,39 +30,55 @@ class AuthFacade(
         val linkUser = spotifyApiClientService.getMe(accessToken.accessToken)
 
         val user = userService.createUser(linkUser, accessToken)
-        val userDetails = jwtUserDetailsFacade.loadUserByUsername(user.id.toString())
+        val userDetails = userService.findUserDetailsById(user.id)
 
-        return createNewAccessTokens(user, userDetails)
+        return createNewAccessTokens(userDetails)
     }
 
     fun refresh(refreshToken: String): LoginQueryResponse {
-        val jwt = jwtTokenUtil.parseToken(refreshToken, JwtTypes.REFRESH)
+        val userDetails = userService.findUserDetailsById(getAuthenticationContextSubject())
 
-        val user = userService.findByUsername(jwt.body.getUserIdFromSubject())
-        val userDetails = jwtUserDetailsFacade.loadUserByUsername(user.id.toString())
-
-        if (user.userRefreshToken?.refreshToken != refreshToken)
+        if (userDetails.userModel.userRefreshToken?.refreshToken != jwtTokenUtil.getTokenFromHeader(refreshToken))
             throw InvalidRefreshJwtException()
 
-        return createNewAccessTokens(user, userDetails)
+        return createNewAccessTokens(userDetails)
     }
 
-    private fun createNewAccessTokens(user: UserModel, userDetails: UserDetails): LoginQueryResponse {
-        user.apply {
-            this.userRefreshToken = UserRefreshTokenModel(
-                this,
-                jwtTokenUtil.generateToken(userDetails, JwtTypes.REFRESH),
-                LocalDateTime.now(ZoneOffset.UTC).plusSeconds(JWT_REFRESH_TOKEN_VALIDITY.toLong())
-            )
-        }
+    fun logout() {
+        val user = userService
+            .findById(getAuthenticationContextSubject())
+            .apply {
+                this.userRefreshToken = null
+                this.userLink?.linkAccessToken = null
+                this.userLink?.linkRefreshToken = null
+            }
 
         userService.save(user)
+    }
+
+    private fun createNewAccessTokens(userDetails: QueueMusicUserDetails): LoginQueryResponse {
+        userDetails.apply {
+            if (this.userModel.userRefreshToken == null) {
+                this.userModel.userRefreshToken = UserRefreshTokenModel(
+                    this.userModel,
+                    jwtTokenUtil.generateToken(userDetails, JwtTypes.REFRESH),
+                    LocalDateTime.now(ZoneOffset.UTC).plusSeconds(JWT_REFRESH_TOKEN_VALIDITY)
+                )
+            } else {
+                this.userModel.userRefreshToken?.apply {
+                    this.refreshToken = jwtTokenUtil.generateToken(userDetails, JwtTypes.REFRESH)
+                    this.expireTime = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(JWT_REFRESH_TOKEN_VALIDITY)
+                }
+            }
+        }
+
+        userService.save(userDetails.userModel)
 
         val jwtToken = jwtTokenUtil.generateToken(userDetails, JwtTypes.ACCESS)
 
         return LoginQueryResponse(
             jwtToken,
-            user.userRefreshToken?.refreshToken!!
+            userDetails.userModel.userRefreshToken?.refreshToken!!
         )
     }
 }

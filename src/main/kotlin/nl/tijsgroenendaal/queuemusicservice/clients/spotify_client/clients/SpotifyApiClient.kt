@@ -15,5 +15,7 @@ interface SpotifyApiClient {
 
     @GetMapping("/v1/me")
     fun getMe(): GetMeQueryResponse
+    @GetMapping("/v1/me/playlists")
+    fun getMyPlaylists(): Any
 
 }

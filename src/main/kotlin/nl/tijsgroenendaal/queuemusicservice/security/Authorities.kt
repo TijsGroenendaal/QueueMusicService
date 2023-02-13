@@ -1,6 +1,12 @@
 package nl.tijsgroenendaal.queuemusicservice.security
 
-enum class Authorities {
+import org.springframework.security.core.GrantedAuthority
+
+enum class Authorities: GrantedAuthority {
     SPOTIFY,
-    REFRESH
+    REFRESH;
+
+    override fun getAuthority(): String {
+        return this.name
+    }
 }
