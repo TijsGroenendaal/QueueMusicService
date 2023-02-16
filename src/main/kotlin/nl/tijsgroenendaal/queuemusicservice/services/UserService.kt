@@ -1,20 +1,21 @@
 package nl.tijsgroenendaal.queuemusicservice.services
 
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.AccessTokenResponseModel
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.users.GetMeQueryResponse
-import nl.tijsgroenendaal.queuemusicservice.exceptions.NotFoundException
+import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.auth.AccessTokenResponseModel
+import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.users.GetMeQueryResponse
 import nl.tijsgroenendaal.queuemusicservice.helper.getUserIdFromSubject
-import nl.tijsgroenendaal.queuemusicservice.models.UserLinkModel
-import nl.tijsgroenendaal.queuemusicservice.models.UserModel
+import nl.tijsgroenendaal.queuemusicservice.entity.UserLinkModel
+import nl.tijsgroenendaal.queuemusicservice.entity.UserModel
 import nl.tijsgroenendaal.queuemusicservice.repositories.UserRepository
-import nl.tijsgroenendaal.queuemusicservice.security.Authorities
-import nl.tijsgroenendaal.queuemusicservice.models.QueueMusicUserDetails
+import nl.tijsgroenendaal.queuemusicservice.security.model.Authorities
+import nl.tijsgroenendaal.queuemusicservice.security.model.QueueMusicUserDetails
 
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 
 import jakarta.transaction.Transactional
+import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
+import nl.tijsgroenendaal.queuemusicservice.exceptions.UserErrorCodes
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -40,12 +41,11 @@ class UserService(
         return QueueMusicUserDetails(user, authorities.toSet())
     }
 
-    @Throws(NotFoundException::class)
     fun findById(id: UUID): UserModel {
         return userRepository
             .findById(id)
             .let {
-                if(it.isEmpty) throw NotFoundException(id.toString())
+                if(it.isEmpty) throw BadRequestException(UserErrorCodes.USER_NOT_FOUND, "User $id not found")
                 it.get()
             }
     }
@@ -55,23 +55,18 @@ class UserService(
         linkUser: GetMeQueryResponse,
         accessToken: AccessTokenResponseModel
     ): UserModel {
-
         val persistentUser = userRepository
             .findByUserLinkLinkId(linkUser.id)
             .let {
-                if (it == null) {
-                    val user = UserModel().apply {
-                        this.userLink = UserLinkModel(
-                            this,
-                            linkUser.id,
-                            accessToken.refreshToken,
-                            accessToken.accessToken,
-                            LocalDateTime.now(ZoneOffset.UTC).plusSeconds(accessToken.expiresIn)
-                        )
-                    }
-                    return@let user
+                it ?: UserModel().apply {
+                    this.userLink = UserLinkModel(
+                    this,
+                        linkUser.id,
+                        accessToken.refreshToken,
+                        accessToken.accessToken,
+                        LocalDateTime.now(ZoneOffset.UTC).plusSeconds(accessToken.expiresIn)
+                    )
                 }
-                return@let it
             }
 
         return userRepository.save(persistentUser)

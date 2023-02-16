@@ -2,8 +2,9 @@ package nl.tijsgroenendaal.queuemusicservice.exceptions
 
 class AccessTokenExpiredException(): Exception()
 class UnAuthorizedException(): Exception()
-class NotFoundException(id: String): Exception()
 open class InvalidJwtException(): Exception()
 class InvalidJwtSubjectException(val id: String): InvalidJwtException()
 class InvalidRefreshJwtException(): InvalidJwtException()
-class NoDeviceIdSuppliedException(): Exception()
+class BadRequestException(val code: String, message: String): Exception(message) {
+    constructor(code: ErrorCode, message: String): this(code.getCode(), message)
+}

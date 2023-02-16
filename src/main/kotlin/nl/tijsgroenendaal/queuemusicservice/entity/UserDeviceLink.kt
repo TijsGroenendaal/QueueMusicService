@@ -1,8 +1,9 @@
-package nl.tijsgroenendaal.queuemusicservice.models
+package nl.tijsgroenendaal.queuemusicservice.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.OneToOne
 
 import java.util.UUID
 
@@ -13,5 +14,7 @@ class UserDeviceLink(
     @Id
     val id: UUID,
     @Column(columnDefinition = "TEXT")
-    val deviceId: String
+    val deviceId: String,
+    @OneToOne
+    val userModel: UserModel,
 )

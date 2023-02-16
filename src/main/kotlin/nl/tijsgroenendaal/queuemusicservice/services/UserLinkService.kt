@@ -1,10 +1,14 @@
 package nl.tijsgroenendaal.queuemusicservice.services
 
-import jakarta.transaction.Transactional
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.RefreshedAccessTokenResponseModel
+import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.auth.RefreshedAccessTokenResponseModel
+import nl.tijsgroenendaal.queuemusicservice.entity.UserLinkModel
 import nl.tijsgroenendaal.queuemusicservice.exceptions.AccessTokenExpiredException
+import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
+import nl.tijsgroenendaal.queuemusicservice.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.queuemusicservice.exceptions.UnAuthorizedException
 import nl.tijsgroenendaal.queuemusicservice.repositories.UserLinkRepository
+
+import jakarta.transaction.Transactional
 
 import org.springframework.stereotype.Service
 
@@ -45,5 +49,10 @@ class UserLinkService(
         }
 
         userLinkRepository.save(userLink)
+    }
+
+    fun findByUserId(userId: UUID): UserLinkModel {
+        return userLinkRepository.findByUserModelId(userId)
+            ?: throw BadRequestException(SessionErrorCodes.NO_USERLINK_FOUND, "User $userId has no UserLink defined")
     }
 }

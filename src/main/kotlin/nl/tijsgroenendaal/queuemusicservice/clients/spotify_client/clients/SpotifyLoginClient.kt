@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.clients
 
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.users.GetMeQueryResponse
+import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.users.GetMeQueryResponse
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestHeader

@@ -1,11 +1,12 @@
-package nl.tijsgroenendaal.queuemusicservice.models
+package nl.tijsgroenendaal.queuemusicservice.entity
+
+import nl.tijsgroenendaal.queuemusicservice.helper.AttributeEncryptor
 
 import jakarta.persistence.Column
 import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import jakarta.persistence.OneToOne
-import nl.tijsgroenendaal.queuemusicservice.helper.AttributeEncryptor
 
 import java.time.LocalDateTime
 import java.util.UUID

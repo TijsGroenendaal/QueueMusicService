@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicservice.models
+package nl.tijsgroenendaal.queuemusicservice.entity
 
 import jakarta.persistence.*
 import nl.tijsgroenendaal.queuemusicservice.helper.AttributeEncryptor

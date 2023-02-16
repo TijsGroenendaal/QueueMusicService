@@ -3,19 +3,17 @@ package nl.tijsgroenendaal.queuemusicservice.security
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil
 import nl.tijsgroenendaal.queuemusicservice.helper.getUserIdFromSubject
 import nl.tijsgroenendaal.queuemusicservice.services.UserService
+import nl.tijsgroenendaal.queuemusicservice.security.model.QueueMusicAuthentication
+import nl.tijsgroenendaal.queuemusicservice.security.model.QueueMusicPrincipalAuthentication
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.core.annotation.Order
 
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
-import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
-@Order(0)
-@Component
 class JwtRequestFilter(
     private val userService: UserService,
     private val jwtTokenUtil: JwtTokenUtil

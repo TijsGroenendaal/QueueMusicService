@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicservice.security
+package nl.tijsgroenendaal.queuemusicservice.security.model
 
 import org.springframework.security.core.GrantedAuthority
 

@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models.users
+package nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.users
 
 data class GetMeQueryResponse(
     val id: String,

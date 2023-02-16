@@ -1,17 +1,20 @@
 package nl.tijsgroenendaal.queuemusicservice.helper
 
-import io.jsonwebtoken.*
 import nl.tijsgroenendaal.queuemusicservice.security.JwtTypes
 import nl.tijsgroenendaal.queuemusicservice.exceptions.InvalidJwtException
-import nl.tijsgroenendaal.queuemusicservice.models.QueueMusicUserDetails
+import nl.tijsgroenendaal.queuemusicservice.security.model.QueueMusicUserDetails
 
 import jakarta.servlet.http.HttpServletRequest
+
+import io.jsonwebtoken.*
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 import java.io.Serializable
 import java.util.Date
+
+private const val REFRESH_URI = "/v1/auth/refresh"
 
 @Component
 class JwtTokenUtil(
@@ -21,8 +24,6 @@ class JwtTokenUtil(
     private val refreshSecret: String
 ): Serializable {
 
-    private val refreshUri = "/v1/auth/refresh"
-
     fun getTokenFromRequest(request: HttpServletRequest): Claims {
         val authenticationHeader = request.getHeader("Authorization")
 
@@ -30,7 +31,7 @@ class JwtTokenUtil(
             throw InvalidJwtException()
         }
 
-        val jwtType = if (request.requestURI == refreshUri) JwtTypes.REFRESH else JwtTypes.ACCESS
+        val jwtType = if (request.requestURI == REFRESH_URI) JwtTypes.REFRESH else JwtTypes.ACCESS
 
         return parseToken(getTokenFromHeader(authenticationHeader), jwtType)
     }

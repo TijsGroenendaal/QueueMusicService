@@ -6,8 +6,8 @@ import nl.tijsgroenendaal.queuemusicservice.exceptions.InvalidRefreshJwtExceptio
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil.Companion.JWT_REFRESH_TOKEN_VALIDITY
 import nl.tijsgroenendaal.queuemusicservice.helper.getAuthenticationContextSubject
-import nl.tijsgroenendaal.queuemusicservice.models.QueueMusicUserDetails
-import nl.tijsgroenendaal.queuemusicservice.models.UserRefreshTokenModel
+import nl.tijsgroenendaal.queuemusicservice.security.model.QueueMusicUserDetails
+import nl.tijsgroenendaal.queuemusicservice.entity.UserRefreshTokenModel
 import nl.tijsgroenendaal.queuemusicservice.query.responses.LoginQueryResponse
 import nl.tijsgroenendaal.queuemusicservice.security.JwtTypes
 import nl.tijsgroenendaal.queuemusicservice.services.UserService

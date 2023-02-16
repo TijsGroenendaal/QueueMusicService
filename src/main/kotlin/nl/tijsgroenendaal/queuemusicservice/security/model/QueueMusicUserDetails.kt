@@ -1,6 +1,7 @@
-package nl.tijsgroenendaal.queuemusicservice.models
+package nl.tijsgroenendaal.queuemusicservice.security.model
 
-import nl.tijsgroenendaal.queuemusicservice.security.Authorities
+import nl.tijsgroenendaal.queuemusicservice.entity.UserModel
+
 import org.springframework.security.core.userdetails.UserDetails
 
 import java.time.LocalDateTime

@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.models
+package nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.auth
 
 import com.fasterxml.jackson.annotation.JsonAlias
 
