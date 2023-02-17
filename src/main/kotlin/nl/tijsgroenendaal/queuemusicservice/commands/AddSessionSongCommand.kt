@@ -1,13 +1,13 @@
 package nl.tijsgroenendaal.queuemusicservice.commands
 
-import nl.tijsgroenendaal.queuemusicservice.entity.QueueMusicSession
-import nl.tijsgroenendaal.queuemusicservice.entity.UserDeviceLink
+import nl.tijsgroenendaal.queuemusicservice.entity.QueueMusicSessionModel
+import nl.tijsgroenendaal.queuemusicservice.entity.UserDeviceLinkModel
 
 data class AddSessionSongCommand(
-    val deviceLink: UserDeviceLink,
+    val deviceLink: UserDeviceLinkModel,
     val trackId: String?,
     val trackAlbum: String,
     val trackName: String,
     val trackArtists: String,
-    val session: QueueMusicSession
+    val session: QueueMusicSessionModel
 )

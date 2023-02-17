@@ -20,6 +20,8 @@ spring:
     show-sql: false
 
 queuemusic:
+  cachecleaner:
+    timer: 3000
   encryption:
     algorithme: ${QUEUEMUSIC_ENCRYPTION_ALGORITHME}
     secret: ${QUEUEMUSIC_ENCRYPTION_SECRET}

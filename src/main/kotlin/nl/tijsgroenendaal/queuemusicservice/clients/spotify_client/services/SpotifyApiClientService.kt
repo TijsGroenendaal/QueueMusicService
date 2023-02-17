@@ -36,9 +36,9 @@ class SpotifyApiClientService(
         return spotifyApiClient.getMyPlaylists()
     }
 
-    fun getTrack(songId: String): GetTrackQueryResponse {
+    fun getTrack(songId: String, accessCode: String): GetTrackQueryResponse {
         return try {
-            spotifyApiClient.getTrack(songId)
+            spotifyLoginClient.getTrack("Bearer $accessCode", songId)
         } catch (e: FeignException) {
             throw BadRequestException(SessionSongErrorCode.TRACK_NOT_FOUND, "Track $songId not found")
         }

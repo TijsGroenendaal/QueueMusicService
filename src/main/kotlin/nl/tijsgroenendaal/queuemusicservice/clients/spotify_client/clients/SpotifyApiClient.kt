@@ -3,7 +3,6 @@ package nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.clients
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.commands.CreatePlaylistCommand
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.commands.responses.CreatePlaylistCommandResponse
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.configuration.SpotifyApiClientConfiguration
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.track.GetTrackQueryResponse
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.users.GetMeQueryResponse
 
 import org.springframework.cloud.openfeign.FeignClient
@@ -23,8 +22,6 @@ interface SpotifyApiClient {
     fun getMe(): GetMeQueryResponse
     @GetMapping("/v1/me/playlists")
     fun getMyPlaylists(): Any
-    @GetMapping("/v1/tracks/{songId}")
-    fun getTrack(@PathVariable songId: String): GetTrackQueryResponse
     @PostMapping("/v1/users/{userId}/playlists")
     fun createPlaylists(@PathVariable userId: String, @RequestBody command: CreatePlaylistCommand): CreatePlaylistCommandResponse
 

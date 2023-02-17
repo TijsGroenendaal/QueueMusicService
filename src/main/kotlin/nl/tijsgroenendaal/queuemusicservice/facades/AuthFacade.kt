@@ -10,6 +10,7 @@ import nl.tijsgroenendaal.queuemusicservice.security.model.QueueMusicUserDetails
 import nl.tijsgroenendaal.queuemusicservice.entity.UserRefreshTokenModel
 import nl.tijsgroenendaal.queuemusicservice.query.responses.LoginQueryResponse
 import nl.tijsgroenendaal.queuemusicservice.security.JwtTypes
+import nl.tijsgroenendaal.queuemusicservice.services.UserRefreshTokenService
 import nl.tijsgroenendaal.queuemusicservice.services.UserService
 
 import org.springframework.stereotype.Service
@@ -21,6 +22,7 @@ import java.time.ZoneOffset
 class AuthFacade(
     private val jwtTokenUtil: JwtTokenUtil,
     private val userService: UserService,
+    private val userRefreshTokenService: UserRefreshTokenService,
     private val spotifyTokenClientService: SpotifyTokenClientService,
     private val spotifyApiClientService: SpotifyApiClientService,
 ) {
@@ -30,6 +32,13 @@ class AuthFacade(
         val linkUser = spotifyApiClientService.getMe(accessToken.accessToken)
 
         val user = userService.createUser(linkUser, accessToken)
+        val userDetails = userService.findUserDetailsById(user.id)
+
+        return createNewAccessTokens(userDetails)
+    }
+
+    fun loginAnonymous(deviceId: String): LoginQueryResponse {
+        val user = userService.createAnonymousUser(deviceId)
         val userDetails = userService.findUserDetailsById(user.id)
 
         return createNewAccessTokens(userDetails)
@@ -72,13 +81,13 @@ class AuthFacade(
             }
         }
 
-        userService.save(userDetails.userModel)
+        userRefreshTokenService.save(userDetails.userModel.userRefreshToken!!)
 
         val jwtToken = jwtTokenUtil.generateToken(userDetails, JwtTypes.ACCESS)
 
         return LoginQueryResponse(
             jwtToken,
-            userDetails.userModel.userRefreshToken?.refreshToken!!
+            userDetails.userModel.userRefreshToken!!.refreshToken
         )
     }
 }

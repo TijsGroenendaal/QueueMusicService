@@ -2,7 +2,8 @@ package nl.tijsgroenendaal.queuemusicservice.controllers
 
 import nl.tijsgroenendaal.queuemusicservice.commands.AddSessionSongControllerCommand
 import nl.tijsgroenendaal.queuemusicservice.commands.AddSpotifySessionSongCommand
-import nl.tijsgroenendaal.queuemusicservice.entity.SessionSong
+import nl.tijsgroenendaal.queuemusicservice.commands.responses.AddSessionSongCommandResponse
+import nl.tijsgroenendaal.queuemusicservice.commands.responses.AddSessionSongCommandResponse.Companion.toResponse
 import nl.tijsgroenendaal.queuemusicservice.facades.SessionSongFacade
 
 import org.springframework.web.bind.annotation.RequestBody
@@ -23,16 +24,16 @@ class SessionSongController(
     fun addSpotifySessionSong(
         @RequestBody command: AddSpotifySessionSongCommand,
         @PathVariable sessionId: UUID
-    ): SessionSong {
-        return sessionSongFacade.addSpotifySessionSong(command, sessionId)
+    ): AddSessionSongCommandResponse {
+        return sessionSongFacade.addSpotifySessionSong(command, sessionId).toResponse()
     }
 
     @PostMapping()
     fun addSessionSong(
         @PathVariable sessionId: UUID,
         @RequestBody command: AddSessionSongControllerCommand
-    ): SessionSong {
-        return sessionSongFacade.addSessionSong(command, sessionId)
+    ): AddSessionSongCommandResponse {
+        return sessionSongFacade.addSessionSong(command, sessionId).toResponse()
     }
 
 }

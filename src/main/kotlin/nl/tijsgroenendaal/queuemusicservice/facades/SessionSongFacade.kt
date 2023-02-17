@@ -1,11 +1,13 @@
 package nl.tijsgroenendaal.queuemusicservice.facades
 
+import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.facade.SpotifyFacade
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.track.concatArtistNames
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.SpotifyApiClientService
 import nl.tijsgroenendaal.queuemusicservice.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicservice.commands.AddSessionSongControllerCommand
 import nl.tijsgroenendaal.queuemusicservice.commands.AddSpotifySessionSongCommand
-import nl.tijsgroenendaal.queuemusicservice.entity.SessionSong
+import nl.tijsgroenendaal.queuemusicservice.entity.SessionSongModel
+import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
+import nl.tijsgroenendaal.queuemusicservice.exceptions.SessionSongErrorCode
 import nl.tijsgroenendaal.queuemusicservice.helper.getAuthenticationContextSubject
 import nl.tijsgroenendaal.queuemusicservice.services.DeviceLinkService
 import nl.tijsgroenendaal.queuemusicservice.services.SessionService
@@ -19,14 +21,14 @@ import java.util.UUID
 class SessionSongFacade(
     private val sessionSongService: SessionSongService,
     private val sessionService: SessionService,
-    private val spotifyApiClientService: SpotifyApiClientService,
+    private val spotifyFacade: SpotifyFacade,
     private val deviceLinkService: DeviceLinkService
 ) {
 
-    fun addSpotifySessionSong(command: AddSpotifySessionSongCommand, sessionId: UUID): SessionSong {
-        val track = spotifyApiClientService.getTrack(command.songId)
+    fun addSpotifySessionSong(command: AddSpotifySessionSongCommand, sessionId: UUID): SessionSongModel {
+        val track = spotifyFacade.getTrack(command.songId)
 
-        return sessionSongService.createSessionSong(AddSessionSongCommand(
+        return createSessionSong(AddSessionSongCommand(
             deviceLinkService.getByUserId(getAuthenticationContextSubject()),
             track.id,
             track.album.name,
@@ -36,8 +38,8 @@ class SessionSongFacade(
         ))
     }
 
-    fun addSessionSong(command: AddSessionSongControllerCommand, sessionId: UUID): SessionSong {
-        return sessionSongService.createSessionSong(AddSessionSongCommand(
+    fun addSessionSong(command: AddSessionSongControllerCommand, sessionId: UUID): SessionSongModel {
+        return createSessionSong(AddSessionSongCommand(
             deviceLinkService.getByUserId(getAuthenticationContextSubject()),
             null,
             command.album,
@@ -45,5 +47,12 @@ class SessionSongFacade(
             command.authors,
             sessionService.findSessionById(sessionId)
         ))
+    }
+
+    private fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {
+        if (!command.session.hasJoined(command.deviceLink.id))
+            throw BadRequestException(SessionSongErrorCode.DEVICE_NOT_JOINED, "Device ${command.deviceLink.deviceId} has not joined")
+
+        return sessionSongService.createSessionSong(command)
     }
 }

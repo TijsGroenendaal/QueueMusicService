@@ -10,11 +10,21 @@ import java.util.UUID
 @Entity(
     name = "user_device_link"
 )
-class UserDeviceLink(
+class UserDeviceLinkModel(
     @Id
     val id: UUID,
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", unique = true)
     val deviceId: String,
     @OneToOne
     val userModel: UserModel,
-)
+) {
+    companion object {
+        fun new(deviceId: String, userModel: UserModel): UserDeviceLinkModel? {
+            return UserDeviceLinkModel(
+                UUID.randomUUID(),
+                deviceId,
+                userModel
+            )
+        }
+    }
+}

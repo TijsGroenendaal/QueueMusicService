@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 
 import jakarta.transaction.Transactional
+import nl.tijsgroenendaal.queuemusicservice.entity.UserDeviceLinkModel
 import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
 import nl.tijsgroenendaal.queuemusicservice.exceptions.UserErrorCodes
 
@@ -58,14 +59,26 @@ class UserService(
         val persistentUser = userRepository
             .findByUserLinkLinkId(linkUser.id)
             .let {
-                it ?: UserModel().apply {
-                    this.userLink = UserLinkModel(
+                it ?: UserModel()
+            }.apply {
+                this.userLink = UserLinkModel(
                     this,
-                        linkUser.id,
-                        accessToken.refreshToken,
-                        accessToken.accessToken,
-                        LocalDateTime.now(ZoneOffset.UTC).plusSeconds(accessToken.expiresIn)
-                    )
+                    linkUser.id,
+                    accessToken.refreshToken,
+                    accessToken.accessToken,
+                    LocalDateTime.now(ZoneOffset.UTC).plusSeconds(accessToken.expiresIn)
+                )
+            }
+
+        return userRepository.save(persistentUser)
+    }
+
+    fun createAnonymousUser(deviceId: String): UserModel {
+        val persistentUser = userRepository
+            .findByUserDeviceLinkDeviceId(deviceId)
+            .let {
+                it ?: UserModel().apply {
+                    this.userDeviceLink = UserDeviceLinkModel.new(deviceId, this)
                 }
             }
 

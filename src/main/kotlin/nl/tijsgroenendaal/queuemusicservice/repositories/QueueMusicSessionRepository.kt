@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.queuemusicservice.repositories
 
-import nl.tijsgroenendaal.queuemusicservice.entity.QueueMusicSession
+import nl.tijsgroenendaal.queuemusicservice.entity.QueueMusicSessionModel
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.PagingAndSortingRepository
@@ -10,8 +10,9 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 @Repository
-interface QueueMusicSessionRepository: PagingAndSortingRepository<QueueMusicSession, UUID>, JpaRepository<QueueMusicSession, UUID> {
+interface QueueMusicSessionRepository: PagingAndSortingRepository<QueueMusicSessionModel, UUID>, JpaRepository<QueueMusicSessionModel, UUID> {
 
-    fun findAllByHostIdAndEndAtAfterAndManualEnded(hostId: UUID, endAt: LocalDateTime, manualEnded: Boolean = false): List<QueueMusicSession>
+    fun findAllByHostIdAndEndAtAfterAndManualEnded(hostId: UUID, endAt: LocalDateTime, manualEnded: Boolean = false): List<QueueMusicSessionModel>
+    fun findByCode(code: String): QueueMusicSessionModel?
 
 }

@@ -2,27 +2,33 @@ package nl.tijsgroenendaal.queuemusicservice.facades
 
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.SpotifyApiClientService
 import nl.tijsgroenendaal.queuemusicservice.commands.CreateSessionCommand
-import nl.tijsgroenendaal.queuemusicservice.entity.QueueMusicSession
+import nl.tijsgroenendaal.queuemusicservice.entity.QueueMusicSessionModel
+import nl.tijsgroenendaal.queuemusicservice.entity.SessionUserModel
 import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
 import nl.tijsgroenendaal.queuemusicservice.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.queuemusicservice.helper.getAuthenticationContextSubject
-import nl.tijsgroenendaal.queuemusicservice.services.SessionService
-import nl.tijsgroenendaal.queuemusicservice.services.UserLinkService
+import nl.tijsgroenendaal.queuemusicservice.services.*
 
 import org.springframework.stereotype.Service
 
 private const val MAX_SECONDS_DURATION = 14400L
 private const val MAX_ACTIVE_SESSION = 1
+private const val MAX_USERS = 50
 
 @Service
 class SessionFacade(
     private val sessionService: SessionService,
     private val userLinkService: UserLinkService,
+    private val deviceLinkService: DeviceLinkService,
+    private val sessionUserService: SessionUserService,
     private val spotifyApiClientService: SpotifyApiClientService
 ) {
 
-    fun createSession(command: CreateSessionCommand): QueueMusicSession {
+    fun createSession(command: CreateSessionCommand): QueueMusicSessionModel {
         val userId = getAuthenticationContextSubject()
+
+        if (command.maxUsers > MAX_USERS)
+            throw BadRequestException(SessionErrorCodes.MAX_USERS_EXCEEDED, "Max users limited by $MAX_USERS, tried ${command.maxUsers}")
 
         if (command.duration * 60 > MAX_SECONDS_DURATION)
             throw BadRequestException(SessionErrorCodes.DURATION_EXCEEDED, "Duration ${command.duration * 60} exceeds max $MAX_SECONDS_DURATION")
@@ -33,7 +39,7 @@ class SessionFacade(
 
         val userLink = userLinkService.findByUserId(userId)
 
-        val sessionCode = QueueMusicSession.generateSessionCode()
+        val sessionCode = QueueMusicSessionModel.generateSessionCode()
 
         val playlist = spotifyApiClientService.createPlaylist(
             userLink,
@@ -44,8 +50,27 @@ class SessionFacade(
             playlist.id,
             sessionCode,
             command.duration,
-            userLink.userModel
+            userLink.userModel,
+            command.maxUsers
         ))
+    }
+
+    fun joinSession(code: String): SessionUserModel {
+        val deviceLink = deviceLinkService.getByUserId(getAuthenticationContextSubject())
+
+        val session = sessionService.findSessionByCode(code)
+
+        if (session.hasJoined(deviceLink.id))
+            throw BadRequestException(SessionErrorCodes.ALREADY_JOINED, "Device ${deviceLink.deviceId} has already joined Session ${session.code} ")
+
+        if (!session.isActive())
+            throw BadRequestException(SessionErrorCodes.SESSION_ENDED, "Session ${session.code} has ended")
+
+        if (!session.hasRoom())
+            throw BadRequestException(SessionErrorCodes.MAX_USERS_EXCEEDED, "Session ${session.code} has reached max users")
+
+
+        return sessionUserService.createNew(deviceLink, session)
     }
 
 }

@@ -12,6 +12,7 @@ class ControllerAdvice {
 
     @ExceptionHandler(value = [BadRequestException::class])
     protected fun handleBadRequestException(exception: BadRequestException): ResponseEntity<ErrorResponse> {
+        log(exception)
         return ResponseEntity.badRequest().body(ErrorResponse(
             HttpStatus.BAD_REQUEST.value().toString(),
             exception.code,
@@ -21,6 +22,7 @@ class ControllerAdvice {
 
     @ExceptionHandler(value = [InvalidJwtException::class])
     protected fun handleUnauthenticatedException(exception: Exception): ResponseEntity<ErrorResponse> {
+        log(exception)
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse(
             HttpStatus.UNAUTHORIZED.value().toString(),
             "Unauthenticated",
@@ -30,6 +32,7 @@ class ControllerAdvice {
 
     @ExceptionHandler(value = [UnAuthorizedException::class])
     protected fun handleUnauthorizedException(exception: UnAuthorizedException): ResponseEntity<ErrorResponse> {
+        log(exception)
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse(
             HttpStatus.FORBIDDEN.value().toString(),
             "Unauthorized",
@@ -39,6 +42,7 @@ class ControllerAdvice {
 
     @ExceptionHandler(value = [AccessTokenExpiredException::class])
     protected fun handleUserLinkAccessTokenExpiredException(exception: AccessTokenExpiredException): ResponseEntity<ErrorResponse> {
+        log(exception)
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse(
             HttpStatus.FORBIDDEN.value().toString(),
             "Unauthorized",
@@ -48,6 +52,7 @@ class ControllerAdvice {
 
     @ExceptionHandler(value = [Exception::class])
     protected fun handleGenericException(exception: Exception): ResponseEntity<ErrorResponse> {
+        log(exception)
         return ResponseEntity.badRequest().body(ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value().toString(),
             "Internal Server Error",
@@ -60,5 +65,9 @@ class ControllerAdvice {
         val code: String,
         val description: String?
     )
+
+    private fun log(exception: Exception) {
+        exception.printStackTrace()
+    }
 
 }

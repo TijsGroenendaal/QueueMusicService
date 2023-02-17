@@ -26,7 +26,7 @@ class WebSecurityConfiguration(
             .and()
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/v1/auth/login")
+                    .requestMatchers("/v1/auth/login/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated()

@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse
 
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
+import org.springframework.util.AntPathMatcher
 import org.springframework.web.filter.OncePerRequestFilter
 
 class JwtRequestFilter(
@@ -20,7 +21,7 @@ class JwtRequestFilter(
 ): OncePerRequestFilter() {
 
     private val excludedUri = arrayOf(
-        "/v1/auth/login"
+        "/v1/auth/login/**"
     )
 
     override fun doFilterInternal(
@@ -45,13 +46,11 @@ class JwtRequestFilter(
         authentication.isAuthenticated = true
 
         SecurityContextHolder.getContext().authentication = authentication
-
-
         filterChain.doFilter(request, response)
     }
 
     override fun shouldNotFilter(request: HttpServletRequest): Boolean {
-        return excludedUri.contains(request.requestURI)
+        return excludedUri.any { AntPathMatcher().match(it, request.requestURI) }
     }
 
     private fun getDeviceIdFromHeader(request: HttpServletRequest): String? {

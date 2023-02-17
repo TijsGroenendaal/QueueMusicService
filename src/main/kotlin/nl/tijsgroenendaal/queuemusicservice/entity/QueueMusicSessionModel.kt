@@ -1,10 +1,7 @@
 package nl.tijsgroenendaal.queuemusicservice.entity
 
+import jakarta.persistence.*
 import nl.tijsgroenendaal.queuemusicservice.services.commands.CreateSessionCommand
-
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.ManyToOne
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -17,7 +14,7 @@ private const val SESSION_CODE_LENGTH = 8
 @Entity(
     name = "queuemusic_session"
 )
-class QueueMusicSession(
+class QueueMusicSessionModel(
     @Id
     val id: UUID,
     @ManyToOne
@@ -27,18 +24,23 @@ class QueueMusicSession(
     val endAt: LocalDateTime,
     val code: String,
     val playListId: String,
+    @Column(name = "maximum_users")
+    val maxUsers: Int,
     val manualEnded: Boolean = false,
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], mappedBy = "session")
+    val sessionUsers: MutableList<SessionUserModel> = mutableListOf()
 ) {
     companion object {
-        fun new(command: CreateSessionCommand): QueueMusicSession {
-            return QueueMusicSession(
+        fun new(command: CreateSessionCommand): QueueMusicSessionModel {
+            return QueueMusicSessionModel(
                 UUID.randomUUID(),
                 command.userModel,
                 command.duration,
                 LocalDateTime.now(ZoneOffset.UTC),
                 LocalDateTime.now(ZoneOffset.UTC).plusMinutes(command.duration),
                 command.code,
-                command.playlistId
+                command.playlistId,
+                command.maxUsers,
             )
         }
 
@@ -55,5 +57,13 @@ class QueueMusicSession(
         if (this.endAt.isBefore(LocalDateTime.now(ZoneOffset.UTC)))
             return false
         return true
+    }
+
+    fun hasRoom(): Boolean {
+        return sessionUsers.size < maxUsers
+    }
+
+    fun hasJoined(id: UUID): Boolean {
+        return sessionUsers.any { it.deviceLink.id == id }
     }
 }

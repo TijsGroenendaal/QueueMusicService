@@ -13,13 +13,13 @@ import java.util.UUID
 @Entity(
     name = "queuemusic_session_uservote"
 )
-class SessionSongUserVote(
+class SessionSongUserVoteModel(
     @Id
     val id: UUID,
     @ManyToOne
-    val userDeviceLink: UserDeviceLink,
+    val userDeviceLink: UserDeviceLinkModel,
     @ManyToOne
-    val song: SessionSong,
+    val song: SessionSongModel,
     @Enumerated(EnumType.STRING)
     val vote: VoteEnum
 )

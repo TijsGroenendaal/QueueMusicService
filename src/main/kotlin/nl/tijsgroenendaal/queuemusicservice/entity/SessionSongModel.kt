@@ -13,13 +13,13 @@ import java.util.UUID
 @Entity(
     name = "queuemusic_session_song"
 )
-class SessionSong(
+class SessionSongModel(
     @Id
     val id: UUID,
     @ManyToOne
-    val deviceLink: UserDeviceLink,
+    val deviceLink: UserDeviceLinkModel,
     @ManyToOne
-    val session: QueueMusicSession,
+    val session: QueueMusicSessionModel,
     val trackId: String?,
     val title: String,
     val album: String,
@@ -30,15 +30,15 @@ class SessionSong(
     companion object {
         fun new(
             command: AddSessionSongCommand
-        ): SessionSong {
-            return SessionSong(
+        ): SessionSongModel {
+            return SessionSongModel(
                 UUID.randomUUID(),
                 command.deviceLink,
                 command.session,
-                "",
-                "",
-                "",
-                "",
+                command.trackId,
+                command.trackName,
+                command.trackAlbum,
+                command.trackArtists,
                 0,
                 LocalDateTime.now(ZoneOffset.UTC)
             )

@@ -1,6 +1,5 @@
 package nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.configuration
 
-import feign.Logger
 import feign.RequestInterceptor
 import feign.RequestTemplate
 
@@ -11,13 +10,6 @@ class SpotifyTokenClientConfiguration {
     @Bean
     fun feignRequestInterceptor(clientIdConfiguration: ClientIdConfiguration) = SpotifyTokenClientRequestInterceptor(clientIdConfiguration)
 
-}
-
-class FeignConfig {
-    @Bean
-    fun feignLoggerLevel(): Logger.Level {
-        return Logger.Level.FULL
-    }
 }
 
 class SpotifyTokenClientRequestInterceptor(

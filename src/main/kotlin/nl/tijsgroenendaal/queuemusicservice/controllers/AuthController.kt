@@ -22,6 +22,13 @@ class AuthController(
         return authFacade.loginLinkUser(code)
     }
 
+    @PostMapping("/login/anonymous")
+    fun loginAnonymous(
+        @RequestParam("deviceId") deviceId: String
+    ): LoginQueryResponse {
+       return authFacade.loginAnonymous(deviceId)
+    }
+
     @PostMapping("/refresh")
     fun refresh(
         @RequestHeader("Authorization") refreshToken: String
@@ -33,5 +40,4 @@ class AuthController(
     fun logout() {
         authFacade.logout()
     }
-
 }
