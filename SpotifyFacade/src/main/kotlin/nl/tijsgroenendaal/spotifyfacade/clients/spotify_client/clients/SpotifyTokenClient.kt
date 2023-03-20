@@ -1,10 +1,10 @@
-package nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.clients
+package nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.clients
 
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.configuration.SpotifyTokenClientConfiguration
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.auth.RefreshedAccessTokenResponseModel
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.configuration.FormEncodedConfiguration
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.auth.AccessTokenResponseModel
-import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.auth.CredentialsTokenResponseModel
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.configuration.FormEncodedConfiguration
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.configuration.SpotifyTokenClientConfiguration
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.auth.AccessTokenResponseModel
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.auth.CredentialsTokenResponseModel
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.auth.RefreshedAccessTokenResponseModel
 
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.MediaType

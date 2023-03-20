@@ -1,0 +1,7 @@
+spring:
+  jpa:
+    generate-ddl: false
+
+clients:
+  spotify-api: https://api.spotify.com
+  account-spotify-api: https://accounts.spotify.com/api/token
