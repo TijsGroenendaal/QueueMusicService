@@ -14,7 +14,7 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-private val MIN_DURATION_TILL_NEXT_SONG = Duration.ofSeconds(900) // 15 minutes
+private const val MIN_DURATION_TILL_NEXT_SONG = 900L // 15 minutes
 
 @Service
 class SessionSongService(
@@ -22,7 +22,7 @@ class SessionSongService(
 ) {
 
     private fun canDeviceCreateSong(deviceLink: UserDeviceLinkModel) {
-        val lowerBoundDateTime = LocalDateTime.now(ZoneOffset.UTC).minus(MIN_DURATION_TILL_NEXT_SONG)
+        val lowerBoundDateTime = LocalDateTime.now(ZoneOffset.UTC).minus(Duration.ofSeconds(MIN_DURATION_TILL_NEXT_SONG))
         val sessionSongCount = sessionSongRepository.countByDeviceLinkIdAndCreatedAtAfter(deviceLink.id, lowerBoundDateTime)
 
         if (sessionSongCount >= 1)
