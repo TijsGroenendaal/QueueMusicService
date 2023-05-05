@@ -1,5 +1,10 @@
 package nl.tijsgroenendaal.queuemusicservice.exceptions
 
+import nl.tijsgroenendaal.qumu.exceptions.AccessTokenExpiredException
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
+import nl.tijsgroenendaal.qumu.exceptions.InvalidJwtException
+import nl.tijsgroenendaal.qumu.exceptions.UnAuthorizedException
+
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice

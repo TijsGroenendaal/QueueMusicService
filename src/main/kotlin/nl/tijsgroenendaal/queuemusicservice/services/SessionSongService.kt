@@ -3,10 +3,10 @@ package nl.tijsgroenendaal.queuemusicservice.services
 import nl.tijsgroenendaal.queuemusicservice.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicservice.entity.SessionSongModel
 import nl.tijsgroenendaal.queuemusicservice.entity.UserDeviceLinkModel
-import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
-import nl.tijsgroenendaal.queuemusicservice.exceptions.SessionErrorCodes
-import nl.tijsgroenendaal.queuemusicservice.exceptions.SessionSongErrorCode
 import nl.tijsgroenendaal.queuemusicservice.repositories.SessionSongRepository
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
+import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
+import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
 
 import org.springframework.stereotype.Service
 

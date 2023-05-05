@@ -6,12 +6,12 @@ import nl.tijsgroenendaal.queuemusicservice.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicservice.commands.AddSessionSongControllerCommand
 import nl.tijsgroenendaal.queuemusicservice.commands.AddSpotifySessionSongCommand
 import nl.tijsgroenendaal.queuemusicservice.entity.SessionSongModel
-import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
-import nl.tijsgroenendaal.queuemusicservice.exceptions.SessionSongErrorCode
 import nl.tijsgroenendaal.queuemusicservice.helper.getAuthenticationContextSubject
 import nl.tijsgroenendaal.queuemusicservice.services.DeviceLinkService
 import nl.tijsgroenendaal.queuemusicservice.services.SessionService
 import nl.tijsgroenendaal.queuemusicservice.services.SessionSongService
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
+import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
 
 import org.springframework.stereotype.Service
 

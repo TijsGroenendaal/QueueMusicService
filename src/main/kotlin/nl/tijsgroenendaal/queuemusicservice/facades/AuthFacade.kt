@@ -2,7 +2,6 @@ package nl.tijsgroenendaal.queuemusicservice.facades
 
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.SpotifyApiClientService
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.SpotifyTokenClientService
-import nl.tijsgroenendaal.queuemusicservice.exceptions.InvalidRefreshJwtException
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil
 import nl.tijsgroenendaal.queuemusicservice.helper.JwtTokenUtil.Companion.JWT_REFRESH_TOKEN_VALIDITY
 import nl.tijsgroenendaal.queuemusicservice.helper.getAuthenticationContextSubject
@@ -12,6 +11,7 @@ import nl.tijsgroenendaal.queuemusicservice.query.responses.LoginQueryResponse
 import nl.tijsgroenendaal.queuemusicservice.security.JwtTypes
 import nl.tijsgroenendaal.queuemusicservice.services.UserRefreshTokenService
 import nl.tijsgroenendaal.queuemusicservice.services.UserService
+import nl.tijsgroenendaal.qumu.exceptions.InvalidRefreshJwtException
 
 import org.springframework.stereotype.Service
 

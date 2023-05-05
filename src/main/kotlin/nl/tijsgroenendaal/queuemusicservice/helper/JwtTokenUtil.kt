@@ -1,12 +1,17 @@
 package nl.tijsgroenendaal.queuemusicservice.helper
 
 import nl.tijsgroenendaal.queuemusicservice.security.JwtTypes
-import nl.tijsgroenendaal.queuemusicservice.exceptions.InvalidJwtException
 import nl.tijsgroenendaal.queuemusicservice.security.model.QueueMusicUserDetails
+import nl.tijsgroenendaal.qumu.exceptions.InvalidJwtException
 
 import jakarta.servlet.http.HttpServletRequest
 
-import io.jsonwebtoken.*
+import io.jsonwebtoken.Claims
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.MalformedJwtException
+import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.SignatureException
+import io.jsonwebtoken.UnsupportedJwtException
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicservice.exceptions
+package nl.tijsgroenendaal.qumu.exceptions
 
 class AccessTokenExpiredException(): Exception()
 class UnAuthorizedException(): Exception()

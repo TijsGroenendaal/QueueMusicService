@@ -1,6 +1,5 @@
 package nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services
 
-import feign.FeignException
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.clients.SpotifyApiClient
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.clients.SpotifyLoginClient
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.commands.CreatePlaylistCommand
@@ -8,8 +7,10 @@ import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.commands.resp
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.track.GetTrackQueryResponse
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.users.GetMeQueryResponse
 import nl.tijsgroenendaal.queuemusicservice.entity.UserLinkModel
-import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
-import nl.tijsgroenendaal.queuemusicservice.exceptions.SessionSongErrorCode
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
+import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
+
+import feign.FeignException
 
 import org.springframework.stereotype.Service
 

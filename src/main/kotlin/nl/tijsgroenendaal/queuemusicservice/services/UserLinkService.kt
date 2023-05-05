@@ -2,11 +2,11 @@ package nl.tijsgroenendaal.queuemusicservice.services
 
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.query.responses.auth.RefreshedAccessTokenResponseModel
 import nl.tijsgroenendaal.queuemusicservice.entity.UserLinkModel
-import nl.tijsgroenendaal.queuemusicservice.exceptions.AccessTokenExpiredException
-import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
-import nl.tijsgroenendaal.queuemusicservice.exceptions.SessionErrorCodes
-import nl.tijsgroenendaal.queuemusicservice.exceptions.UnAuthorizedException
 import nl.tijsgroenendaal.queuemusicservice.repositories.UserLinkRepository
+import nl.tijsgroenendaal.qumu.exceptions.AccessTokenExpiredException
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
+import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
+import nl.tijsgroenendaal.qumu.exceptions.UnAuthorizedException
 
 import jakarta.transaction.Transactional
 

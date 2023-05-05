@@ -8,15 +8,15 @@ import nl.tijsgroenendaal.queuemusicservice.entity.UserModel
 import nl.tijsgroenendaal.queuemusicservice.repositories.UserRepository
 import nl.tijsgroenendaal.queuemusicservice.security.model.Authorities
 import nl.tijsgroenendaal.queuemusicservice.security.model.QueueMusicUserDetails
+import nl.tijsgroenendaal.queuemusicservice.entity.UserDeviceLinkModel
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
+import nl.tijsgroenendaal.qumu.exceptions.UserErrorCodes
 
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 
 import jakarta.transaction.Transactional
-import nl.tijsgroenendaal.queuemusicservice.entity.UserDeviceLinkModel
-import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
-import nl.tijsgroenendaal.queuemusicservice.exceptions.UserErrorCodes
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset

@@ -1,8 +1,8 @@
 package nl.tijsgroenendaal.queuemusicservice.facades
 
 import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.SpotifyTokenClientService
-import nl.tijsgroenendaal.queuemusicservice.exceptions.AccessTokenExpiredException
 import nl.tijsgroenendaal.queuemusicservice.services.UserLinkService
+import nl.tijsgroenendaal.qumu.exceptions.AccessTokenExpiredException
 
 import org.springframework.stereotype.Service
 

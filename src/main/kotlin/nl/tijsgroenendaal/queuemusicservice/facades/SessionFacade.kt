@@ -4,10 +4,10 @@ import nl.tijsgroenendaal.queuemusicservice.clients.spotify_client.services.Spot
 import nl.tijsgroenendaal.queuemusicservice.commands.CreateSessionCommand
 import nl.tijsgroenendaal.queuemusicservice.entity.QueueMusicSessionModel
 import nl.tijsgroenendaal.queuemusicservice.entity.SessionUserModel
-import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
-import nl.tijsgroenendaal.queuemusicservice.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.queuemusicservice.helper.getAuthenticationContextSubject
 import nl.tijsgroenendaal.queuemusicservice.services.*
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
+import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
 
 import org.springframework.stereotype.Service
 

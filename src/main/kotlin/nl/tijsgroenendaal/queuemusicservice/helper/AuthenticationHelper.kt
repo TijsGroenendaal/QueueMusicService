@@ -1,7 +1,7 @@
 package nl.tijsgroenendaal.queuemusicservice.helper
 
-import nl.tijsgroenendaal.queuemusicservice.exceptions.InvalidJwtSubjectException
 import nl.tijsgroenendaal.queuemusicservice.security.model.QueueMusicAuthentication
+import nl.tijsgroenendaal.qumu.exceptions.InvalidJwtSubjectException
 
 import io.jsonwebtoken.Claims
 

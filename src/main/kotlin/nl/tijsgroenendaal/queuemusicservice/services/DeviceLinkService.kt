@@ -1,9 +1,9 @@
 package nl.tijsgroenendaal.queuemusicservice.services
 
 import nl.tijsgroenendaal.queuemusicservice.entity.UserDeviceLinkModel
-import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
-import nl.tijsgroenendaal.queuemusicservice.exceptions.DeviceLinkErrorCodes
 import nl.tijsgroenendaal.queuemusicservice.repositories.UserDeviceLinkRepository
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
+import nl.tijsgroenendaal.qumu.exceptions.DeviceLinkErrorCodes
 
 import org.springframework.stereotype.Service
 

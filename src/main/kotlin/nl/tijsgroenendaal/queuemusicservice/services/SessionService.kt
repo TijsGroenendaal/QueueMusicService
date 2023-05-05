@@ -1,10 +1,10 @@
 package nl.tijsgroenendaal.queuemusicservice.services
 
 import nl.tijsgroenendaal.queuemusicservice.entity.QueueMusicSessionModel
-import nl.tijsgroenendaal.queuemusicservice.exceptions.BadRequestException
-import nl.tijsgroenendaal.queuemusicservice.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.queuemusicservice.repositories.QueueMusicSessionRepository
 import nl.tijsgroenendaal.queuemusicservice.services.commands.CreateSessionCommand
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
+import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
 
 import org.springframework.stereotype.Service
 
