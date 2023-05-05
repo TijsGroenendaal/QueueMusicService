@@ -1,2 +1,0 @@
-clients:
-    spotify-facade-api: ${SPOTIFY_FACADE_API_URL}

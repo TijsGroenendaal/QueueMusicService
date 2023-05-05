@@ -27,6 +27,7 @@ interface SpotifyTokenClient {
         form: Map<String, Any>
     ): AccessTokenResponseModel
 
+
     @PostMapping(consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE])
     fun getCredentialsToken(
         form: Map<String, Any>
