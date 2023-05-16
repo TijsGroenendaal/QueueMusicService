@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.helper
+package nl.tijsgroenendaal.qumusecurity.data
 
 import org.springframework.beans.factory.annotation.Value
 
@@ -8,13 +8,11 @@ import java.util.Base64
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 
-
 class AttributeEncryptor(
     @Value("\${queuemusic.encryption.algorithme}")
     private val algorithme: String,
     @Value("\${queuemusic.encryption.secret}")
     private val secret: String
-
 ): AttributeConverter<String, String>{
 
     private val cipher = Cipher.getInstance(algorithme)

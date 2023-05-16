@@ -1,7 +1,7 @@
-package nl.tijsgroenendaal.queuemusicfacade.security
+package nl.tijsgroenendaal.queuemusicfacade.configuration
 
-import nl.tijsgroenendaal.queuemusicfacade.helper.JwtTokenUtil
-import nl.tijsgroenendaal.queuemusicfacade.services.UserService
+import nl.tijsgroenendaal.qumusecurity.security.JwtRequestFilter
+import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfiguration(
-    private val userService: UserService,
     private val jwtTokenUtil: JwtTokenUtil
 ) {
 
@@ -38,7 +37,9 @@ class WebSecurityConfiguration(
 
     @Bean
     fun getJwtFilter(): JwtRequestFilter {
-        return JwtRequestFilter(userService, jwtTokenUtil)
+        return JwtRequestFilter(
+            jwtTokenUtil,
+            arrayOf("/v1/auth/login/**"))
     }
 
 }

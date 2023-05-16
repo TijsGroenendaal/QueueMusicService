@@ -1,7 +1,7 @@
 package nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.configuration
 
 import nl.tijsgroenendaal.queuemusicfacade.facades.UserLinkFacade
-import nl.tijsgroenendaal.queuemusicfacade.helper.getAuthenticationContextSubject
+import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 
 import feign.RequestInterceptor
 import feign.RequestTemplate

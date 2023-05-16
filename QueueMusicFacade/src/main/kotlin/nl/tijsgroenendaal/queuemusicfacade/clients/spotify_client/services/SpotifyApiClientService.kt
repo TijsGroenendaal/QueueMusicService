@@ -41,7 +41,11 @@ class SpotifyApiClientService(
         return try {
             spotifyLoginClient.getTrack("Bearer $accessCode", songId)
         } catch (e: FeignException) {
-            throw BadRequestException(SessionSongErrorCode.TRACK_NOT_FOUND, "Track $songId not found")
+            if (e.status() == 404 || e.status() == 400) {
+                throw BadRequestException(SessionSongErrorCode.TRACK_NOT_FOUND, "Track $songId not found")
+            } else {
+                throw e
+            }
         }
     }
 

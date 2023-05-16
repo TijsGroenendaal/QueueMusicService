@@ -1,6 +1,6 @@
-package nl.tijsgroenendaal.queuemusicfacade.helper
+package nl.tijsgroenendaal.qumusecurity.security.helper
 
-import nl.tijsgroenendaal.queuemusicfacade.security.model.QueueMusicAuthentication
+import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicAuthentication
 import nl.tijsgroenendaal.qumu.exceptions.InvalidJwtSubjectException
 
 import io.jsonwebtoken.Claims
@@ -14,7 +14,7 @@ fun getAuthenticationContext(): QueueMusicAuthentication =
 
 
 fun getAuthenticationContextSubject(): UUID =
-    getAuthenticationContext().principal.qmId
+    getAuthenticationContext().principal.id
 
 
 fun Claims.getUserIdFromSubject(): UUID {
@@ -28,4 +28,8 @@ fun getUserIdFromSubject(subject: String): UUID {
     } catch (e: IllegalArgumentException) {
         throw InvalidJwtSubjectException(subject)
     }
+}
+
+fun Claims.getDeviceIdFromClaims(): String? {
+    return this["deviceId"] as String?
 }

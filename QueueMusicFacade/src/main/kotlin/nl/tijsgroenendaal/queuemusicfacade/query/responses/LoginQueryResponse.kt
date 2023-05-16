@@ -1,7 +1,8 @@
 package nl.tijsgroenendaal.queuemusicfacade.query.responses
 
+import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil.Companion.JWT_TOKEN_VALIDITY
+
 import com.fasterxml.jackson.annotation.JsonProperty
-import nl.tijsgroenendaal.queuemusicfacade.helper.JwtTokenUtil.Companion.JWT_TOKEN_VALIDITY
 
 data class LoginQueryResponse(
     val jwt: String,

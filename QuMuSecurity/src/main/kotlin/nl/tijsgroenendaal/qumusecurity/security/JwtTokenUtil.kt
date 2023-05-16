@@ -1,8 +1,11 @@
-package nl.tijsgroenendaal.queuemusicfacade.helper
+package nl.tijsgroenendaal.qumusecurity.security
 
-import nl.tijsgroenendaal.queuemusicfacade.security.JwtTypes
-import nl.tijsgroenendaal.queuemusicfacade.security.model.QueueMusicUserDetails
+import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicUserDetails
 import nl.tijsgroenendaal.qumu.exceptions.InvalidJwtException
+import nl.tijsgroenendaal.qumusecurity.security.helper.getDeviceIdFromClaims
+import nl.tijsgroenendaal.qumusecurity.security.helper.getUserIdFromSubject
+import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicAuthentication
+import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicPrincipalAuthentication
 
 import jakarta.servlet.http.HttpServletRequest
 
@@ -14,6 +17,8 @@ import io.jsonwebtoken.SignatureException
 import io.jsonwebtoken.UnsupportedJwtException
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 
 import java.io.Serializable
@@ -29,7 +34,7 @@ class JwtTokenUtil(
     private val refreshSecret: String
 ): Serializable {
 
-    fun getTokenFromRequest(request: HttpServletRequest): Claims {
+    fun getTokenFromRequest(request: HttpServletRequest): QueueMusicAuthentication {
         val authenticationHeader = request.getHeader("Authorization")
 
         if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {
@@ -38,7 +43,8 @@ class JwtTokenUtil(
 
         val jwtType = if (request.requestURI == REFRESH_URI) JwtTypes.REFRESH else JwtTypes.ACCESS
 
-        return parseToken(getTokenFromHeader(authenticationHeader), jwtType)
+        return getAuthenticationFromClaims(parseToken(getTokenFromHeader(authenticationHeader), jwtType))
+            .apply { this.details = WebAuthenticationDetailsSource().buildDetails(request) }
     }
 
     fun getTokenFromHeader(header: String): String {
@@ -69,9 +75,24 @@ class JwtTokenUtil(
         }
     }
 
+    private fun getAuthenticationFromClaims(claims: Claims): QueueMusicAuthentication {
+
+        val authorities = try { claims["authorities"] as Set<GrantedAuthority> }
+            catch (e: Exception) { HashSet() }
+
+        return QueueMusicAuthentication(
+            QueueMusicPrincipalAuthentication(
+                claims.getUserIdFromSubject(),
+                claims.getDeviceIdFromClaims()
+            ),
+            authorities
+        )
+    }
+
     private fun generateAccessToken(userDetails: QueueMusicUserDetails): String {
-        val claims = mapOf<String, Any>(
-            Pair("subs", userDetails.authorities)
+        val claims = mapOf(
+            Pair("authorities", userDetails.authorities),
+            Pair("deviceId", userDetails.deviceId)
         )
         return doGenerateToken(
             claims,
@@ -92,7 +113,7 @@ class JwtTokenUtil(
 
 
     private fun doGenerateToken(
-        claims: Map<String, Any>,
+        claims: Map<String, Any?>,
         subject: String,
         validity: Long,
         secret: String

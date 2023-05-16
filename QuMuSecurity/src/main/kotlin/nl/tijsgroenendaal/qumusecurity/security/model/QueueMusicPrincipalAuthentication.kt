@@ -1,8 +1,8 @@
-package nl.tijsgroenendaal.queuemusicfacade.security.model
+package nl.tijsgroenendaal.qumusecurity.security.model
 
 import java.util.UUID
 
 data class QueueMusicPrincipalAuthentication(
-    val qmId: UUID,
+    val id: UUID,
     val deviceId: String?
 )

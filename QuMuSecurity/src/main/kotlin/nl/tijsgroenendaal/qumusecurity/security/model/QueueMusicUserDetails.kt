@@ -1,14 +1,12 @@
-package nl.tijsgroenendaal.queuemusicfacade.security.model
-
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
+package nl.tijsgroenendaal.qumusecurity.security.model
 
 import org.springframework.security.core.userdetails.UserDetails
 
-import java.time.LocalDateTime
-import java.time.ZoneOffset
+import java.util.UUID
 
 class QueueMusicUserDetails(
-    val userModel: UserModel,
+    val id: UUID,
+    val deviceId: String?,
     val authorities: Set<Authorities>
 ): UserDetails {
 
@@ -21,7 +19,7 @@ class QueueMusicUserDetails(
     }
 
     override fun getUsername(): String {
-        return userModel.id.toString()
+        return id.toString()
     }
 
     override fun isAccountNonExpired(): Boolean {
@@ -33,12 +31,6 @@ class QueueMusicUserDetails(
     }
 
     override fun isCredentialsNonExpired(): Boolean {
-        if (userModel.userLink == null) return false
-
-        if (userModel.userLink!!.linkAccessToken != null &&
-            userModel.userLink!!.linkExpireTime.isBefore(LocalDateTime.now(ZoneOffset.UTC)))
-            return true
-
         return false
     }
 

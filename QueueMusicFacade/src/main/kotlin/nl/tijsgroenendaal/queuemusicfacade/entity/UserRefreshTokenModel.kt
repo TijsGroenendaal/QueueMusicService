@@ -1,7 +1,12 @@
 package nl.tijsgroenendaal.queuemusicfacade.entity
 
-import jakarta.persistence.*
-import nl.tijsgroenendaal.queuemusicfacade.helper.AttributeEncryptor
+import nl.tijsgroenendaal.qumusecurity.data.AttributeEncryptor
+
+import jakarta.persistence.Column
+import jakarta.persistence.Convert
+import jakarta.persistence.Id
+import jakarta.persistence.OneToOne
+import jakarta.persistence.Entity
 
 import java.time.LocalDateTime
 import java.util.UUID

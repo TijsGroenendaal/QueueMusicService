@@ -2,15 +2,15 @@ package nl.tijsgroenendaal.queuemusicfacade.services
 
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.query.responses.auth.AccessTokenResponseModel
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.query.responses.users.GetMeQueryResponse
-import nl.tijsgroenendaal.queuemusicfacade.helper.getUserIdFromSubject
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserLinkModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
 import nl.tijsgroenendaal.queuemusicfacade.repositories.UserRepository
-import nl.tijsgroenendaal.queuemusicfacade.security.model.Authorities
-import nl.tijsgroenendaal.queuemusicfacade.security.model.QueueMusicUserDetails
+import nl.tijsgroenendaal.qumusecurity.security.model.Authorities
+import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicUserDetails
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserDeviceLinkModel
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.UserErrorCodes
+import nl.tijsgroenendaal.qumusecurity.security.helper.getUserIdFromSubject
 
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -39,7 +39,7 @@ class UserService(
             authorities.add(Authorities.SPOTIFY)
         }
 
-        return QueueMusicUserDetails(user, authorities.toSet())
+        return QueueMusicUserDetails(user.id, user.userDeviceLink?.deviceId, authorities.toSet())
     }
 
     fun findById(id: UUID): UserModel {

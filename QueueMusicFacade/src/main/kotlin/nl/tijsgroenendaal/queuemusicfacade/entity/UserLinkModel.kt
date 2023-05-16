@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.queuemusicfacade.entity
 
-import nl.tijsgroenendaal.queuemusicfacade.helper.AttributeEncryptor
+import nl.tijsgroenendaal.qumusecurity.data.AttributeEncryptor
 
 import jakarta.persistence.Column
 import jakarta.persistence.Convert
