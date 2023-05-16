@@ -16,5 +16,5 @@ data class GetTrackQueryResponseAlbum(
 )
 
 fun List<GetTrackQueryResponseArtist>.concatArtistNames(): String {
-    return this.fold("") { sum, item -> "$sum, $item" }
+    return this.joinToString(", ") { it.name }
 }
