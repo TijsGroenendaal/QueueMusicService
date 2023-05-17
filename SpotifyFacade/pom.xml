@@ -53,6 +53,18 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>nl.tijsgroenendaal</groupId>
+            <artifactId>QuMu</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>nl.tijsgroenendaal</groupId>
+            <artifactId>QuMuSecurity</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- Kotlin Dependencies -->
 
         <dependency>

@@ -85,6 +85,14 @@ class UserService(
         return userRepository.save(persistentUser)
     }
 
+    fun logout(userId: UUID) {
+        val user = findById(userId).apply {
+            this.userRefreshToken = null
+        }
+
+        save(user)
+    }
+
     @Transactional
     fun save(userModel: UserModel): UserModel = userRepository.save(userModel)
 }

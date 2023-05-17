@@ -15,6 +15,7 @@ import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.SignatureException
 import io.jsonwebtoken.UnsupportedJwtException
+import nl.tijsgroenendaal.qumusecurity.security.model.Authorities
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.GrantedAuthority
@@ -77,13 +78,14 @@ class JwtTokenUtil(
 
     private fun getAuthenticationFromClaims(claims: Claims): QueueMusicAuthentication {
 
-        val authorities = try { claims["authorities"] as Set<GrantedAuthority> }
+        val authorities = try { claims["authorities"] as Set<Authorities> }
             catch (e: Exception) { HashSet() }
 
         return QueueMusicAuthentication(
             QueueMusicPrincipalAuthentication(
                 claims.getUserIdFromSubject(),
-                claims.getDeviceIdFromClaims()
+                claims.getDeviceIdFromClaims(),
+                authorities
             ),
             authorities
         )

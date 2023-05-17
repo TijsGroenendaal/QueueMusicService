@@ -1,7 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.configuration
-
-import nl.tijsgroenendaal.qumusecurity.security.JwtRequestFilter
-import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil
+package nl.tijsgroenendaal.qumusecurity.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -17,6 +14,8 @@ class WebSecurityConfiguration(
     private val jwtTokenUtil: JwtTokenUtil
 ) {
 
+    private val excludedUri = arrayOf("/v1/auth/login/**")
+
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
@@ -25,7 +24,7 @@ class WebSecurityConfiguration(
             .and()
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/v1/auth/login/**")
+                    .requestMatchers(*excludedUri)
                     .permitAll()
                     .anyRequest()
                     .authenticated()
@@ -39,7 +38,7 @@ class WebSecurityConfiguration(
     fun getJwtFilter(): JwtRequestFilter {
         return JwtRequestFilter(
             jwtTokenUtil,
-            arrayOf("/v1/auth/login/**"))
+            excludedUri)
     }
 
 }

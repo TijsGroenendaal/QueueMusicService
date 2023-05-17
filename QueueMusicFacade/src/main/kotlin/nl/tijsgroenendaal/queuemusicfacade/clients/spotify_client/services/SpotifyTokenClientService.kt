@@ -22,7 +22,6 @@ class SpotifyTokenClientService(
     fun getRefreshedAccessToken(refreshToken: String): RefreshedAccessTokenResponseModel =
         spotifyTokenClient.getRefreshAccessToken(RefreshTokenQuery(refreshToken).toForm())
 
-    @Cacheable("credentials-access-token")
     fun getCredentialsAccessToken(): CredentialsTokenResponseModel =
         spotifyTokenClient.getCredentialsToken(CredentialsTokenQuery().toForm())
 

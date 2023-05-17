@@ -10,6 +10,16 @@ enum class UserErrorCodes(
     }
 }
 
+enum class UserLinkErrorCodes(
+    private val code: String
+): ErrorCode {
+    USER_LINK_NOT_FOUND("USLK0001");
+
+    override fun getCode(): String {
+        return this.code
+    }
+}
+
 enum class SessionErrorCodes(
     private val code: String
 ): ErrorCode {

@@ -2,6 +2,7 @@ package nl.tijsgroenendaal.queuemusicfacade.facades
 
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.services.SpotifyApiClientService
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.services.SpotifyTokenClientService
+import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.FacadeUserLinkService
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserRefreshTokenModel
 import nl.tijsgroenendaal.queuemusicfacade.query.responses.LoginQueryResponse
@@ -25,6 +26,7 @@ class AuthFacade(
     private val userRefreshTokenService: UserRefreshTokenService,
     private val spotifyTokenClientService: SpotifyTokenClientService,
     private val spotifyApiClientService: SpotifyApiClientService,
+    private val facadeUserLinkService: FacadeUserLinkService
 ) {
 
     fun loginLinkUser(code: String): LoginQueryResponse {
@@ -53,15 +55,8 @@ class AuthFacade(
     }
 
     fun logout() {
-        val user = userService
-            .findById(getAuthenticationContextSubject())
-            .apply {
-                this.userRefreshToken = null
-                this.userLink?.linkAccessToken = null
-                this.userLink?.linkRefreshToken = null
-            }
-
-        userService.save(user)
+        userService.logout(getAuthenticationContextSubject())
+        facadeUserLinkService.logout()
     }
 
     private fun createNewAccessTokens(userModel: UserModel): LoginQueryResponse {

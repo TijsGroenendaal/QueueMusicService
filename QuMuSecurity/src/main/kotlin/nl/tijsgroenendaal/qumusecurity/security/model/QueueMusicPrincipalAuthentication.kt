@@ -4,5 +4,6 @@ import java.util.UUID
 
 data class QueueMusicPrincipalAuthentication(
     val id: UUID,
-    val deviceId: String?
+    val deviceId: String?,
+    val authorities: Set<Authorities>,
 )
