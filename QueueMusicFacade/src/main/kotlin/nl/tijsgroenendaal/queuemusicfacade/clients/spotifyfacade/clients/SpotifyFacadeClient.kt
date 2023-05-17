@@ -1,8 +1,14 @@
 package nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.clients
 
+import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.query.responses.GetUserLinkByUserIdQueryResponse
 import nl.tijsgroenendaal.qumusecurity.feign.QuMuFeignConfiguration
+
 import org.springframework.cloud.openfeign.FeignClient
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+
+import java.util.UUID
 
 @FeignClient(
     url = "\${clients.spotify-facade}",
@@ -11,7 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping
 )
 interface SpotifyFacadeClient {
 
-    @PostMapping("/v1/user-link/logout")
+    @PostMapping("/v1/auth/logout")
     fun logout()
 
+    @GetMapping("/v1/user-link/user/{userId}")
+    fun getByUserId(@PathVariable userId: UUID): GetUserLinkByUserIdQueryResponse
 }

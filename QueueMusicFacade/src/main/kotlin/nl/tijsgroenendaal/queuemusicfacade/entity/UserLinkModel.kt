@@ -28,19 +28,4 @@ class UserLinkModel(
     @Convert(converter = AttributeEncryptor::class)
     var linkAccessToken: String?,
     var linkExpireTime: LocalDateTime
-) {
-    constructor(
-        userModel: UserModel,
-        linkId: String,
-        linkRefreshToken: String?,
-        linkAccessToken: String?,
-        linkExpireTime: LocalDateTime
-    ) : this(
-        UUID.randomUUID(),
-        userModel,
-        linkId,
-        linkRefreshToken,
-        linkAccessToken,
-        linkExpireTime
-    )
-}
+)

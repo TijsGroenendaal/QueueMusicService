@@ -18,7 +18,6 @@ import io.jsonwebtoken.UnsupportedJwtException
 import nl.tijsgroenendaal.qumusecurity.security.model.Authorities
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 
@@ -35,7 +34,7 @@ class JwtTokenUtil(
     private val refreshSecret: String
 ): Serializable {
 
-    fun getTokenFromRequest(request: HttpServletRequest): QueueMusicAuthentication {
+    fun getAuthenticationFromRequest(request: HttpServletRequest): QueueMusicAuthentication {
         val authenticationHeader = request.getHeader("Authorization")
 
         if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {
@@ -45,7 +44,8 @@ class JwtTokenUtil(
         val jwtType = if (request.requestURI == REFRESH_URI) JwtTypes.REFRESH else JwtTypes.ACCESS
 
         return getAuthenticationFromClaims(parseToken(getTokenFromHeader(authenticationHeader), jwtType))
-            .apply { this.details = WebAuthenticationDetailsSource().buildDetails(request) }
+            .apply { this.details = WebAuthenticationDetailsSource().buildDetails(request)
+            this.isAuthenticated = true}
     }
 
     fun getTokenFromHeader(header: String): String {

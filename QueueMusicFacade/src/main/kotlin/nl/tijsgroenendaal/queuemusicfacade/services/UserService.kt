@@ -1,46 +1,21 @@
 package nl.tijsgroenendaal.queuemusicfacade.services
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.query.responses.auth.AccessTokenResponseModel
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.query.responses.users.GetMeQueryResponse
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserLinkModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
 import nl.tijsgroenendaal.queuemusicfacade.repositories.UserRepository
-import nl.tijsgroenendaal.qumusecurity.security.model.Authorities
-import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicUserDetails
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserDeviceLinkModel
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.UserErrorCodes
-import nl.tijsgroenendaal.qumusecurity.security.helper.getUserIdFromSubject
 
-import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 
 import jakarta.transaction.Transactional
 
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.UUID
 
 @Service
 class UserService(
     private val userRepository: UserRepository
-): UserDetailsService {
-
-    override fun loadUserByUsername(username: String): UserDetails {
-        return findUserDetailsById(getUserIdFromSubject(username))
-    }
-
-    fun findUserDetailsById(id: UUID): QueueMusicUserDetails {
-        val user = findById(id)
-
-        val authorities = mutableListOf(Authorities.REFRESH)
-        if (user.userLink != null) {
-            authorities.add(Authorities.SPOTIFY)
-        }
-
-        return QueueMusicUserDetails(user.id, user.userDeviceLink?.deviceId, authorities.toSet())
-    }
+) {
 
     fun findById(id: UUID): UserModel {
         return userRepository
@@ -53,31 +28,19 @@ class UserService(
 
     @Transactional
     fun createUser(
-        linkUser: GetMeQueryResponse,
-        accessToken: AccessTokenResponseModel
+        userId: UUID,
     ): UserModel {
-        val persistentUser = userRepository
-            .findByUserLinkLinkId(linkUser.id)
-            .let {
-                it ?: UserModel()
-            }.apply {
-                this.userLink = UserLinkModel(
-                    this,
-                    linkUser.id,
-                    accessToken.refreshToken,
-                    accessToken.accessToken,
-                    LocalDateTime.now(ZoneOffset.UTC).plusSeconds(accessToken.expiresIn)
-                )
-            }
+        val persistentUser = userRepository.findById(userId)
+        if (persistentUser.isEmpty) return userRepository.save(UserModel(userId))
 
-        return userRepository.save(persistentUser)
+        return persistentUser.get()
     }
 
     fun createAnonymousUser(deviceId: String): UserModel {
         val persistentUser = userRepository
             .findByUserDeviceLinkDeviceId(deviceId)
             .let {
-                it ?: UserModel().apply {
+                it ?: UserModel(UUID.randomUUID()).apply {
                     this.userDeviceLink = UserDeviceLinkModel.new(deviceId, this)
                 }
             }

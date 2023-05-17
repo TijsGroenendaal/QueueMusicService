@@ -22,13 +22,6 @@ class SpotifyApiClientService(
     private val spotifyLoginClient: SpotifyLoginClient
 ) {
 
-    /**
-     * Use this when you have no AuthenticationContext configured
-     */
-    fun getMe(accessCode: String): GetMeQueryResponse {
-        return spotifyLoginClient.getMeWithAccessToken("Bearer $accessCode")
-    }
-
     fun getMe(): GetMeQueryResponse {
         return spotifyApiClient.getMe()
     }

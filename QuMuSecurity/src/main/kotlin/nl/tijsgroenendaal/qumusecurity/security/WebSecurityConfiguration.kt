@@ -14,8 +14,6 @@ class WebSecurityConfiguration(
     private val jwtTokenUtil: JwtTokenUtil
 ) {
 
-    private val excludedUri = arrayOf("/v1/auth/login/**")
-
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
@@ -24,7 +22,7 @@ class WebSecurityConfiguration(
             .and()
             .authorizeHttpRequests {
                 it
-                    .requestMatchers(*excludedUri)
+                    .requestMatchers("/v1/auth/login/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated()
@@ -38,7 +36,7 @@ class WebSecurityConfiguration(
     fun getJwtFilter(): JwtRequestFilter {
         return JwtRequestFilter(
             jwtTokenUtil,
-            excludedUri)
+            arrayOf("/v1/auth/login/**"))
     }
 
 }

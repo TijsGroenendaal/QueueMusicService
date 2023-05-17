@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.spotifyfacade.entity;
+package nl.tijsgroenendaal.spotifyfacade.entity
 
 import nl.tijsgroenendaal.qumusecurity.data.AttributeEncryptor
 
@@ -6,7 +6,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import jakarta.persistence.OneToOne
 
 import java.time.LocalDateTime
 import java.util.UUID
@@ -29,14 +28,13 @@ class UserLinkModel(
     var linkExpireTime: LocalDateTime
 ) {
     constructor(
-        userId: UUID,
         linkId: String,
         linkRefreshToken: String?,
         linkAccessToken: String?,
         linkExpireTime: LocalDateTime
     ) : this(
         UUID.randomUUID(),
-        userId,
+        UUID.randomUUID(),
         linkId,
         linkRefreshToken,
         linkAccessToken,

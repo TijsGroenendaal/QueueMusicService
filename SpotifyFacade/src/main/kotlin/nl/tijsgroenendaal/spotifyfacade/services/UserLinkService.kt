@@ -34,4 +34,19 @@ class UserLinkService(
             return
         }
     }
+
+    fun findByLinkId(linkId: String): UserLinkModel {
+        return userLinkRepository.findByLinkId(linkId) ?: throw BadRequestException(UserLinkErrorCodes.USER_LINK_NOT_FOUND, "UserLink $linkId not found")
+    }
+
+    fun create(accessToken: String, refreshToken: String, expiresIn: Long, id: String): UserLinkModel {
+        val userLink = UserLinkModel(
+            id,
+            refreshToken,
+            accessToken,
+            LocalDateTime.now(ZoneOffset.UTC).plusSeconds(expiresIn)
+        )
+
+        return userLinkRepository.save(userLink)
+    }
 }

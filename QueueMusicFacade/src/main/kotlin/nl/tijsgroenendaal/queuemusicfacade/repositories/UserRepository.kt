@@ -10,6 +10,5 @@ import java.util.UUID
 @Repository
 interface UserRepository: JpaRepository<UserModel, UUID> {
 
-    fun findByUserLinkLinkId(userLinkLinkId: String): UserModel?
     fun findByUserDeviceLinkDeviceId(userDeviceLinkDeviceId: String): UserModel?
 }

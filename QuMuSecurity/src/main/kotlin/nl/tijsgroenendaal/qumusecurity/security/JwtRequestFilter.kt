@@ -18,9 +18,7 @@ class JwtRequestFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authentication = jwtTokenUtil.getTokenFromRequest(request)
-
-        authentication.isAuthenticated = true
+        val authentication = jwtTokenUtil.getAuthenticationFromRequest(request)
 
         SecurityContextHolder.getContext().authentication = authentication
         filterChain.doFilter(request, response)

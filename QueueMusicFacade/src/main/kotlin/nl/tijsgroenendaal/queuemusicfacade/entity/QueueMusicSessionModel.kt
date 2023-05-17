@@ -54,9 +54,7 @@ class QueueMusicSessionModel(
     fun isActive(): Boolean {
         if (this.manualEnded)
             return false
-        if (this.endAt.isBefore(LocalDateTime.now(ZoneOffset.UTC)))
-            return false
-        return true
+        return !this.endAt.isBefore(LocalDateTime.now(ZoneOffset.UTC))
     }
 
     fun hasRoom(): Boolean {

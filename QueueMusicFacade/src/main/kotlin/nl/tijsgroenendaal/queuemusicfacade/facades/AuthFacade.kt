@@ -1,9 +1,6 @@
 package nl.tijsgroenendaal.queuemusicfacade.facades
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.services.SpotifyApiClientService
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.services.SpotifyTokenClientService
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.FacadeUserLinkService
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserRefreshTokenModel
 import nl.tijsgroenendaal.queuemusicfacade.query.responses.LoginQueryResponse
 import nl.tijsgroenendaal.queuemusicfacade.services.UserRefreshTokenService
@@ -13,36 +10,39 @@ import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil
 import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil.Companion.JWT_REFRESH_TOKEN_VALIDITY
 import nl.tijsgroenendaal.qumusecurity.security.JwtTypes
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
+import nl.tijsgroenendaal.qumusecurity.security.model.Authorities
+import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicAuthentication
+import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicPrincipalAuthentication
+import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicUserDetails
 
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.UUID
 
 @Service
 class AuthFacade(
     private val jwtTokenUtil: JwtTokenUtil,
     private val userService: UserService,
     private val userRefreshTokenService: UserRefreshTokenService,
-    private val spotifyTokenClientService: SpotifyTokenClientService,
-    private val spotifyApiClientService: SpotifyApiClientService,
     private val facadeUserLinkService: FacadeUserLinkService
 ) {
 
     fun loginLinkUser(code: String): LoginQueryResponse {
-        val accessToken = spotifyTokenClientService.getAccessToken(code)
-        val linkUser = spotifyApiClientService.getMe(accessToken.accessToken)
+        val userId = facadeUserLinkService.login(code)
 
-        val user = userService.createUser(linkUser, accessToken)
+        val user = userService.createUser(userId)
         val userModel = userService.findById(user.id)
 
-        return createNewAccessTokens(userModel)
+        return createNewAccessTokens(userModel.id)
     }
 
     fun loginAnonymous(deviceId: String): LoginQueryResponse {
         val userModel = userService.createAnonymousUser(deviceId)
 
-        return createNewAccessTokens(userModel)
+        return createNewAccessTokens(userModel.id)
     }
 
     fun refresh(refreshToken: String): LoginQueryResponse {
@@ -51,7 +51,7 @@ class AuthFacade(
         if (userModel.userRefreshToken?.refreshToken != jwtTokenUtil.getTokenFromHeader(refreshToken))
             throw InvalidRefreshJwtException()
 
-        return createNewAccessTokens(userModel)
+        return createNewAccessTokens(userModel.id)
     }
 
     fun logout() {
@@ -59,8 +59,25 @@ class AuthFacade(
         facadeUserLinkService.logout()
     }
 
-    private fun createNewAccessTokens(userModel: UserModel): LoginQueryResponse {
-        val userDetails = userService.findUserDetailsById(userModel.id)
+    private fun createNewAccessTokens(userId: UUID): LoginQueryResponse {
+        val userModel = userService.findById(userId)
+        SecurityContextHolder.getContext().authentication = QueueMusicAuthentication(
+            QueueMusicPrincipalAuthentication(
+                userModel.id,
+                null,
+                emptySet()
+            ),
+            emptySet()
+        )
+
+        val userLink = facadeUserLinkService.getByUserId(userModel.id)
+
+        val authorities = mutableListOf(Authorities.REFRESH)
+        if (userLink != null) {
+            authorities.add(Authorities.SPOTIFY)
+        }
+
+        val userDetails = QueueMusicUserDetails(userModel.id, userModel.userDeviceLink?.deviceId, authorities.toSet())
 
         if (userModel.userRefreshToken == null) {
             userModel.userRefreshToken = UserRefreshTokenModel(

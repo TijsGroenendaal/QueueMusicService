@@ -19,7 +19,7 @@ class UserDeviceLinkModel(
     val userModel: UserModel,
 ) {
     companion object {
-        fun new(deviceId: String, userModel: UserModel): UserDeviceLinkModel? {
+        fun new(deviceId: String, userModel: UserModel): UserDeviceLinkModel {
             return UserDeviceLinkModel(
                 UUID.randomUUID(),
                 deviceId,

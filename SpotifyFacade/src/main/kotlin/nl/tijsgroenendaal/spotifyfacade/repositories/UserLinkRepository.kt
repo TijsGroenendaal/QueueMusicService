@@ -12,4 +12,6 @@ interface UserLinkRepository: JpaRepository<UserLinkModel, UUID> {
 
     fun findByUserModelId(userId: UUID): UserLinkModel?
 
+    fun findByLinkId(linkId: String): UserLinkModel?
+
 }

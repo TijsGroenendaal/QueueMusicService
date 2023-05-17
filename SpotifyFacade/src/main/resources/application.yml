@@ -2,6 +2,10 @@ spring:
   profiles:
     active: local
 
+clients:
+  spotify-api: https://api.spotify.com
+  account-spotify-api: https://accounts.spotify.com/api/token
+
 queuemusic:
   encryption:
     algorithme: ${QUEUEMUSIC_ENCRYPTION_ALGORITHME}
