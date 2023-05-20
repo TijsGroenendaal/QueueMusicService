@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.query
+package nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query
 
 data class RefreshTokenQuery(
     val refreshToken: String,

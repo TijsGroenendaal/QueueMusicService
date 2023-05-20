@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.commands
+package nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands
 
 data class CreatePlaylistCommand(
     val name: String,

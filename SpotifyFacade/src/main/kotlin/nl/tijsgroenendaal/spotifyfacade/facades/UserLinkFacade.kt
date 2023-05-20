@@ -1,8 +1,8 @@
-package nl.tijsgroenendaal.queuemusicfacade.facades
+package nl.tijsgroenendaal.spotifyfacade.facades
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.services.SpotifyTokenClientService
-import nl.tijsgroenendaal.queuemusicfacade.services.UserLinkService
 import nl.tijsgroenendaal.qumu.exceptions.AccessTokenExpiredException
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.services.SpotifyTokenClientService
+import nl.tijsgroenendaal.spotifyfacade.services.UserLinkService
 
 import org.springframework.stereotype.Service
 
@@ -10,7 +10,7 @@ import java.util.UUID
 
 @Service
 class UserLinkFacade(
-    private val spotifyTokenService: SpotifyTokenClientService,
+    private val spotifyTokenClientService: SpotifyTokenClientService,
     private val spotifyLinkService: UserLinkService
 ) {
 
@@ -20,10 +20,9 @@ class UserLinkFacade(
         } catch (e: AccessTokenExpiredException) {
             val refreshToken = spotifyLinkService.getRefreshToken(userId)
 
-            val refreshedToken = spotifyTokenService.getRefreshedAccessToken(refreshToken)
-            spotifyLinkService.updateLink(userId, refreshedToken)
-            refreshedToken.accessToken
+            val refreshedToken = spotifyTokenClientService.getRefreshedAccessToken(refreshToken)
+            spotifyLinkService.update(userId, refreshedToken)
+            return refreshedToken.accessToken
         }
     }
-
 }

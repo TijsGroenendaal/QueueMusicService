@@ -1,6 +1,7 @@
 package nl.tijsgroenendaal.qumu.exceptions
 
 class AccessTokenExpiredException : Exception()
+class RefreshTokenExpiredException: Exception()
 class UnAuthorizedException : Exception()
 open class InvalidJwtException : Exception()
 class InvalidJwtSubjectException(val id: String): InvalidJwtException()

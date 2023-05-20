@@ -1,7 +1,7 @@
 package nl.tijsgroenendaal.queuemusicfacade.facades
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.facade.SpotifyFacade
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.query.responses.track.concatArtistNames
+import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.query.responses.concatArtistNames
+import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.SpotifyService
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongControllerCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSpotifySessionSongCommand
@@ -21,12 +21,12 @@ import java.util.UUID
 class SessionSongFacade(
     private val sessionSongService: SessionSongService,
     private val sessionService: SessionService,
-    private val spotifyFacade: SpotifyFacade,
+    private val spotifyService: SpotifyService,
     private val deviceLinkService: DeviceLinkService
 ) {
 
     fun addSpotifySessionSong(command: AddSpotifySessionSongCommand, sessionId: UUID): SessionSongModel {
-        val track = spotifyFacade.getTrack(command.songId)
+        val track = spotifyService.getTrack(command.songId)
 
         return createSessionSong(AddSessionSongCommand(
             deviceLinkService.getByUserId(getAuthenticationContextSubject()),

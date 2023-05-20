@@ -35,6 +35,9 @@ class JwtTokenUtil(
 ): Serializable {
 
     fun getAuthenticationFromRequest(request: HttpServletRequest): QueueMusicAuthentication {
+
+
+
         val authenticationHeader = request.getHeader("Authorization")
 
         if (authenticationHeader == null || !authenticationHeader.startsWith("Bearer ")) {

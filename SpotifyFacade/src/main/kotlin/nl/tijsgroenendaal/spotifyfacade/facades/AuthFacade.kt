@@ -20,7 +20,10 @@ class AuthFacade(
         val linkUser = spotifyApiClientService.getMe(accessToken.accessToken)
 
         return try {
-            userLinkService.findByLinkId(linkUser.id)
+            val userLink = userLinkService.findByLinkId(linkUser.id)
+            userLinkService.update(userLink, accessToken)
+
+            return userLink
         } catch (e: BadRequestException) {
             userLinkService.create(accessToken.accessToken, accessToken.refreshToken, accessToken.expiresIn, linkUser.id)
         }

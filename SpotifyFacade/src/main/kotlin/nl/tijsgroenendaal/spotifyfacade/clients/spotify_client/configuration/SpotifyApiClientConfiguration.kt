@@ -1,7 +1,7 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.configuration
+package nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.configuration
 
-import nl.tijsgroenendaal.queuemusicfacade.facades.UserLinkFacade
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
+import nl.tijsgroenendaal.spotifyfacade.facades.UserLinkFacade
 
 import feign.RequestInterceptor
 import feign.RequestTemplate
@@ -17,11 +17,10 @@ class SpotifyApiClientConfiguration {
 
 class SpotifyApiClientRequestInterceptor(
     private val userLinkFacade: UserLinkFacade
-) : RequestInterceptor {
+): RequestInterceptor {
 
-    override fun apply(requestTemplate: RequestTemplate) {
+    override fun apply(template: RequestTemplate) {
         val accessToken = userLinkFacade.getAccessToken(getAuthenticationContextSubject())
-
-        requestTemplate.header("Authorization", "Bearer $accessToken")
+        template.header("Authorization", "Bearer $accessToken")
     }
 }

@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.query.responses.auth
+package nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.auth
 
 import com.fasterxml.jackson.annotation.JsonAlias
 

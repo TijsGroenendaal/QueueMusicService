@@ -1,13 +1,10 @@
 package nl.tijsgroenendaal.queuemusicfacade.facades
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.services.SpotifyApiClientService
+import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.SpotifyService
 import nl.tijsgroenendaal.queuemusicfacade.commands.CreateSessionCommand
 import nl.tijsgroenendaal.queuemusicfacade.entity.QueueMusicSessionModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionUserModel
-import nl.tijsgroenendaal.queuemusicfacade.services.DeviceLinkService
-import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
-import nl.tijsgroenendaal.queuemusicfacade.services.SessionUserService
-import nl.tijsgroenendaal.queuemusicfacade.services.UserLinkService
+import nl.tijsgroenendaal.queuemusicfacade.services.*
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
@@ -21,10 +18,10 @@ private const val MAX_USERS = 50
 @Service
 class SessionFacade(
     private val sessionService: SessionService,
-    private val userLinkService: UserLinkService,
     private val deviceLinkService: DeviceLinkService,
     private val sessionUserService: SessionUserService,
-    private val spotifyApiClientService: SpotifyApiClientService
+    private val spotifyService: SpotifyService,
+    private val userService: UserService
 ) {
 
     fun createSession(command: CreateSessionCommand): QueueMusicSessionModel {
@@ -40,20 +37,17 @@ class SessionFacade(
         if (activeSessions >= MAX_ACTIVE_SESSION)
             throw BadRequestException(SessionErrorCodes.HOSTING_SESSIONS_EXCEEDED, "Max active sessions ($activeSessions) reached for user $userId")
 
-        val userLink = userLinkService.findByUserId(userId)
-
         val sessionCode = QueueMusicSessionModel.generateSessionCode()
 
-        val playlist = spotifyApiClientService.createPlaylist(
-            userLink,
-            sessionCode
-        )
+        val playlist = spotifyService.createPlaylist(sessionCode)
+
+        val user = userService.findById(userId)
 
         return sessionService.createSession(nl.tijsgroenendaal.queuemusicfacade.services.commands.CreateSessionCommand(
             playlist.id,
             sessionCode,
             command.duration,
-            userLink.userModel,
+            user,
             command.maxUsers
         ))
     }

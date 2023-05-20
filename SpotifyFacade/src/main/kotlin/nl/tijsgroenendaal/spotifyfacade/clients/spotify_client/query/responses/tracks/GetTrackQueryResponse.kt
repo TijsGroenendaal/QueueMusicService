@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.spotify_client.query.responses.track
+package nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.tracks
 
 data class GetTrackQueryResponse(
     val id: String,
@@ -14,7 +14,3 @@ data class GetTrackQueryResponseArtist(
 data class GetTrackQueryResponseAlbum(
     val name: String
 )
-
-fun List<GetTrackQueryResponseArtist>.concatArtistNames(): String {
-    return this.joinToString(", ") { it.name }
-}

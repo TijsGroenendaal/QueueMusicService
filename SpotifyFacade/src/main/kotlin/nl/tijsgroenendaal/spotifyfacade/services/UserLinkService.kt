@@ -2,6 +2,8 @@ package nl.tijsgroenendaal.spotifyfacade.services
 
 import nl.tijsgroenendaal.qumu.exceptions.*
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.auth.AccessTokenResponseModel
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.auth.RefreshedAccessTokenResponseModel
 import nl.tijsgroenendaal.spotifyfacade.entity.UserLinkModel
 import nl.tijsgroenendaal.spotifyfacade.repositories.UserLinkRepository
 
@@ -49,4 +51,45 @@ class UserLinkService(
 
         return userLinkRepository.save(userLink)
     }
+
+    @Throws(AccessTokenExpiredException::class)
+    fun getAccessToken(userId: UUID): String {
+        val userLink = findByUserId(userId)
+
+        if (userLink.linkAccessToken == null || userLink.linkExpireTime.isBefore(LocalDateTime.now(ZoneOffset.UTC))) {
+            throw AccessTokenExpiredException()
+        }
+
+        // Smart cast not possible due to mutability of attribute
+        return userLink.linkAccessToken!!
+    }
+
+    fun getRefreshToken(userId: UUID): String {
+        val userLink = findByUserId(userId)
+
+        return userLink.linkRefreshToken ?: throw RefreshTokenExpiredException()
+    }
+
+    fun update(userId: UUID, refreshedToken: RefreshedAccessTokenResponseModel) {
+        val userLink = findByUserId(userId)
+
+        userLink.apply {
+            this.linkAccessToken = refreshedToken.accessToken
+            this.linkExpireTime = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(refreshedToken.expiresIn)
+        }
+
+        save(userLink)
+    }
+
+    fun update(userLink: UserLinkModel, accessToken: AccessTokenResponseModel) {
+        userLink.apply {
+            this.linkAccessToken = accessToken.accessToken
+            this.linkRefreshToken = accessToken.refreshToken
+            this.linkExpireTime = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(accessToken.expiresIn)
+        }
+
+        save(userLink)
+    }
+
+    private fun save(userLink: UserLinkModel) = userLinkRepository.save(userLink)
 }
