@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.queuemusicfacade.facades
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.FacadeUserLinkService
+import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.UserLinkService
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserRefreshTokenModel
 import nl.tijsgroenendaal.queuemusicfacade.query.responses.LoginQueryResponse
 import nl.tijsgroenendaal.queuemusicfacade.services.UserRefreshTokenService
@@ -27,11 +27,11 @@ class AuthFacade(
     private val jwtTokenUtil: JwtTokenUtil,
     private val userService: UserService,
     private val userRefreshTokenService: UserRefreshTokenService,
-    private val facadeUserLinkService: FacadeUserLinkService
+    private val userLinkService: UserLinkService
 ) {
 
     fun loginLinkUser(code: String): LoginQueryResponse {
-        val userId = facadeUserLinkService.login(code)
+        val userId = userLinkService.login(code)
 
         val user = userService.createUser(userId)
         val userModel = userService.findById(user.id)
@@ -56,7 +56,7 @@ class AuthFacade(
 
     fun logout() {
         userService.logout(getAuthenticationContextSubject())
-        facadeUserLinkService.logout()
+        userLinkService.logout()
     }
 
     private fun createNewAccessTokens(userId: UUID): LoginQueryResponse {
@@ -70,7 +70,7 @@ class AuthFacade(
             emptySet()
         )
 
-        val userLink = facadeUserLinkService.getByUserId(userModel.id)
+        val userLink = userLinkService.getByUserId(userModel.id)
 
         val authorities = mutableListOf(Authorities.REFRESH)
         if (userLink != null) {

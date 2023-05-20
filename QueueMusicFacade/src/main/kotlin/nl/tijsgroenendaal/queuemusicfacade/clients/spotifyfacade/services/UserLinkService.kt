@@ -10,9 +10,8 @@ import org.springframework.stereotype.Service
 
 import java.util.UUID
 
-// TODO rename to UserLinkFacade once UserLinkService is gone
 @Service
-class FacadeUserLinkService(
+class UserLinkService(
     private val spotifyFacadeClient: SpotifyFacadeClient,
     private val anonymousSpotifyFacadeClient: AnonymousSpotifyFacadeClient
 ) {
@@ -32,5 +31,4 @@ class FacadeUserLinkService(
             null
         }
     }
-
 }
