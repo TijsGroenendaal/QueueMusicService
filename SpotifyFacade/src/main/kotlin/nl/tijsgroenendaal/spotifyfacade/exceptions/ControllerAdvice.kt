@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.exceptions
+package nl.tijsgroenendaal.spotifyfacade.exceptions
 
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 

@@ -16,7 +16,7 @@ class DeviceLinkService(
 
     fun getByUserId(userId: UUID): UserDeviceLinkModel {
         return userDeviceLinkRepository.findByUserModelId(userId)
-            ?: throw BadRequestException(DeviceLinkErrorCodes.DEVICE_LINK_NOT_AVAILABLE, "User $userId has no deviceLink defined")
+            ?: throw BadRequestException(DeviceLinkErrorCodes.DEVICE_LINK_NOT_FOUND)
     }
 
 }

@@ -21,7 +21,7 @@ class UserService(
         return userRepository
             .findById(id)
             .let {
-                if(it.isEmpty) throw BadRequestException(UserErrorCodes.USER_NOT_FOUND, "User $id not found")
+                if(it.isEmpty) throw BadRequestException(UserErrorCodes.USER_NOT_FOUND)
                 it.get()
             }
     }

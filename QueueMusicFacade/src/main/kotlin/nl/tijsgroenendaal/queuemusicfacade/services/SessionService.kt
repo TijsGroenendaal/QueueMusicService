@@ -28,13 +28,13 @@ class SessionService(
 
     fun findSessionById(sessionId: UUID): QueueMusicSessionModel {
         return sessionRepository.findById(sessionId).let {
-            if (it.isEmpty) throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND, "Session $sessionId not found")
+            if (it.isEmpty) throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
             else it.get()
         }
     }
 
     fun findSessionByCode(code: String): QueueMusicSessionModel {
         return sessionRepository.findByCode(code)
-            ?: throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND, "Session with code $code not found")
+            ?: throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
     }
 }

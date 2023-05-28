@@ -1,11 +1,12 @@
 package nl.tijsgroenendaal.qumu.exceptions
 
-class AccessTokenExpiredException : Exception()
-class RefreshTokenExpiredException: Exception()
-class UnAuthorizedException : Exception()
-open class InvalidJwtException : Exception()
-class InvalidJwtSubjectException(val id: String): InvalidJwtException()
-class InvalidRefreshJwtException : InvalidJwtException()
-class BadRequestException(val code: String, message: String): Exception(message) {
-    constructor(code: ErrorCode, message: String): this(code.getCode(), message)
-}
+import java.lang.RuntimeException
+
+class AccessTokenExpiredException : BadRequestException(AuthErrorCodes.LINK_ACCESS_TOKEN_EXPIRED)
+class RefreshTokenExpiredException: BadRequestException(AuthErrorCodes.LINK_REFRESH_TOKEN_EXPIRED)
+class InvalidJwtException : BadRequestException(AuthErrorCodes.INVALID_JWT)
+class InvalidRefreshJwtException : BadRequestException(AuthErrorCodes.INVALID_JWT_REFRESH_TOKEN)
+
+open class BadRequestException(
+    val error: ErrorCode
+): RuntimeException(error.getMessage())

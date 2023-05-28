@@ -28,14 +28,14 @@ class SessionFacade(
         val userId = getAuthenticationContextSubject()
 
         if (command.maxUsers > MAX_USERS)
-            throw BadRequestException(SessionErrorCodes.MAX_USERS_EXCEEDED, "Max users limited by $MAX_USERS, tried ${command.maxUsers}")
+            throw BadRequestException(SessionErrorCodes.MAX_USERS_EXCEEDED)
 
         if (command.duration * 60 > MAX_SECONDS_DURATION)
-            throw BadRequestException(SessionErrorCodes.DURATION_EXCEEDED, "Duration ${command.duration * 60} exceeds max $MAX_SECONDS_DURATION")
+            throw BadRequestException(SessionErrorCodes.DURATION_EXCEEDED)
 
         val activeSessions = sessionService.getActiveSessionsByUser(userId).size
         if (activeSessions >= MAX_ACTIVE_SESSION)
-            throw BadRequestException(SessionErrorCodes.HOSTING_SESSIONS_EXCEEDED, "Max active sessions ($activeSessions) reached for user $userId")
+            throw BadRequestException(SessionErrorCodes.HOSTING_SESSIONS_EXCEEDED)
 
         val sessionCode = QueueMusicSessionModel.generateSessionCode()
 
@@ -58,13 +58,13 @@ class SessionFacade(
         val session = sessionService.findSessionByCode(code)
 
         if (session.hasJoined(deviceLink.id))
-            throw BadRequestException(SessionErrorCodes.ALREADY_JOINED, "Device ${deviceLink.deviceId} has already joined Session ${session.code} ")
+            throw BadRequestException(SessionErrorCodes.ALREADY_JOINED)
 
         if (!session.isActive())
-            throw BadRequestException(SessionErrorCodes.SESSION_ENDED, "Session ${session.code} has ended")
+            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
 
         if (!session.hasRoom())
-            throw BadRequestException(SessionErrorCodes.MAX_USERS_EXCEEDED, "Session ${session.code} has reached max users")
+            throw BadRequestException(SessionErrorCodes.MAX_USERS_EXCEEDED)
 
 
         return sessionUserService.createNew(deviceLink, session)

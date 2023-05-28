@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @EnableFeignClients
 class QueueMusicFacade
 
-fun main(args: Array<String>) {
+    fun main(args: Array<String>) {
     runApplication<QueueMusicFacade>(*args)
 }

@@ -20,7 +20,7 @@ class SpotifyService(
             spotifyFacadeClient.getTrack(trackId)
         } catch (e: FeignException) {
             if (e.status() == 404 || e.status() == 400) {
-                throw BadRequestException(SessionSongErrorCode.TRACK_NOT_FOUND, "Track $trackId not found")
+                throw BadRequestException(SessionSongErrorCode.TRACK_NOT_FOUND)
             } else {
                 throw e
             }

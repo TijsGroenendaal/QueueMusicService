@@ -51,7 +51,7 @@ class SessionSongFacade(
 
     private fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {
         if (!command.session.hasJoined(command.deviceLink.id))
-            throw BadRequestException(SessionSongErrorCode.DEVICE_NOT_JOINED, "Device ${command.deviceLink.deviceId} has not joined")
+            throw BadRequestException(SessionSongErrorCode.DEVICE_NOT_JOINED)
 
         return sessionSongService.createSessionSong(command)
     }

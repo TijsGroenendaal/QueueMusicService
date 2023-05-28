@@ -26,12 +26,12 @@ class SessionSongService(
         val sessionSongCount = sessionSongRepository.countByDeviceLinkIdAndCreatedAtAfter(deviceLink.id, lowerBoundDateTime)
 
         if (sessionSongCount >= 1)
-            throw BadRequestException(SessionSongErrorCode.ADD_SONG_TIMEOUT_NOT_PASSED, "Timeout from $lowerBoundDateTime not passed")
+            throw BadRequestException(SessionSongErrorCode.ADD_SONG_TIMEOUT_NOT_PASSED)
     }
 
     fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {
         if (!command.session.isActive()) {
-            throw BadRequestException(SessionErrorCodes.SESSION_ENDED, "Cannot add SessionSong. Session ${command.session.id} has ended")
+            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
         }
 
         canDeviceCreateSong(command.deviceLink)

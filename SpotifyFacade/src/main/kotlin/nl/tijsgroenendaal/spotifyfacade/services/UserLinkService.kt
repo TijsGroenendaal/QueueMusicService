@@ -20,7 +20,7 @@ class UserLinkService(
 
     fun findByUserId(userId: UUID): UserLinkModel {
         return userLinkRepository.findByUserModelId(userId)
-            ?: throw BadRequestException(SessionErrorCodes.NO_USERLINK_FOUND, "User $userId has no UserLink defined")
+            ?: throw BadRequestException(UserLinkErrorCodes.USER_LINK_NOT_FOUND)
     }
 
     fun logout() {
@@ -38,7 +38,7 @@ class UserLinkService(
     }
 
     fun findByLinkId(linkId: String): UserLinkModel {
-        return userLinkRepository.findByLinkId(linkId) ?: throw BadRequestException(UserLinkErrorCodes.USER_LINK_NOT_FOUND, "UserLink $linkId not found")
+        return userLinkRepository.findByLinkId(linkId) ?: throw BadRequestException(UserLinkErrorCodes.USER_LINK_NOT_FOUND)
     }
 
     fun create(accessToken: String, refreshToken: String, expiresIn: Long, id: String): UserLinkModel {

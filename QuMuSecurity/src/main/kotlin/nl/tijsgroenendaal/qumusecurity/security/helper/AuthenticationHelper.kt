@@ -1,9 +1,10 @@
 package nl.tijsgroenendaal.qumusecurity.security.helper
 
 import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicAuthentication
-import nl.tijsgroenendaal.qumu.exceptions.InvalidJwtSubjectException
 
 import io.jsonwebtoken.Claims
+import nl.tijsgroenendaal.qumu.exceptions.AuthErrorCodes
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 
 import org.springframework.security.core.context.SecurityContextHolder
 
@@ -21,12 +22,11 @@ fun Claims.getUserIdFromSubject(): UUID {
     return getUserIdFromSubject(this.subject)
 }
 
-@Throws(InvalidJwtSubjectException::class)
 fun getUserIdFromSubject(subject: String): UUID {
     return try {
         UUID.fromString(subject)
     } catch (e: IllegalArgumentException) {
-        throw InvalidJwtSubjectException(subject)
+        throw BadRequestException(AuthErrorCodes.INVALID_JWT_SUBJECT)
     }
 }
 
