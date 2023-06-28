@@ -16,10 +16,10 @@ class ControllerAdvice {
     @ExceptionHandler(value = [BadRequestException::class])
     protected fun handleBadRequestException(exception: BadRequestException): ResponseEntity<ErrorResponse> {
         log(exception)
-        return ResponseEntity.status(HttpStatusCode.valueOf(exception.error.getStatus())).body(ErrorResponse(
-            exception.error.getCode(),
-            exception.error.getStatus(),
-            exception.error.getMessage()
+        return ResponseEntity.status(HttpStatusCode.valueOf(exception.status)).body(ErrorResponse(
+            exception.code,
+            exception.status,
+            exception.message.orEmpty()
         ))
     }
 

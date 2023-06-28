@@ -131,6 +131,26 @@ enum class SessionSongErrorCode(
     }
 }
 
+enum class FallbackErrorCodes(
+    private val code: String,
+    private val status: Int,
+    private val message: String
+): ErrorCode {
+    INTERNAL_SERVER_ERROR("FALL0001", 500, "Internal Server Error");
+
+    override fun getCode(): String {
+        return this.code
+    }
+
+    override fun getStatus(): Int {
+        return this.status
+    }
+
+    override fun getMessage(): String {
+        return this.message
+    }
+}
+
 
 interface ErrorCode {
     fun getCode(): String

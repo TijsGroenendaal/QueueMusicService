@@ -1,6 +1,7 @@
 package nl.tijsgroenendaal.spotifyfacade.facades
 
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
+import nl.tijsgroenendaal.qumu.exceptions.UserLinkErrorCodes
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.services.SpotifyApiClientService
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.services.SpotifyTokenClientService
 import nl.tijsgroenendaal.spotifyfacade.entity.UserLinkModel
@@ -25,7 +26,11 @@ class AuthFacade(
 
             return userLink
         } catch (e: BadRequestException) {
-            userLinkService.create(accessToken.accessToken, accessToken.refreshToken, accessToken.expiresIn, linkUser.id)
+            if (e.isError(UserLinkErrorCodes.USER_LINK_NOT_FOUND)) {
+                userLinkService.create(accessToken.accessToken, accessToken.refreshToken, accessToken.expiresIn, linkUser.id)
+            } else {
+                throw e
+            }
         }
     }
 

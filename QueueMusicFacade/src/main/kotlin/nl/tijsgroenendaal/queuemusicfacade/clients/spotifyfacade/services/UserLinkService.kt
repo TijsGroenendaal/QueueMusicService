@@ -3,6 +3,8 @@ package nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.clients.AnonymousSpotifyFacadeClient
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.clients.SpotifyFacadeClient
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.query.responses.GetUserLinkByUserIdQueryResponse
+import nl.tijsgroenendaal.qumu.exceptions.UserLinkErrorCodes
+import nl.tijsgroenendaal.qumu.helper.BadRequestSerializer
 
 import feign.FeignException
 
@@ -21,14 +23,23 @@ class UserLinkService(
     }
 
     fun login(code: String): UUID {
-        return anonymousSpotifyFacadeClient.login(code)
+        return try {
+            anonymousSpotifyFacadeClient.login(code)
+        } catch (e: FeignException) {
+            throw BadRequestSerializer.getBadRequestException(e)
+        }
     }
 
     fun getByUserId(userId: UUID): GetUserLinkByUserIdQueryResponse? {
         return try {
             spotifyFacadeClient.getByUserId(userId)
         } catch (e: FeignException) {
-            null
+            val badRequestException = BadRequestSerializer.getBadRequestException(e)
+            if (badRequestException.isError(UserLinkErrorCodes.USER_LINK_NOT_FOUND)) {
+                null
+            } else {
+                throw badRequestException
+            }
         }
     }
 }

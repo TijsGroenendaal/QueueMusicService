@@ -7,6 +7,7 @@ import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
 
 import feign.FeignException
+import nl.tijsgroenendaal.qumu.helper.BadRequestSerializer
 
 import org.springframework.stereotype.Service
 
@@ -19,11 +20,7 @@ class SpotifyService(
         return try {
             spotifyFacadeClient.getTrack(trackId)
         } catch (e: FeignException) {
-            if (e.status() == 404 || e.status() == 400) {
-                throw BadRequestException(SessionSongErrorCode.TRACK_NOT_FOUND)
-            } else {
-                throw e
-            }
+            throw BadRequestSerializer.getBadRequestException(e)
         }
     }
 
