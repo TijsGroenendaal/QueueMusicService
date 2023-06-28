@@ -19,7 +19,7 @@ class SessionSongModel(
     @ManyToOne
     val deviceLink: UserDeviceLinkModel,
     @ManyToOne
-    val session: QueueMusicSessionModel,
+    val session: SessionModel,
     val trackId: String?,
     val title: String,
     val album: String,

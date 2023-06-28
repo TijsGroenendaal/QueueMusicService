@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.queuemusicfacade.services
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.QueueMusicSessionModel
+import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionUserModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserDeviceLinkModel
 import nl.tijsgroenendaal.queuemusicfacade.repositories.SessionUserRepository
@@ -12,7 +12,7 @@ class SessionUserService(
     private val sessionUserRepository: SessionUserRepository
 ) {
 
-    fun createNew(deviceLink: UserDeviceLinkModel, session: QueueMusicSessionModel): SessionUserModel =
+    fun createNew(deviceLink: UserDeviceLinkModel, session: SessionModel): SessionUserModel =
         sessionUserRepository.save(SessionUserModel.new(deviceLink, session))
 
 }

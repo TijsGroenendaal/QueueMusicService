@@ -15,10 +15,10 @@ class SessionUserModel(
     @ManyToOne
     val deviceLink: UserDeviceLinkModel,
     @ManyToOne
-    val session: QueueMusicSessionModel
+    val session: SessionModel
 ) {
     companion object {
-        fun new(deviceLink: UserDeviceLinkModel, session: QueueMusicSessionModel): SessionUserModel {
+        fun new(deviceLink: UserDeviceLinkModel, session: SessionModel): SessionUserModel {
             return SessionUserModel(
                 UUID.randomUUID(),
                 deviceLink,

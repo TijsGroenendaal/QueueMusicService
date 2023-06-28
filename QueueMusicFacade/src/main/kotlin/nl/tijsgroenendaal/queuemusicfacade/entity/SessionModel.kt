@@ -14,7 +14,7 @@ private const val SESSION_CODE_LENGTH = 8
 @Entity(
     name = "queuemusic_session"
 )
-class QueueMusicSessionModel(
+class SessionModel(
     @Id
     val id: UUID,
     @ManyToOne
@@ -23,7 +23,8 @@ class QueueMusicSessionModel(
     val createdAt: LocalDateTime,
     val endAt: LocalDateTime,
     val code: String,
-    val playListId: String,
+    @Column(nullable = true)
+    val playListId: String?,
     @Column(name = "maximum_users")
     val maxUsers: Int,
     val manualEnded: Boolean = false,
@@ -31,8 +32,8 @@ class QueueMusicSessionModel(
     val sessionUsers: MutableList<SessionUserModel> = mutableListOf()
 ) {
     companion object {
-        fun new(command: CreateSessionCommand): QueueMusicSessionModel {
-            return QueueMusicSessionModel(
+        fun new(command: CreateSessionCommand): SessionModel {
+            return SessionModel(
                 UUID.randomUUID(),
                 command.userModel,
                 command.duration,

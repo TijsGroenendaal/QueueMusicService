@@ -2,7 +2,7 @@ package nl.tijsgroenendaal.queuemusicfacade.facades
 
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.SpotifyService
 import nl.tijsgroenendaal.queuemusicfacade.commands.CreateSessionCommand
-import nl.tijsgroenendaal.queuemusicfacade.entity.QueueMusicSessionModel
+import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionUserModel
 import nl.tijsgroenendaal.queuemusicfacade.services.*
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
@@ -24,7 +24,7 @@ class SessionFacade(
     private val userService: UserService
 ) {
 
-    fun createSession(command: CreateSessionCommand): QueueMusicSessionModel {
+    fun createSession(command: CreateSessionCommand): SessionModel {
         val userId = getAuthenticationContextSubject()
 
         if (command.maxUsers > MAX_USERS)
@@ -37,14 +37,16 @@ class SessionFacade(
         if (activeSessions >= MAX_ACTIVE_SESSION)
             throw BadRequestException(SessionErrorCodes.HOSTING_SESSIONS_EXCEEDED)
 
-        val sessionCode = QueueMusicSessionModel.generateSessionCode()
+        val sessionCode = SessionModel.generateSessionCode()
 
-        val playlist = spotifyService.createPlaylist(sessionCode)
+        val playlist = if (command.autoplay) {
+            spotifyService.createPlaylist(sessionCode)
+        } else null
 
         val user = userService.findById(userId)
 
         return sessionService.createSession(nl.tijsgroenendaal.queuemusicfacade.services.commands.CreateSessionCommand(
-            playlist.id,
+            playlist?.id,
             sessionCode,
             command.duration,
             user,

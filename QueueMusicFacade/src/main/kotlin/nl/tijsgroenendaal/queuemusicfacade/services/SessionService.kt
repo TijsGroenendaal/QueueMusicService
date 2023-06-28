@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.queuemusicfacade.services
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.QueueMusicSessionModel
+import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
 import nl.tijsgroenendaal.queuemusicfacade.repositories.QueueMusicSessionRepository
 import nl.tijsgroenendaal.queuemusicfacade.services.commands.CreateSessionCommand
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
@@ -17,23 +17,23 @@ class SessionService(
     private val sessionRepository: QueueMusicSessionRepository
 ) {
 
-    fun getActiveSessionsByUser(userId: UUID): List<QueueMusicSessionModel> {
+    fun getActiveSessionsByUser(userId: UUID): List<SessionModel> {
         val now = LocalDateTime.now(ZoneOffset.UTC)
         return sessionRepository.findAllByHostIdAndEndAtAfterAndManualEnded(userId, now)
     }
 
-    fun createSession(command: CreateSessionCommand): QueueMusicSessionModel {
-        return sessionRepository.save(QueueMusicSessionModel.new(command))
+    fun createSession(command: CreateSessionCommand): SessionModel {
+        return sessionRepository.save(SessionModel.new(command))
     }
 
-    fun findSessionById(sessionId: UUID): QueueMusicSessionModel {
+    fun findSessionById(sessionId: UUID): SessionModel {
         return sessionRepository.findById(sessionId).let {
             if (it.isEmpty) throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
             else it.get()
         }
     }
 
-    fun findSessionByCode(code: String): QueueMusicSessionModel {
+    fun findSessionByCode(code: String): SessionModel {
         return sessionRepository.findByCode(code)
             ?: throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
     }
