@@ -19,4 +19,7 @@ queuemusic:
   spotify:
     id: ${SPOTIFY_CLIENT_ID}
     secret: ${SPOTIFY_CLIENT_SECRET}
+  session:
+    song:
+      timeout: PT5M
 
