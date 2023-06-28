@@ -1,5 +1,6 @@
 package nl.tijsgroenendaal.qumusecurity.security
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -11,7 +12,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfiguration(
-    private val jwtTokenUtil: JwtTokenUtil
+    private val jwtTokenUtil: JwtTokenUtil,
+    @Value("\${queuemusic.security.permitted}")
+    private var permittedRequests: Array<String>
 ) {
 
     @Bean
@@ -22,7 +25,7 @@ class WebSecurityConfiguration(
             .and()
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/v1/auth/login/**")
+                    .requestMatchers(*permittedRequests)
                     .permitAll()
                     .anyRequest()
                     .authenticated()

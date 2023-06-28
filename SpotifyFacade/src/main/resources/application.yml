@@ -7,6 +7,8 @@ clients:
   account-spotify-api: https://accounts.spotify.com/api/token
 
 queuemusic:
+  security:
+    permitted: "/v1/auth/login/**"
   encryption:
     algorithme: ${QUEUEMUSIC_ENCRYPTION_ALGORITHME}
     secret: ${QUEUEMUSIC_ENCRYPTION_SECRET}
