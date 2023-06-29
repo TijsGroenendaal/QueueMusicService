@@ -47,5 +47,5 @@ jobs:
       - name: 'Release QueueMusicFacade Container'
         working-directory: ./QueueMusicFacade
         run: |
-          IMAGE_TAG=ghcr.io/$CI_GITHUB_USERNAME/$IMAGE_NAME:$GITHUB_SHA
+          IMAGE_TAG=$(echo "ghcr.io/$CI_GITHUB_USERNAME/$IMAGE_NAME:$GITHUB_SHA" | tr '[:upper:]' '[:lower:]')
           docker build --build-arg CI_GITHUB_USERNAME=${{ env.CI_GITHUB_USERNAME }} --build-arg CI_GITHUB_PASSWORD=${{ env.CI_GITHUB_PASSWORD }} --build-arg CI_GITHUB_REPOSITORY=${{ env.CI_GITHUB_REPOSITORY }} -t $IMAGE_TAG .
