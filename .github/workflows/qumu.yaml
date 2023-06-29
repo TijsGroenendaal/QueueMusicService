@@ -13,6 +13,10 @@ jobs:
   verify:
     name: 'Verify QuMu Package'
     runs-on: ubuntu-latest
+    env:
+      CI_GITHUB_PASSWORD: ${{ secrets.CI_GITHUB_PASSWORD }}
+      CI_GITHUB_USERNAME: ${{ secrets.CI_GITHUB_USERNAME }}
+      CI_GITHUB_REPOSITORY: ${{ secrets.CI_GITHUB_REPOSITORY }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 16
@@ -30,6 +34,10 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - verify
+    env:
+      CI_GITHUB_PASSWORD: ${{ secrets.CI_GITHUB_PASSWORD }}
+      CI_GITHUB_USERNAME: ${{ secrets.CI_GITHUB_USERNAME }}
+      CI_GITHUB_REPOSITORY: ${{ secrets.CI_GITHUB_REPOSITORY }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 16
@@ -47,6 +55,10 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - test
+    env:
+      CI_GITHUB_PASSWORD: ${{ secrets.CI_GITHUB_PASSWORD }}
+      CI_GITHUB_USERNAME: ${{ secrets.CI_GITHUB_USERNAME }}
+      CI_GITHUB_REPOSITORY: ${{ secrets.CI_GITHUB_REPOSITORY }}
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v2
@@ -58,4 +70,4 @@ jobs:
           cache: maven
       - name: 'Test QuMu'
         working-directory: ./QuMu
-        run: mvn --batch-mode --update-snapshots deploy -s ci-settings.xml
+        run: mvn --batch-mode --update-snapshots deploy -s ci-settings.xml -Dmaven.test.skip
