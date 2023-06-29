@@ -21,8 +21,8 @@ jobs:
           java-version: '16'
           distribution: 'adopt'
           cache: maven
-      - run: cd ./QuMu
       - name: 'Verify QuMu'
+        working-directory: ./QuMu
         run: mvn --batch-mode --update-snapshots verify -Dmaven.test.skip -s ci-settings.xml
 
   test:
@@ -38,8 +38,8 @@ jobs:
           java-version: '16'
           distribution: 'adopt'
           cache: maven
-      - run: cd ./QuMu
       - name: 'Test QuMu'
+        working-directory: ./QuMu
         run: mvn --batch-mode --update-snapshots test -s ci-settings.xml
 
   release:
@@ -56,6 +56,6 @@ jobs:
           java-version: '16'
           distribution: 'adopt'
           cache: maven
-      - run: cd ./QuMu
       - name: 'Test QuMu'
+        working-directory: ./QuMu
         run: mvn --batch-mode --update-snapshots deploy -s ci-settings.xml
