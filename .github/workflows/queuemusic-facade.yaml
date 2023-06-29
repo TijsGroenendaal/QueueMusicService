@@ -50,3 +50,4 @@ jobs:
           SHORT_SHA=${GITHUB_SHA:0:8}
           IMAGE_TAG=$(echo "ghcr.io/$CI_GITHUB_USERNAME/$IMAGE_NAME:$SHORT_SHA" | tr '[:upper:]' '[:lower:]')
           docker build --build-arg CI_GITHUB_USERNAME=${{ env.CI_GITHUB_USERNAME }} --build-arg CI_GITHUB_PASSWORD=${{ env.CI_GITHUB_PASSWORD }} --build-arg CI_GITHUB_REPOSITORY=${{ env.CI_GITHUB_REPOSITORY }} -t $IMAGE_TAG .
+          docker push $IMAGE_TAG
