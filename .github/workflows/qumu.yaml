@@ -68,6 +68,6 @@ jobs:
           java-version: '16'
           distribution: 'adopt'
           cache: maven
-      - name: 'Test QuMu'
+      - name: 'Release QuMu Package'
         working-directory: ./QuMu
         run: mvn --batch-mode --update-snapshots deploy -s ci-settings.xml -Dmaven.test.skip
