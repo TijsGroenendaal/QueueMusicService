@@ -47,8 +47,7 @@ jobs:
       - name: 'Release QuMuSecurity Container'
         working-directory: ./QuMuSecurity
         run: |
-          echo "NEW_VERSION=$(mvn -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive exec:exec -q)"
-          echo "IMAGE_TAG=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$NEW_VERSION"
+          echo "IMAGE_TAG=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:$GITHUB_SHA"
           docker build \
             --build-arg CI_GITHUB_USERNAME=${CI_GITHUB_USERNAME} \
             --build-arg CI_GITHUB_PASSWORD=${CI_GITHUB_PASSWORD} \
