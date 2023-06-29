@@ -12,9 +12,9 @@ services:
     build:
       context: QuMu
       args:
-        GITHUB_USERNAME: ${GITHUB_USERNAME}
-        GITHUB_PASSWORD: ${GITHUB_PASSWORD}
-        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+        CI_GITHUB_USERNAME: ${CI_GITHUB_USERNAME}
+        CI_GITHUB_PASSWORD: ${CI_GITHUB_PASSWORD}
+        CI_GITHUB_REPOSITORY: ${CI_GITHUB_REPOSITORY}
       dockerfile: ./release.Dockerfile
     env_file: .env
 
@@ -22,9 +22,9 @@ services:
     build:
       context: QuMuSecurity
       args:
-        GITHUB_USERNAME: ${GITHUB_USERNAME}
-        GITHUB_PASSWORD: ${GITHUB_PASSWORD}
-        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+        CI_GITHUB_USERNAME: ${CI_GITHUB_USERNAME}
+        CI_GITHUB_PASSWORD: ${CI_GITHUB_PASSWORD}
+        CI_GITHUB_REPOSITORY: ${CI_GITHUB_REPOSITORY}
       dockerfile: ./release.Dockerfile
     env_file: .env
 
@@ -32,9 +32,9 @@ services:
     build:
       context: ./QueueMusicFacade
       args:
-        GITHUB_USERNAME: ${GITHUB_USERNAME}
-        GITHUB_PASSWORD: ${GITHUB_PASSWORD}
-        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+        CI_GITHUB_USERNAME: ${CI_GITHUB_USERNAME}
+        CI_GITHUB_PASSWORD: ${CI_GITHUB_PASSWORD}
+        CI_GITHUB_REPOSITORY: ${CI_GITHUB_REPOSITORY}
     env_file: .env
     restart: on-failure
     ports:
@@ -47,9 +47,9 @@ services:
     build:
       context: ./SpotifyFacade
       args:
-        GITHUB_USERNAME: ${GITHUB_USERNAME}
-        GITHUB_PASSWORD: ${GITHUB_PASSWORD}
-        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+        CI_GITHUB_USERNAME: ${CI_GITHUB_USERNAME}
+        CI_GITHUB_PASSWORD: ${CI_GITHUB_PASSWORD}
+        CI_GITHUB_REPOSITORY: ${CI_GITHUB_REPOSITORY}
     env_file: .env
     restart: on-failure
     command:
