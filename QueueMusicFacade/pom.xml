@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>QueueMusicFacade</artifactId>
+    <artifactId>queuemusic-facade</artifactId>
     <groupId>nl.tijsgroenendaal</groupId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -75,13 +75,13 @@
 
         <dependency>
             <groupId>nl.tijsgroenendaal</groupId>
-            <artifactId>QuMu</artifactId>
+            <artifactId>qumu</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>nl.tijsgroenendaal</groupId>
-            <artifactId>QuMuSecurity</artifactId>
+            <artifactId>qumu-security</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -157,4 +157,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub TijsGroenendaal Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/TijsGroenendaal/QueueMusicService</url>
+        </repository>
+    </distributionManagement>
+
 </project>

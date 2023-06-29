@@ -7,9 +7,54 @@ services:
     restart: on-failure
     volumes:
       - queuemusic_postgresql:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
 
+  qumu-release:
+    build:
+      context: QuMu
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_PASSWORD: ${GITHUB_PASSWORD}
+        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+      dockerfile: ./release.Dockerfile
+    env_file: .env
+
+  qumusecurity-release:
+    build:
+      context: QuMuSecurity
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_PASSWORD: ${GITHUB_PASSWORD}
+        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+      dockerfile: ./release.Dockerfile
+    env_file: .env
+
+  queuemusicfacade:
+    build:
+      context: ./QueueMusicFacade
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_PASSWORD: ${GITHUB_PASSWORD}
+        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+    env_file: .env
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    command:
+      - /opt/entrypoint.sh
+      - -Dspring.profiles.active=prd
+
+  spotifyfacade:
+    build:
+      context: ./SpotifyFacade
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_PASSWORD: ${GITHUB_PASSWORD}
+        GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+    env_file: .env
+    restart: on-failure
+    command:
+      - /opt/entrypoint.sh
+      - -Dspring.profiles.active=prd
 
 volumes:
   queuemusic_postgresql:
