@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI_GITHUB_PASSWORD: ${{ secrets.CI_GITHUB_PASSWORD }}
-      CI_GITHUB_USERNAME: ${{ secrets.CI_GITHUB_USERNAME }}
-      CI_GITHUB_REPOSITORY: ${{ secrets.CI_GITHUB_REPOSITORY }}
+      CI_GITHUB_USERNAME: ${{ env.CI_GITHUB_USERNAME }}
+      CI_GITHUB_REPOSITORY: ${{ env.CI_GITHUB_REPOSITORY }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 16
@@ -36,8 +36,8 @@ jobs:
       - verify
     env:
       CI_GITHUB_PASSWORD: ${{ secrets.CI_GITHUB_PASSWORD }}
-      CI_GITHUB_USERNAME: ${{ secrets.CI_GITHUB_USERNAME }}
-      CI_GITHUB_REPOSITORY: ${{ secrets.CI_GITHUB_REPOSITORY }}
+      CI_GITHUB_USERNAME: ${{ env.CI_GITHUB_USERNAME }}
+      CI_GITHUB_REPOSITORY: ${{ env.CI_GITHUB_REPOSITORY }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 16
@@ -57,8 +57,8 @@ jobs:
       - test
     env:
       CI_GITHUB_PASSWORD: ${{ secrets.CI_GITHUB_PASSWORD }}
-      CI_GITHUB_USERNAME: ${{ secrets.CI_GITHUB_USERNAME }}
-      CI_GITHUB_REPOSITORY: ${{ secrets.CI_GITHUB_REPOSITORY }}
+      CI_GITHUB_USERNAME: ${{ env.CI_GITHUB_USERNAME }}
+      CI_GITHUB_REPOSITORY: ${{ env.CI_GITHUB_REPOSITORY }}
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v2
