@@ -9,7 +9,7 @@ ENV CI_GITHUB_REPOSITORY=$CI_GITHUB_REPOSITORY
 
 WORKDIR /service
 COPY . .
-RUN mvn package -DskipTests -s ci-settings.xml
+RUN mvn package -DskipTests -s ci-settings.xml -q
 
 FROM openjdk:22 AS openjdk
 COPY --from=maven /service/target/*.jar /service.jar
