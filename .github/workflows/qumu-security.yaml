@@ -7,7 +7,7 @@ on:
     branches:
       - main
     paths:
-      - './QuMuSecurity/**'
+      - 'QuMuSecurity/**'
 
 jobs:
   test:
