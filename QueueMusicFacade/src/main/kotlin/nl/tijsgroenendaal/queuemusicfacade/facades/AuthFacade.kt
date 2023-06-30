@@ -33,7 +33,7 @@ class AuthFacade(
     private val deviceLinkService: DeviceLinkService
 ) {
 
-    fun loginLinkUser(code: String, deviceId: String): LoginQueryResponse {
+    fun loginLinkUser(code: String): LoginQueryResponse {
         val userId = userLinkService.login(code)
 
         val user = try {
@@ -41,7 +41,6 @@ class AuthFacade(
         } catch (e: BadRequestException) {
             userService.createUser(userId)
         }
-        deviceLinkService.attachToUser(deviceId, user)
         return createNewAccessTokens(user.id)
     }
 
@@ -50,7 +49,7 @@ class AuthFacade(
             deviceLinkService.getByDeviceId(deviceId)
         } catch (e: BadRequestException) {
             val user = userService.createAnonymousUser()
-            deviceLinkService.attachToUser(deviceId, user)
+            deviceLinkService.createDeviceLink(deviceId, user)
         }
 
         return createNewAccessTokens(deviceLink.user.id)
@@ -70,7 +69,7 @@ class AuthFacade(
         userLinkService.logout()
     }
 
-    private fun createNewAccessTokens(userId: UUID): LoginQueryResponse {
+    private fun createNewAccessTokens(userId: UUID, checkUserLink: Boolean = false): LoginQueryResponse {
         val userModel = userService.findById(userId)
         SecurityContextHolder.getContext().authentication = QueueMusicAuthentication(
             QueueMusicPrincipalAuthentication(
@@ -81,7 +80,7 @@ class AuthFacade(
             emptySet()
         )
 
-        val userLink = userLinkService.getByUserId(userModel.id)
+        val userLink = if (checkUserLink) userLinkService.getByUserId(userModel.id) else null
 
         val authorities = mutableListOf(Authorities.REFRESH)
         if (userLink != null) {
@@ -97,7 +96,7 @@ class AuthFacade(
                 LocalDateTime.now(ZoneOffset.UTC).plusSeconds(JWT_REFRESH_TOKEN_VALIDITY)
             )
         } else {
-            userModel.userRefreshToken?.apply {
+            userModel.userRefreshToken!!.apply {
                 this.refreshToken = jwtTokenUtil.generateToken(userDetails, JwtTypes.REFRESH)
                 this.expireTime = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(JWT_REFRESH_TOKEN_VALIDITY)
             }
