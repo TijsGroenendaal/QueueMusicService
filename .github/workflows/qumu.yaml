@@ -41,12 +41,25 @@ jobs:
       - test
     steps:
       - uses: actions/checkout@v2
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'adopt'
           cache: maven
+      - name: 'Increment Package Version'
+        working-directory: ./QuMu
+        run: |
+          OLD_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)
+          NEW_VERSION=$(echo ${OLD_VERSION} |  awk -F'.' '{print $1"."$2"."$3+1}' |  sed s/[.]$//)
+          mvn versions:set -DnewVersion=$NEW_VERSION -DprocessFromLocalAggregationRoot=false -DgenerateBackupPoms=false
       - name: 'Release QuMu Package'
         working-directory: ./QuMu
         run: mvn --batch-mode --update-snapshots deploy -s ci-settings.xml -Dmaven.test.skip
+      - name: 'Commit Version Update'
+        run: | 
+          git commit -am "Update QuMu version to $NEW_VERSION [skip ci]"
+          git push 
