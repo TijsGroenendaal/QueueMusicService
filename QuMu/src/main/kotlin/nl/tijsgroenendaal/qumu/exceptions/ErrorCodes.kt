@@ -9,7 +9,8 @@ enum class AuthErrorCodes(
     LINK_REFRESH_TOKEN_EXPIRED("AUTH0002", 401, "Userlink RefreshToken has expired."),
     INVALID_JWT_SUBJECT("AUTH0003", 401, "Subject is invalid"),
     INVALID_JWT_REFRESH_TOKEN("AUTH0004", 401, "RefreshToken is not valid."),
-    INVALID_JWT("AUTH0004", 401, "Jwt is not valid");
+    INVALID_JWT("AUTH0004", 401, "Jwt is not valid"),
+    UNABLE_TO_LOGIN_TO_LINK("AUTH0005", 400, "Unable to login to link account");
 
     override fun getCode(): String {
         return this.code
