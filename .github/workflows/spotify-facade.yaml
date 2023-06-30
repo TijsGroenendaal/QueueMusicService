@@ -40,14 +40,29 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
     needs:
       - test
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
       - name: 'Login Github Container Registry'
         run: echo $CI_GITHUB_PASSWORD | docker login ghcr.io -u $CI_GITHUB_USERNAME --password-stdin
+      - name: 'Increment Package Version'
+        working-directory: ./SpotifyFacade
+        run: |
+          OLD_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)
+          NEW_VERSION=$(echo ${OLD_VERSION} |  awk -F'.' '{print $1"."$2"."$3+1}' |  sed s/[.]$//)
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          mvn versions:set -DnewVersion=$NEW_VERSION -DprocessFromLocalAggregationRoot=false -DgenerateBackupPoms=false
       - name: 'Release SpotifyFacade Container'
         working-directory: ./SpotifyFacade
         run: |
-          SHORT_SHA=${GITHUB_SHA:0:8}
-          IMAGE_TAG=$(echo "ghcr.io/$CI_GITHUB_USERNAME/$IMAGE_NAME:$SHORT_SHA" | tr '[:upper:]' '[:lower:]')
+          IMAGE_TAG=$(echo "ghcr.io/$CI_GITHUB_USERNAME/$IMAGE_NAME:$NEW_VERSION" | tr '[:upper:]' '[:lower:]')
           docker build --build-arg CI_GITHUB_USERNAME=${{ env.CI_GITHUB_USERNAME }} --build-arg CI_GITHUB_PASSWORD=${{ env.CI_GITHUB_PASSWORD }} --build-arg CI_GITHUB_REPOSITORY=${{ env.CI_GITHUB_REPOSITORY }} -t $IMAGE_TAG .
           docker push $IMAGE_TAG
+      - name: 'Commit Version Update'
+        run: |
+          git commit -am "Increment SpotifyFacade to version $NEW_VERSION [skip ci]"
+          git push 

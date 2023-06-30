@@ -64,5 +64,5 @@ jobs:
         run: mvn --batch-mode --update-snapshots deploy -s ci-settings.xml -Dmaven.test.skip
       - name: 'Commit Version Update'
         run: | 
-          git commit -am "Update QuMu version to $NEW_VERSION [skip ci]"
+          git commit -am "Increment QuMu to version $NEW_VERSION [skip ci]"
           git push 
