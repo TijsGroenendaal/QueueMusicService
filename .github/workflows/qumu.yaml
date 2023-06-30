@@ -57,6 +57,7 @@ jobs:
         run: |
           OLD_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)
           NEW_VERSION=$(echo ${OLD_VERSION} |  awk -F'.' '{print $1"."$2"."$3+1}' |  sed s/[.]$//)
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           mvn versions:set -DnewVersion=$NEW_VERSION -DprocessFromLocalAggregationRoot=false -DgenerateBackupPoms=false
       - name: 'Release QuMu Package'
         working-directory: ./QuMu
