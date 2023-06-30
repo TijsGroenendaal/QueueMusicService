@@ -6,9 +6,9 @@ import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongControllerCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSpotifySessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongModel
-import nl.tijsgroenendaal.queuemusicfacade.services.DeviceLinkService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionSongService
+import nl.tijsgroenendaal.queuemusicfacade.services.UserService
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
@@ -22,14 +22,14 @@ class SessionSongFacade(
     private val sessionSongService: SessionSongService,
     private val sessionService: SessionService,
     private val spotifyService: SpotifyService,
-    private val deviceLinkService: DeviceLinkService
+    private val deviceLinkService: UserService
 ) {
 
     fun addSpotifySessionSong(command: AddSpotifySessionSongCommand, sessionId: UUID): SessionSongModel {
         val track = spotifyService.getTrack(command.songId)
 
         return createSessionSong(AddSessionSongCommand(
-            deviceLinkService.getByUserId(getAuthenticationContextSubject()),
+            deviceLinkService.findById(getAuthenticationContextSubject()),
             track.id,
             track.album.name,
             track.name,
@@ -40,7 +40,7 @@ class SessionSongFacade(
 
     fun addSessionSong(command: AddSessionSongControllerCommand, sessionId: UUID): SessionSongModel {
         return createSessionSong(AddSessionSongCommand(
-            deviceLinkService.getByUserId(getAuthenticationContextSubject()),
+            deviceLinkService.findById(getAuthenticationContextSubject()),
             null,
             command.album,
             command.name,
@@ -50,7 +50,7 @@ class SessionSongFacade(
     }
 
     private fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {
-        if (!command.session.hasJoined(command.deviceLink.id))
+        if (!command.session.hasJoined(command.user))
             throw BadRequestException(SessionSongErrorCode.DEVICE_NOT_JOINED)
 
         return sessionSongService.createSessionSong(command)

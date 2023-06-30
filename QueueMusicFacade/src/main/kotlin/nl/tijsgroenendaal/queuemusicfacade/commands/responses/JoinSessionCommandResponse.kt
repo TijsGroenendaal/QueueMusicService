@@ -7,16 +7,15 @@ import java.util.UUID
 
 data class JoinSessionCommandResponse(
     val id: UUID,
-    val device: JoinSessionCommandResponseDevice,
+    val user: JoinSessionCommandResponseUser,
     val session: JoinSessionCommandResponseSession
 ) {
     companion object {
         fun SessionUserModel.toResponse(): JoinSessionCommandResponse {
             return JoinSessionCommandResponse(
                 this.id,
-                JoinSessionCommandResponseDevice(
-                    this.deviceLink.id,
-                    this.deviceLink.deviceId
+                JoinSessionCommandResponseUser(
+                    this.user.id,
                 ),
                 JoinSessionCommandResponseSession(
                     this.session.id,
@@ -36,7 +35,6 @@ data class JoinSessionCommandResponseSession(
     val code: String
 )
 
-data class JoinSessionCommandResponseDevice(
+data class JoinSessionCommandResponseUser(
     val id: UUID,
-    val deviceId: String
 )

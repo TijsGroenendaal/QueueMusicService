@@ -18,7 +18,6 @@ private const val MAX_USERS = 50
 @Service
 class SessionFacade(
     private val sessionService: SessionService,
-    private val deviceLinkService: DeviceLinkService,
     private val sessionUserService: SessionUserService,
     private val spotifyService: SpotifyService,
     private val userService: UserService
@@ -55,11 +54,11 @@ class SessionFacade(
     }
 
     fun joinSession(code: String): SessionUserModel {
-        val deviceLink = deviceLinkService.getByUserId(getAuthenticationContextSubject())
+        val user = userService.findById(getAuthenticationContextSubject())
 
         val session = sessionService.findSessionByCode(code)
 
-        if (session.hasJoined(deviceLink.id))
+        if (session.hasJoined(user))
             throw BadRequestException(SessionErrorCodes.ALREADY_JOINED)
 
         if (!session.isActive())
@@ -69,7 +68,7 @@ class SessionFacade(
             throw BadRequestException(SessionErrorCodes.MAX_USERS_EXCEEDED)
 
 
-        return sessionUserService.createNew(deviceLink, session)
+        return sessionUserService.createNew(user, session)
     }
 
 }

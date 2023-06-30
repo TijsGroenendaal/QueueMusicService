@@ -19,7 +19,7 @@ class ControllerAdvice {
         return ResponseEntity.status(HttpStatusCode.valueOf(exception.status)).body(ErrorResponse(
             exception.code,
             exception.status,
-            exception.message.orEmpty()
+            exception.message
         ))
     }
 

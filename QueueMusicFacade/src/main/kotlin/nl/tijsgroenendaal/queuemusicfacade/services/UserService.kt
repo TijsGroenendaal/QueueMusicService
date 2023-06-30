@@ -2,7 +2,6 @@ package nl.tijsgroenendaal.queuemusicfacade.services
 
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
 import nl.tijsgroenendaal.queuemusicfacade.repositories.UserRepository
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserDeviceLinkModel
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.UserErrorCodes
 
@@ -26,26 +25,12 @@ class UserService(
             }
     }
 
-    @Transactional
-    fun createUser(
-        userId: UUID,
-    ): UserModel {
-        val persistentUser = userRepository.findById(userId)
-        if (persistentUser.isEmpty) return userRepository.save(UserModel(userId))
-
-        return persistentUser.get()
+    fun createUser(userId: UUID): UserModel {
+        return userRepository.save(UserModel.new(userId))
     }
 
-    fun createAnonymousUser(deviceId: String): UserModel {
-        val persistentUser = userRepository
-            .findByUserDeviceLinkDeviceId(deviceId)
-            .let {
-                it ?: UserModel(UUID.randomUUID()).apply {
-                    this.userDeviceLink = UserDeviceLinkModel.new(deviceId, this)
-                }
-            }
-
-        return userRepository.save(persistentUser)
+    fun createAnonymousUser(): UserModel {
+        return userRepository.save(UserModel.new())
     }
 
     fun logout(userId: UUID) {

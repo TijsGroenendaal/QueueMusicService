@@ -3,8 +3,10 @@ package nl.tijsgroenendaal.queuemusicfacade.facades
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.UserLinkService
 import nl.tijsgroenendaal.queuemusicfacade.entity.UserRefreshTokenModel
 import nl.tijsgroenendaal.queuemusicfacade.query.responses.LoginQueryResponse
+import nl.tijsgroenendaal.queuemusicfacade.services.DeviceLinkService
 import nl.tijsgroenendaal.queuemusicfacade.services.UserRefreshTokenService
 import nl.tijsgroenendaal.queuemusicfacade.services.UserService
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.InvalidRefreshJwtException
 import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil
 import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil.Companion.JWT_REFRESH_TOKEN_VALIDITY
@@ -27,22 +29,31 @@ class AuthFacade(
     private val jwtTokenUtil: JwtTokenUtil,
     private val userService: UserService,
     private val userRefreshTokenService: UserRefreshTokenService,
-    private val userLinkService: UserLinkService
+    private val userLinkService: UserLinkService,
+    private val deviceLinkService: DeviceLinkService
 ) {
 
-    fun loginLinkUser(code: String): LoginQueryResponse {
+    fun loginLinkUser(code: String, deviceId: String): LoginQueryResponse {
         val userId = userLinkService.login(code)
 
-        val user = userService.createUser(userId)
-        val userModel = userService.findById(user.id)
-
-        return createNewAccessTokens(userModel.id)
+        val user = try {
+            userService.findById(userId)
+        } catch (e: BadRequestException) {
+            userService.createUser(userId)
+        }
+        deviceLinkService.attachToUser(deviceId, user)
+        return createNewAccessTokens(user.id)
     }
 
     fun loginAnonymous(deviceId: String): LoginQueryResponse {
-        val userModel = userService.createAnonymousUser(deviceId)
+        val deviceLink = try {
+            deviceLinkService.getByDeviceId(deviceId)
+        } catch (e: BadRequestException) {
+            val user = userService.createAnonymousUser()
+            deviceLinkService.attachToUser(deviceId, user)
+        }
 
-        return createNewAccessTokens(userModel.id)
+        return createNewAccessTokens(deviceLink.userModel.id)
     }
 
     fun refresh(refreshToken: String): LoginQueryResponse {
@@ -64,7 +75,7 @@ class AuthFacade(
         SecurityContextHolder.getContext().authentication = QueueMusicAuthentication(
             QueueMusicPrincipalAuthentication(
                 userModel.id,
-                null,
+                userModel.userDeviceLink?.deviceId,
                 emptySet()
             ),
             emptySet()

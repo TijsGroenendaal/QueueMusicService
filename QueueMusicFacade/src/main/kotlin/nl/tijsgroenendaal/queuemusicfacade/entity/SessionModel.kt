@@ -62,7 +62,7 @@ class SessionModel(
         return sessionUsers.size < maxUsers
     }
 
-    fun hasJoined(id: UUID): Boolean {
-        return sessionUsers.any { it.deviceLink.id == id }
+    fun hasJoined(user: UserModel): Boolean {
+        return sessionUsers.any { it.id == user.id }
     }
 }

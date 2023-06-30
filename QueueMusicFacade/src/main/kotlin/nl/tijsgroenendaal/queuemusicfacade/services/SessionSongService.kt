@@ -2,18 +2,18 @@ package nl.tijsgroenendaal.queuemusicfacade.services
 
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongModel
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserDeviceLinkModel
 import nl.tijsgroenendaal.queuemusicfacade.repositories.SessionSongRepository
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
-import org.springframework.beans.factory.annotation.Value
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.UUID
 
 @Service
 class SessionSongService(
@@ -22,9 +22,9 @@ class SessionSongService(
     private val songTimeout: Duration
 ) {
 
-    private fun canDeviceCreateSong(deviceLink: UserDeviceLinkModel) {
+    private fun canDeviceCreateSong(userId: UUID) {
         val lowerBoundDateTime = LocalDateTime.now(ZoneOffset.UTC).minus(songTimeout)
-        val sessionSongCount = sessionSongRepository.countByDeviceLinkIdAndCreatedAtAfter(deviceLink.id, lowerBoundDateTime)
+        val sessionSongCount = sessionSongRepository.countByUserIdAndCreatedAtAfter(userId, lowerBoundDateTime)
 
         if (sessionSongCount >= 1)
             throw BadRequestException(SessionSongErrorCode.ADD_SONG_TIMEOUT_NOT_PASSED)
@@ -35,7 +35,7 @@ class SessionSongService(
             throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
         }
 
-        canDeviceCreateSong(command.deviceLink)
+        canDeviceCreateSong(command.user.id)
 
         return sessionSongRepository.save(SessionSongModel.new(command))
     }

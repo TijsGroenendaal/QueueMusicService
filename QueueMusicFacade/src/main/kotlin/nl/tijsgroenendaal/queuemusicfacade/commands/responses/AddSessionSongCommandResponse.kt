@@ -7,7 +7,7 @@ import java.util.UUID
 
 data class AddSessionSongCommandResponse(
     val id: UUID,
-    val device: AddSessionSongCommandResponseDevice,
+    val user: AddSessionSongCommandResponseUser,
     val session: AddSessionSongCommandResponseSession,
     val trackId: String?,
     val title: String,
@@ -20,9 +20,8 @@ data class AddSessionSongCommandResponse(
         fun SessionSongModel.toResponse(): AddSessionSongCommandResponse {
             return AddSessionSongCommandResponse(
                 this.id,
-                AddSessionSongCommandResponseDevice(
-                    this.deviceLink.id,
-                    this.deviceLink.deviceId
+                AddSessionSongCommandResponseUser(
+                    this.user.id,
                 ),
                 AddSessionSongCommandResponseSession(
                     this.session.id,
@@ -41,9 +40,8 @@ data class AddSessionSongCommandResponse(
     }
 }
 
-data class AddSessionSongCommandResponseDevice(
+data class AddSessionSongCommandResponseUser(
     val id: UUID,
-    val deviceId: String
 )
 
 data class AddSessionSongCommandResponseSession(

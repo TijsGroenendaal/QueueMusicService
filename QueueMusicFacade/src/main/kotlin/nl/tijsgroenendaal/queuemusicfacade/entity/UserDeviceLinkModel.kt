@@ -14,9 +14,9 @@ class UserDeviceLinkModel(
     @Id
     val id: UUID,
     @Column(columnDefinition = "TEXT", unique = true)
-    val deviceId: String,
+    var deviceId: String,
     @OneToOne
-    val userModel: UserModel,
+    var userModel: UserModel,
 ) {
     companion object {
         fun new(deviceId: String, userModel: UserModel): UserDeviceLinkModel {

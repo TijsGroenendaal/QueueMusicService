@@ -17,7 +17,7 @@ class SessionSongModel(
     @Id
     val id: UUID,
     @ManyToOne
-    val deviceLink: UserDeviceLinkModel,
+    val user: UserModel,
     @ManyToOne
     val session: SessionModel,
     val trackId: String?,
@@ -33,7 +33,7 @@ class SessionSongModel(
         ): SessionSongModel {
             return SessionSongModel(
                 UUID.randomUUID(),
-                command.deviceLink,
+                command.user,
                 command.session,
                 command.trackId,
                 command.trackName,

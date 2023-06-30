@@ -18,9 +18,13 @@ class UserModel(
     @OneToOne(optional = true, cascade = [CascadeType.ALL], mappedBy = "userModel")
     var userDeviceLink: UserDeviceLinkModel?
 ) {
-    constructor(id: UUID): this(
-        id,
-        null,
-        null
-    )
+    companion object {
+        fun new(id: UUID): UserModel {
+            return UserModel(id, null, null)
+        }
+
+        fun new(): UserModel {
+            return UserModel(UUID.randomUUID(), null, null)
+        }
+    }
 }

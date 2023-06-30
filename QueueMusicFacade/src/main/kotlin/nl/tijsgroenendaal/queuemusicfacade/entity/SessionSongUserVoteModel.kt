@@ -17,7 +17,7 @@ class SessionSongUserVoteModel(
     @Id
     val id: UUID,
     @ManyToOne
-    val userDeviceLink: UserDeviceLinkModel,
+    val user: UserModel,
     @ManyToOne
     val song: SessionSongModel,
     @Enumerated(EnumType.STRING)

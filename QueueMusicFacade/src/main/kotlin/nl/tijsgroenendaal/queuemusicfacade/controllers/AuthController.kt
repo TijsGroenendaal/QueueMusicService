@@ -17,9 +17,10 @@ class AuthController(
 
     @PostMapping("/login")
     fun login(
-        @RequestParam("code") code: String
+        @RequestParam("code") code: String,
+        @RequestParam("deviceId") deviceId: String
     ): LoginQueryResponse {
-        return authFacade.loginLinkUser(code)
+        return authFacade.loginLinkUser(code, deviceId)
     }
 
     @PostMapping("/login/anonymous")
