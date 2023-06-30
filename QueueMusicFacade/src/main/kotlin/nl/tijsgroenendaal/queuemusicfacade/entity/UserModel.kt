@@ -15,7 +15,7 @@ class UserModel(
     val id: UUID,
     @OneToOne(optional = true, cascade = [CascadeType.ALL], mappedBy = "userModel")
     var userRefreshToken: UserRefreshTokenModel?,
-    @OneToOne(optional = true, cascade = [CascadeType.ALL], mappedBy = "userModel")
+    @OneToOne(optional = true, cascade = [CascadeType.ALL], mappedBy = "user")
     var userDeviceLink: UserDeviceLinkModel?
 ) {
     companion object {

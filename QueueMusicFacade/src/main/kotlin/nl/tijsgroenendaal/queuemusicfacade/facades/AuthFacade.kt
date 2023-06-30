@@ -53,7 +53,7 @@ class AuthFacade(
             deviceLinkService.attachToUser(deviceId, user)
         }
 
-        return createNewAccessTokens(deviceLink.userModel.id)
+        return createNewAccessTokens(deviceLink.user.id)
     }
 
     fun refresh(refreshToken: String): LoginQueryResponse {

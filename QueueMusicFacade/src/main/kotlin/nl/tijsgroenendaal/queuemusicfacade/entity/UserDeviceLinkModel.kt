@@ -1,5 +1,6 @@
 package nl.tijsgroenendaal.queuemusicfacade.entity
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -15,8 +16,8 @@ class UserDeviceLinkModel(
     val id: UUID,
     @Column(columnDefinition = "TEXT", unique = true)
     var deviceId: String,
-    @OneToOne
-    var userModel: UserModel,
+    @OneToOne(cascade = [CascadeType.ALL])
+    var user: UserModel,
 ) {
     companion object {
         fun new(deviceId: String, userModel: UserModel): UserDeviceLinkModel {
