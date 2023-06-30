@@ -5,7 +5,7 @@
 
     <artifactId>qumu-security</artifactId>
     <groupId>nl.tijsgroenendaal</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.0</version>
     <name>QuMuSecurity</name>
 
     <properties>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>nl.tijsgroenendaal</groupId>
             <artifactId>qumu</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
         </dependency>
 
         <dependency>
