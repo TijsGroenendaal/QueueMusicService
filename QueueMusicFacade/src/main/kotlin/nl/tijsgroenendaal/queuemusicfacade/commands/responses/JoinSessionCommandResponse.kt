@@ -6,14 +6,12 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 data class JoinSessionCommandResponse(
-    val id: UUID,
     val user: JoinSessionCommandResponseUser,
     val session: JoinSessionCommandResponseSession
 ) {
     companion object {
         fun SessionUserModel.toResponse(): JoinSessionCommandResponse {
             return JoinSessionCommandResponse(
-                this.id,
                 JoinSessionCommandResponseUser(
                     this.user.id,
                 ),
