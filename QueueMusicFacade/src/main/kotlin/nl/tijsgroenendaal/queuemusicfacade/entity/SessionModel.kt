@@ -28,7 +28,7 @@ class SessionModel(
     @Column(name = "maximum_users")
     val maxUsers: Int,
     val manualEnded: Boolean = false,
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], mappedBy = "session")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "session")
     val sessionUsers: MutableList<SessionUserModel> = mutableListOf()
 ) {
     companion object {
@@ -63,6 +63,6 @@ class SessionModel(
     }
 
     fun hasJoined(user: UserModel): Boolean {
-        return sessionUsers.any { it.id == user.id }
+        return sessionUsers.any { it.user.id == user.id }
     }
 }

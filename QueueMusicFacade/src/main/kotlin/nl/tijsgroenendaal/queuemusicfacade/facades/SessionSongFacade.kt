@@ -10,7 +10,7 @@ import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionSongService
 import nl.tijsgroenendaal.queuemusicfacade.services.UserService
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
-import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
+import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 
 import org.springframework.stereotype.Service
@@ -51,7 +51,7 @@ class SessionSongFacade(
 
     private fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {
         if (!command.session.hasJoined(command.user))
-            throw BadRequestException(SessionSongErrorCode.DEVICE_NOT_JOINED)
+            throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
 
         return sessionSongService.createSessionSong(command)
     }

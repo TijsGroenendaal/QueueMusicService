@@ -71,4 +71,8 @@ class SessionFacade(
         return sessionUserService.createNew(user, session)
     }
 
+    fun leaveSession(code: String) {
+        val user = getAuthenticationContextSubject()
+        sessionUserService.leaveSession(code, user)
+    }
 }

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-interface SessionUserRepository: JpaRepository<SessionUserModel, UUID>
+interface SessionUserRepository: JpaRepository<SessionUserModel, UUID> {
+    fun deleteByUserIdAndSessionCode(userId: UUID, sessionCode: String)
+}

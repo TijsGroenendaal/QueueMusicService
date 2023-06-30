@@ -8,6 +8,7 @@ import nl.tijsgroenendaal.queuemusicfacade.commands.responses.JoinSessionCommand
 import nl.tijsgroenendaal.queuemusicfacade.facades.SessionFacade
 
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -33,6 +34,13 @@ class SessionController(
         @PathVariable code: String
     ): JoinSessionCommandResponse {
         return sessionFacade.joinSession(code).toResponse()
+    }
+
+    @DeleteMapping("/{code}/leave")
+    fun leaveSession(
+        @PathVariable code: String
+    ) {
+        sessionFacade.leaveSession(code)
     }
 
 }

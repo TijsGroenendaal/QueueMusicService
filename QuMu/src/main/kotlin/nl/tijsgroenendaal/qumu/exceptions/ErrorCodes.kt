@@ -75,7 +75,8 @@ enum class SessionErrorCodes(
     SESSION_NOT_FOUND("SESS0003", 404, "Session not found."),
     SESSION_ENDED("SESS0004", 403, "Session has ended."),
     MAX_USERS_EXCEEDED("SESS0005", 400, "Session has reached it maximum users."),
-    ALREADY_JOINED("SESS0006", 400, "User has already joined this session.");
+    ALREADY_JOINED("SESS0006", 400, "User has already joined this session."),
+    USER_NOT_JOINED("SESS0007", 403, "User has not joined this session.");
 
     override fun getCode(): String {
         return this.code
@@ -116,8 +117,7 @@ enum class SessionSongErrorCode(
     private val message: String
 ): ErrorCode {
     TRACK_NOT_FOUND("SSON0001", 404, "Spotify Track not found."),
-    ADD_SONG_TIMEOUT_NOT_PASSED("SSON0002", 400, "User addSong timeout has not passed."),
-    DEVICE_NOT_JOINED("SSON0003", 403, "Device has not joined this session.");
+    ADD_SONG_TIMEOUT_NOT_PASSED("SSON0002", 400, "User addSong timeout has not passed.");
 
     override fun getCode(): String {
         return this.code

@@ -7,6 +7,10 @@ import nl.tijsgroenendaal.queuemusicfacade.repositories.SessionUserRepository
 
 import org.springframework.stereotype.Service
 
+import jakarta.transaction.Transactional
+
+import java.util.UUID
+
 @Service
 class SessionUserService(
     private val sessionUserRepository: SessionUserRepository
@@ -15,4 +19,6 @@ class SessionUserService(
     fun createNew(user: UserModel, session: SessionModel): SessionUserModel =
         sessionUserRepository.save(SessionUserModel.new(user, session))
 
+    @Transactional
+    fun leaveSession(code: String, user: UUID) = sessionUserRepository.deleteByUserIdAndSessionCode(user, code)
 }
