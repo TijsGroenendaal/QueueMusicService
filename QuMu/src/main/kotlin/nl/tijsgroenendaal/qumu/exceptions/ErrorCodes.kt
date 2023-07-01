@@ -117,7 +117,28 @@ enum class SessionSongErrorCode(
     private val message: String
 ): ErrorCode {
     TRACK_NOT_FOUND("SSON0001", 404, "Spotify Track not found."),
-    ADD_SONG_TIMEOUT_NOT_PASSED("SSON0002", 400, "User addSong timeout has not passed.");
+    ADD_SONG_TIMEOUT_NOT_PASSED("SSON0002", 400, "User addSong timeout has not passed."),
+    SESSION_SONG_NOT_FOUND("SSON0004", 404, "SessionSong not found");
+
+    override fun getCode(): String {
+        return this.code
+    }
+
+    override fun getStatus(): Int {
+        return this.status
+    }
+
+    override fun getMessage(): String {
+        return this.message
+    }
+}
+
+enum class SessionSongUserVoteErrorCodes(
+    private val code: String,
+    private val status: Int,
+    private val message: String
+): ErrorCode {
+    VOTE_NOT_FOUND("SSUV0001", 404, "SessionSongUserVote tot found");
 
     override fun getCode(): String {
         return this.code
