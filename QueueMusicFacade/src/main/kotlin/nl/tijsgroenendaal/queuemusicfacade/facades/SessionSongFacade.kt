@@ -6,8 +6,11 @@ import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongControllerCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSpotifySessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongModel
+import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongUserVoteModel
+import nl.tijsgroenendaal.queuemusicfacade.entity.enums.VoteEnum
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionSongService
+import nl.tijsgroenendaal.queuemusicfacade.services.SessionSongUserVoteService
 import nl.tijsgroenendaal.queuemusicfacade.services.UserService
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
@@ -22,7 +25,8 @@ class SessionSongFacade(
     private val sessionSongService: SessionSongService,
     private val sessionService: SessionService,
     private val spotifyService: SpotifyService,
-    private val deviceLinkService: UserService
+    private val deviceLinkService: UserService,
+    private val sessionSongUserVoteService: SessionSongUserVoteService
 ) {
 
     fun addSpotifySessionSong(command: AddSpotifySessionSongCommand, sessionId: UUID): SessionSongModel {
@@ -47,6 +51,20 @@ class SessionSongFacade(
             command.authors,
             sessionService.findSessionById(sessionId)
         ))
+    }
+
+    fun voteSessionSong(sessionId: UUID, songId: UUID, vote: VoteEnum): SessionSongUserVoteModel {
+        val session = sessionService.findSessionById(sessionId)
+
+        val user = session.getUser(getAuthenticationContextSubject())
+            ?: throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
+
+        if (!session.isActive())
+            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
+
+        val song = sessionSongService.getById(songId)
+
+        return sessionSongUserVoteService.vote(song, user, vote)
     }
 
     private fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {

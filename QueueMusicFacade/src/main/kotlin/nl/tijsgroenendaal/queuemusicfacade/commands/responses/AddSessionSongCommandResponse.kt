@@ -13,7 +13,6 @@ data class AddSessionSongCommandResponse(
     val title: String,
     val album: String,
     val authors: String,
-    val votes: Int,
     val createdAt: LocalDateTime,
 ) {
     companion object {
@@ -33,7 +32,6 @@ data class AddSessionSongCommandResponse(
                 this.title,
                 this.album,
                 this.authors,
-                this.votes,
                 this.createdAt
             )
         }

@@ -40,4 +40,6 @@ class SessionSongService(
         return sessionSongRepository.save(SessionSongModel.new(command))
     }
 
+    fun getById(songId: UUID): SessionSongModel = sessionSongRepository.findById(songId)
+        .orElseThrow { BadRequestException(SessionSongErrorCode.SESSION_SONG_NOT_FOUND) }
 }

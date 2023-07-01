@@ -65,4 +65,6 @@ class SessionModel(
     fun hasJoined(user: UserModel): Boolean {
         return sessionUsers.any { it.user.id == user.id }
     }
+
+    fun getUser(user: UUID): UserModel? = sessionUsers.firstOrNull { it.user.id == user }?.user
 }
