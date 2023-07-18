@@ -4,12 +4,15 @@ import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.Spotif
 import nl.tijsgroenendaal.queuemusicfacade.commands.CreateSessionCommand
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionUserModel
-import nl.tijsgroenendaal.queuemusicfacade.services.*
+import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
+import nl.tijsgroenendaal.queuemusicfacade.services.SessionUserService
+import nl.tijsgroenendaal.queuemusicfacade.services.UserService
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 private const val MAX_SECONDS_DURATION = 14400L
 private const val MAX_ACTIVE_SESSION = 1
@@ -53,6 +56,7 @@ class SessionFacade(
         ))
     }
 
+    @Transactional
     fun joinSession(code: String): SessionUserModel {
         val user = userService.findById(getAuthenticationContextSubject())
 
@@ -67,12 +71,22 @@ class SessionFacade(
         if (!session.hasRoom())
             throw BadRequestException(SessionErrorCodes.MAX_USERS_EXCEEDED)
 
+        sessionUserService.leaveActiveJoinedSessions(user.id)
 
         return sessionUserService.createNew(user, session)
     }
 
+    @Transactional
     fun leaveSession(code: String) {
         val user = getAuthenticationContextSubject()
-        sessionUserService.leaveSession(code, user)
+        val session = sessionService.findSessionByCode(code)
+
+        if (!session.isActive())
+            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
+
+        if (!session.hasJoined(user))
+            throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
+
+        sessionUserService.leaveSession(session, user)
     }
 }
