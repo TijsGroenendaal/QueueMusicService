@@ -1,19 +1,14 @@
 clients:
-  spotify-facade: spotifyfacade:8080
+  spotify-facade: ${SPOTIFY_FACADE_URL}
 
 spring:
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
   datasource:
-    url: jdbc:postgresql://postgresql:5432/${POSTGRES_DB}?user=${POSTGRES_USER}&password=${POSTGRES_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}?user=${POSTGRES_USER}&password=${POSTGRES_PASSWORD}
     hikari:
       minimum-idle: 4
       maximum-pool-size: 16
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: false
-    generate-ddl: true
     hibernate:
-      ddl-auto: update
-    show-sql: false
+      ddl-auto: none

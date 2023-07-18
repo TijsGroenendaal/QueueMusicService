@@ -8,26 +8,6 @@ services:
     volumes:
       - queuemusic_postgresql:/var/lib/postgresql/data
 
-  qumu-release:
-    build:
-      context: QuMu
-      args:
-        CI_GITHUB_USERNAME: ${CI_GITHUB_USERNAME}
-        CI_GITHUB_PASSWORD: ${CI_GITHUB_PASSWORD}
-        CI_GITHUB_REPOSITORY: ${CI_GITHUB_REPOSITORY}
-      dockerfile: ./release.Dockerfile
-    env_file: .env
-
-  qumusecurity-release:
-    build:
-      context: QuMuSecurity
-      args:
-        CI_GITHUB_USERNAME: ${CI_GITHUB_USERNAME}
-        CI_GITHUB_PASSWORD: ${CI_GITHUB_PASSWORD}
-        CI_GITHUB_REPOSITORY: ${CI_GITHUB_REPOSITORY}
-      dockerfile: ./release.Dockerfile
-    env_file: .env
-
   queuemusicfacade:
     build:
       context: ./QueueMusicFacade
@@ -55,6 +35,18 @@ services:
     command:
       - /opt/entrypoint.sh
       - -Dspring.profiles.active=prd
+
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    volumes:
+      - ./ops/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./ops/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
 
 volumes:
   queuemusic_postgresql:

@@ -1,8 +1,19 @@
 spring:
   profiles:
     active: local
-
-clients:
+  rabbitmq:
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: true
+    show-sql: false
 
 queuemusic:
   security:
@@ -17,4 +28,9 @@ queuemusic:
   session:
     song:
       timeout: PT5M
+  rabbitmq:
+    exchange: queuemusic
+    autoqueue:
+      routingKey: autoqueue
+      queueName: autoqueue
 
