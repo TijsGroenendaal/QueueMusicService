@@ -37,4 +37,15 @@ class SessionService(
         return sessionRepository.findByCode(code)
             ?: throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
     }
+
+    fun endSession(code: String): SessionModel {
+        val session = this.findSessionByCode(code)
+
+        if (!session.isActive())
+            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
+
+        session.end()
+
+        return sessionRepository.save(session)
+    }
 }

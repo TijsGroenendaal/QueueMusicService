@@ -89,4 +89,14 @@ class SessionFacade(
 
         sessionUserService.leaveSession(session, user)
     }
+
+    fun endSession(code: String) {
+        val user = getAuthenticationContextSubject()
+        val session = sessionService.findSessionByCode(code)
+
+        if (!session.isHost(user))
+            throw BadRequestException(SessionErrorCodes.NOT_HOST)
+
+        sessionService.endSession(code)
+    }
 }

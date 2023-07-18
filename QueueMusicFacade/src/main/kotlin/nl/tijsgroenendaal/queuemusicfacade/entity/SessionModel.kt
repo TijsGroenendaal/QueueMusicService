@@ -27,7 +27,7 @@ class SessionModel(
     val playListId: String?,
     @Column(name = "maximum_users")
     val maxUsers: Int,
-    val manualEnded: Boolean = false,
+    var manualEnded: Boolean = false,
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "session")
     val sessionUsers: MutableList<SessionUserModel> = mutableListOf()
 ) {
@@ -71,4 +71,11 @@ class SessionModel(
     }
 
     fun getUser(user: UUID): UserModel? = sessionUsers.firstOrNull { it.user.id == user }?.user
+
+
+    fun isHost(user: UUID): Boolean = this.host.id == user
+
+    fun end() {
+        this.manualEnded = true
+    }
 }
