@@ -76,7 +76,8 @@ enum class SessionErrorCodes(
     SESSION_ENDED("SESS0004", 403, "Session has ended."),
     MAX_USERS_EXCEEDED("SESS0005", 400, "Session has reached it maximum users."),
     ALREADY_JOINED("SESS0006", 400, "User has already joined this session."),
-    USER_NOT_JOINED("SESS0007", 403, "User has not joined this session.");
+    USER_NOT_JOINED("SESS0007", 403, "User has not joined this session."),
+    NOT_HOST("SESS0008", 403, "User is not the host.");
 
     override fun getCode(): String {
         return this.code
@@ -138,7 +139,7 @@ enum class SessionSongUserVoteErrorCodes(
     private val status: Int,
     private val message: String
 ): ErrorCode {
-    VOTE_NOT_FOUND("SSUV0001", 404, "SessionSongUserVote tot found");
+    VOTE_NOT_FOUND("SSUV0001", 404, "SessionSongUserVote not found");
 
     override fun getCode(): String {
         return this.code
