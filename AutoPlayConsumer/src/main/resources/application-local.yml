@@ -1,0 +1,10 @@
+clients:
+  spotify-facade: localhost:8081
+
+spring:
+  rabbitmq:
+    host: localhost
+
+server:
+  port: 8083
+
