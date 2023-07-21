@@ -44,9 +44,6 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
-    volumes:
-      - ./ops/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      - ./ops/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
 
 volumes:
   queuemusic_postgresql:
