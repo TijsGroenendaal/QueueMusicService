@@ -66,4 +66,5 @@ jobs:
       - name: 'Commit Version Update'
         run: | 
           git commit -am "Increment QuMu to version $NEW_VERSION [skip ci]"
+          git pull
           git push 
