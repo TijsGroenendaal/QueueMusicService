@@ -56,13 +56,13 @@
         <dependency>
             <groupId>nl.tijsgroenendaal</groupId>
             <artifactId>qumu</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.3</version>
         </dependency>
 
         <dependency>
             <groupId>nl.tijsgroenendaal</groupId>
             <artifactId>qumu-security</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.2</version>
         </dependency>
 
         <!-- Kotlin Dependencies -->
