@@ -15,6 +15,7 @@
         <module>SpotifyFacade</module>
         <module>QueueMusicFacade</module>
         <module>AutoPlayConsumer</module>
+        <module>IdpService</module>
     </modules>
 
 </project>

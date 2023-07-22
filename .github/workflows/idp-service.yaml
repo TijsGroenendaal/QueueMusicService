@@ -1,0 +1,70 @@
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    paths:
+      - 'IdpService/**'
+
+jobs:
+  test:
+    name: 'Test IdpService Package'
+    runs-on: ubuntu-latest
+    env:
+      CI_GITHUB_PASSWORD: ${{ secrets.CI_GITHUB_PASSWORD }}
+      CI_GITHUB_USERNAME: ${{ secrets.CI_GITHUB_USERNAME }}
+      CI_GITHUB_REPOSITORY: ${{ secrets.CI_GITHUB_REPOSITORY }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: maven
+      - name: 'Test IdpService'
+        working-directory: ./IdpService
+        run: mvn --batch-mode --update-snapshots test -s ci-settings.xml
+
+  release:
+    name: 'Release IdpService Container'
+    runs-on: ubuntu-latest
+    env:
+      CI_GITHUB_PASSWORD: ${{ secrets.CI_GITHUB_PASSWORD }}
+      CI_GITHUB_USERNAME: ${{ secrets.CI_GITHUB_USERNAME }}
+      CI_GITHUB_REPOSITORY: ${{ secrets.CI_GITHUB_REPOSITORY }}
+      IMAGE_NAME: idp-service
+    if: ${{ github.ref == 'refs/heads/main' }}
+    needs:
+      - test
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull
+      - name: 'Login Github Container Registry'
+        run: echo $CI_GITHUB_PASSWORD | docker login ghcr.io -u $CI_GITHUB_USERNAME --password-stdin
+      - name: 'Increment Package Version'
+        working-directory: ./IdpService
+        run: |
+          OLD_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)
+          NEW_VERSION=$(echo ${OLD_VERSION} |  awk -F'.' '{print $1"."$2"."$3+1}' |  sed s/[.]$//)
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          mvn versions:set -DnewVersion=$NEW_VERSION -DprocessFromLocalAggregationRoot=false -DgenerateBackupPoms=false
+      - name: 'Release IdpService Container'
+        working-directory: ./IdpService
+        run: |
+          IMAGE_TAG=$(echo "ghcr.io/$CI_GITHUB_USERNAME/$IMAGE_NAME:$NEW_VERSION" | tr '[:upper:]' '[:lower:]')
+          docker build --build-arg CI_GITHUB_USERNAME=${{ env.CI_GITHUB_USERNAME }} --build-arg CI_GITHUB_PASSWORD=${{ env.CI_GITHUB_PASSWORD }} --build-arg CI_GITHUB_REPOSITORY=${{ env.CI_GITHUB_REPOSITORY }} -t $IMAGE_TAG .
+          docker push $IMAGE_TAG
+      - name: 'Commit Version Update'
+        run: |
+          git commit -am "Increment IdpService to version $NEW_VERSION [skip ci]"
+          git pull
+          git push 

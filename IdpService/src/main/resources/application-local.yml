@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?user=${POSTGRES_USER}&password=${POSTGRES_PASSWORD}
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 10
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8082
