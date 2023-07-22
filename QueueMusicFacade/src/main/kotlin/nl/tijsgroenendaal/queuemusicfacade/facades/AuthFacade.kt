@@ -12,12 +12,9 @@ import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil
 import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil.Companion.JWT_REFRESH_TOKEN_VALIDITY
 import nl.tijsgroenendaal.qumusecurity.security.JwtTypes
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
-import nl.tijsgroenendaal.qumusecurity.security.model.Authorities
-import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicAuthentication
-import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicPrincipalAuthentication
-import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicUserDetails
+import nl.tijsgroenendaal.qumusecurity.security.model.QuMuAuthority
+import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicClaims
 
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 
 import java.time.LocalDateTime
@@ -71,23 +68,19 @@ class AuthFacade(
 
     private fun createNewAccessTokens(userId: UUID, checkUserLink: Boolean = false): LoginQueryResponse {
         val userModel = userService.findById(userId)
-        SecurityContextHolder.getContext().authentication = QueueMusicAuthentication(
-            QueueMusicPrincipalAuthentication(
-                userModel.id,
-                userModel.userDeviceLink?.deviceId,
-                emptySet()
-            ),
-            emptySet()
-        )
 
         val userLink = if (checkUserLink) userLinkService.getByUserId(userModel.id) else null
 
-        val authorities = mutableListOf(Authorities.REFRESH)
+        val authorities = mutableListOf(QuMuAuthority("REFRESH"))
         if (userLink != null) {
-            authorities.add(Authorities.SPOTIFY)
+            authorities.add(QuMuAuthority("SPOTIFY"))
         }
 
-        val userDetails = QueueMusicUserDetails(userModel.id, userModel.userDeviceLink?.deviceId, authorities.toSet())
+        val userDetails = QueueMusicClaims(userId.toString())
+            .apply {
+                setScope(authorities)
+                setUserId(userModel.id)
+            }
 
         if (userModel.userRefreshToken == null) {
             userModel.userRefreshToken = UserRefreshTokenModel(

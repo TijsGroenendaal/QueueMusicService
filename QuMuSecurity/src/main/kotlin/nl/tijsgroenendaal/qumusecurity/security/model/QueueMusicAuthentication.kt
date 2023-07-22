@@ -1,18 +1,33 @@
 package nl.tijsgroenendaal.qumusecurity.security.model
 
-import org.springframework.security.authentication.AbstractAuthenticationToken
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 
 class QueueMusicAuthentication(
-    private val principal: QueueMusicPrincipalAuthentication,
-    authorities: Set<GrantedAuthority>
-): AbstractAuthenticationToken(authorities) {
+    val claims: QueueMusicClaims
+): Authentication {
 
-    override fun getCredentials(): String {
-        return name
+    override fun getName(): String {
+        return claims.subject
     }
 
-    override fun getPrincipal(): QueueMusicPrincipalAuthentication {
-        return principal
+    override fun getAuthorities(): Collection<GrantedAuthority> {
+        return claims.getScope()
     }
+
+    override fun getCredentials(): Any {
+        throw NotImplementedError()
+    }
+
+    override fun getDetails(): Any {
+        throw NotImplementedError()
+    }
+
+    override fun getPrincipal(): QueueMusicClaims {
+        return claims
+    }
+
+    override fun isAuthenticated(): Boolean = true
+
+    override fun setAuthenticated(isAuthenticated: Boolean) { }
 }
