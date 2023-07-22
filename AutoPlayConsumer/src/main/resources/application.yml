@@ -5,3 +5,10 @@ spring:
     port: ${RABBITMQ_PORT}
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}
+
+queuemusic:
+  rabbitmq:
+    exchange: queuemusic
+    autoqueue:
+      routingKey: autoqueue
+      queueName: autoqueue
