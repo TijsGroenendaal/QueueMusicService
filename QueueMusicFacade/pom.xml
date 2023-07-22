@@ -7,7 +7,7 @@
     <artifactId>queuemusic-facade</artifactId>
     <groupId>nl.tijsgroenendaal</groupId>
     <version>0.0.5</version>
-    <packaging>jar</packaging>
+    <name>QueueMusicFacade</name>
 
     <properties>
         <java.version>17</java.version>
@@ -113,6 +113,10 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
             <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-coroutines-core-jvm</artifactId>
         </dependency>
     </dependencies>
 

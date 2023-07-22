@@ -18,15 +18,20 @@ class SessionSongUserVoteService(
     private val sessionSongUserVoteRepository: SessionSongUserVoteRepository
 ) {
 
-    fun vote(song: SessionSongModel, user: UserModel, vote: VoteEnum): SessionSongUserVoteModel {
-        return try {
-            val userVote = findBySongAndUser(song.id, getAuthenticationContextSubject())
-            if (userVote.vote == vote) return userVote
+    fun vote(song: SessionSongModel, user: UserModel, vote: VoteEnum): Pair<Int, SessionSongUserVoteModel> {
+        try {
+            val oldUserVote = findBySongAndUser(song.id, getAuthenticationContextSubject())
+            if (oldUserVote.vote == vote) {
+                return Pair(0, oldUserVote)
+            }
 
-            sessionSongUserVoteRepository.save(userVote.apply { this.vote = vote })
+            val userVote = sessionSongUserVoteRepository.save(oldUserVote.apply { this.vote = vote })
+            // Vote is multiplied to take into account that the difference from +1 to -1, 2 is.
+            return Pair(vote.value * 2, userVote)
         }
         catch (e: BadRequestException) {
-            sessionSongUserVoteRepository.save(SessionSongUserVoteModel.new(song, user, vote))
+            val userVote = sessionSongUserVoteRepository.save(SessionSongUserVoteModel.new(song, user, vote))
+            return Pair(vote.value, userVote)
         }
     }
 

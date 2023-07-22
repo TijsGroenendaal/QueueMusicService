@@ -42,4 +42,23 @@ class SessionSongService(
 
     fun getById(songId: UUID): SessionSongModel = sessionSongRepository.findById(songId)
         .orElseThrow { BadRequestException(SessionSongErrorCode.SESSION_SONG_NOT_FOUND) }
+
+    fun calculateQueuePosition(songId: UUID, sessionId: UUID): Int {
+        val songs = getSongsBySession(sessionId)
+
+        val orderedSongs = songs.sortedByDescending { it.votes }
+
+        return orderedSongs.indexOfFirst { it.id == songId }
+    }
+
+    fun updateVoteAggregate(songId: UUID, vote: Int): SessionSongModel {
+        val song = getById(songId)
+
+        song.votes += vote
+
+        return sessionSongRepository.save(song)
+    }
+
+    private fun getSongsBySession(id: UUID): List<SessionSongModel> = sessionSongRepository.findAllBySessionId(id)
+
 }

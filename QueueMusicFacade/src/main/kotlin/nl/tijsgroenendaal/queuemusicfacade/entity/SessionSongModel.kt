@@ -24,6 +24,7 @@ class SessionSongModel(
     val title: String,
     val album: String,
     val authors: String,
+    var votes: Int,
     val createdAt: LocalDateTime,
 ) {
     companion object {
@@ -38,6 +39,7 @@ class SessionSongModel(
                 command.trackName,
                 command.trackAlbum,
                 command.trackArtists,
+                0,
                 LocalDateTime.now(ZoneOffset.UTC)
             )
         }

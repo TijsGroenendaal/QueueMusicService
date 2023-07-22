@@ -1,6 +1,7 @@
 package nl.tijsgroenendaal.queuemusicfacade.services
 
-import nl.tijsgroenendaal.queuemusicfacade.services.commands.AutoqueueUpdateTask
+import nl.tijsgroenendaal.queuemusicfacade.services.commands.AutoplayUpdateTask
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -14,7 +15,7 @@ class AutoQueueService(
     private val routingKey: String
 ) {
 
-    fun publish(task: AutoqueueUpdateTask) {
+    fun publish(task: AutoplayUpdateTask) {
         rabbitTemplate.convertAndSend(exchange, routingKey, task)
     }
 }

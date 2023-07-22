@@ -12,5 +12,5 @@ import java.util.UUID
 interface SessionSongRepository: JpaRepository<SessionSongModel, UUID> {
 
     fun countByUserIdAndCreatedAtAfter(userId: UUID, createdAt: LocalDateTime): Int
-
+    fun findAllBySessionId(sessionId: UUID): List<SessionSongModel>
 }
