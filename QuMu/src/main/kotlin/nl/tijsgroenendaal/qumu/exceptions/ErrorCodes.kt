@@ -10,7 +10,29 @@ enum class AuthErrorCodes(
     INVALID_JWT_SUBJECT("AUTH0003", 401, "Subject is invalid"),
     INVALID_JWT_REFRESH_TOKEN("AUTH0004", 401, "RefreshToken is not valid."),
     INVALID_JWT("AUTH0004", 401, "Jwt is not valid"),
-    UNABLE_TO_LOGIN_TO_LINK("AUTH0005", 400, "Unable to login to link account");
+    UNABLE_TO_LOGIN_TO_LINK("AUTH0005", 400, "Unable to login to link account"),
+    ANONYMOUS_CLIENT_CLAIMS("AUTH0006", 400, "Anonymous client claims");
+
+    override fun getCode(): String {
+        return this.code
+    }
+
+    override fun getStatus(): Int {
+        return this.status
+    }
+
+    override fun getMessage(): String {
+        return this.message
+    }
+}
+
+enum class RegisteredClientErrorCodes(
+    private val code: String,
+    private val status: Int,
+    private val message: String
+): ErrorCode {
+    CLIENT_NOT_FOUND("RGCL0001", 404, "Client not found."),
+    BAD_CLIENT_CREDENTIALS("RGCL0002", 403, "Bad client Credentials.");
 
     override fun getCode(): String {
         return this.code
