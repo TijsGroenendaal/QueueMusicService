@@ -10,3 +10,12 @@ spring:
     open-in-view: false
     generate-ddl: true
     show-sql: false
+
+queuemusic:
+  security:
+    permitted: >
+      /v1/client/jwt
+  jwt:
+    secret: ${QUEUEMUSIC_JWT_SECRET}
+    refresh:
+      secret: ${QUEUEMUSIC_REFRESH_JWT_SECRET}
