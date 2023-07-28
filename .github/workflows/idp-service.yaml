@@ -1,3 +1,5 @@
+name: Release IdpService
+
 on:
   workflow_dispatch:
   pull_request:

@@ -1,3 +1,5 @@
+name: Release AutoplayConsumer
+
 on:
   workflow_dispatch:
   pull_request:

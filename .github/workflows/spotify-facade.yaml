@@ -1,3 +1,5 @@
+name: Release SpotifyFacade
+
 on:
   workflow_dispatch:
   pull_request:

@@ -1,3 +1,5 @@
+name: Release QuMuSecurity
+
 on:
   workflow_dispatch:
   pull_request:
