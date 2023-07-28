@@ -1,5 +1,7 @@
 package nl.tijsgroenendaal.qumusecurity.security.model
 
+import nl.tijsgroenendaal.qumu.exceptions.AuthErrorCodes
+import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumusecurity.security.exceptions.InvalidUserIdException
 
 import java.util.UUID
@@ -20,6 +22,9 @@ class QueueMusicClaims : DefaultClaims {
     constructor(claims: Claims): super(claims)
 
     fun getUserId(): UUID {
+        if (!containsKey(USER_ID))
+            throw BadRequestException(AuthErrorCodes.ANONYMOUS_CLIENT_CLAIMS)
+
         return getUserIdFromSubject(getString(USER_ID))
     }
 
