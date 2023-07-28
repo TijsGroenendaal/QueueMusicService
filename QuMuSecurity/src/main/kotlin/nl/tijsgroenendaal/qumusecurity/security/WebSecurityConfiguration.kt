@@ -39,7 +39,7 @@ class WebSecurityConfiguration(
     fun getJwtFilter(): JwtRequestFilter {
         return JwtRequestFilter(
             jwtTokenUtil,
-            arrayOf("/v1/auth/login/**"))
+            permittedRequests)
     }
 
 }
