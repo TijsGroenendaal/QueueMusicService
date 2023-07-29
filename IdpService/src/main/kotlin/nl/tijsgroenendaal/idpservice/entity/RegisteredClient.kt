@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.idpservice.entities
+package nl.tijsgroenendaal.idpservice.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

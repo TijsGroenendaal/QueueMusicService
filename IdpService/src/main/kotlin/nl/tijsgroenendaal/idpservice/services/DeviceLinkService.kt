@@ -1,8 +1,8 @@
-package nl.tijsgroenendaal.queuemusicfacade.services
+package nl.tijsgroenendaal.idpservice.services
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserDeviceLinkModel
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
-import nl.tijsgroenendaal.queuemusicfacade.repositories.UserDeviceLinkRepository
+import nl.tijsgroenendaal.idpservice.entity.UserDeviceLinkModel
+import nl.tijsgroenendaal.idpservice.entity.UserModel
+import nl.tijsgroenendaal.idpservice.repositories.UserDeviceLinkRepository
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.DeviceLinkErrorCodes
 

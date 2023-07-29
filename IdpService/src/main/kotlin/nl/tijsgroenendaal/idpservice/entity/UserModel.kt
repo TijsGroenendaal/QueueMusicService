@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.entity
+package nl.tijsgroenendaal.idpservice.entity
 
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity

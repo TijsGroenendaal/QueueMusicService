@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.entity
+package nl.tijsgroenendaal.idpservice.entity
 
 import nl.tijsgroenendaal.qumusecurity.data.AttributeEncryptor
 

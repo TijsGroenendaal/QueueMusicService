@@ -17,7 +17,7 @@ spring:
 
 queuemusic:
   security:
-    permitted: "/v1/auth/login/**"
+    permitted: >
   encryption:
     algorithme: ${QUEUEMUSIC_ENCRYPTION_ALGORITHME}
     secret: ${QUEUEMUSIC_ENCRYPTION_SECRET}

@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.query.responses
+package nl.tijsgroenendaal.idpservice.clients.spotifyfacade.query.responses
 
 import java.util.UUID
 

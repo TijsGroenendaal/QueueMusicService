@@ -1,8 +1,8 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services
+package nl.tijsgroenendaal.idpservice.clients.spotifyfacade.services
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.clients.AnonymousSpotifyFacadeClient
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.clients.SpotifyFacadeClient
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.query.responses.GetUserLinkByUserIdQueryResponse
+import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.clients.AnonymousSpotifyFacadeClient
+import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.clients.SpotifyFacadeClient
+import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.query.responses.GetUserLinkByUserIdQueryResponse
 import nl.tijsgroenendaal.qumu.exceptions.UserLinkErrorCodes
 import nl.tijsgroenendaal.qumu.helper.BadRequestSerializer
 

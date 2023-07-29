@@ -14,7 +14,8 @@ spring:
 queuemusic:
   security:
     permitted: >
-      /v1/client/jwt
+      /v1/client/jwt,
+      /v1/auth/login/**
   jwt:
     secret: ${QUEUEMUSIC_JWT_SECRET}
     refresh:

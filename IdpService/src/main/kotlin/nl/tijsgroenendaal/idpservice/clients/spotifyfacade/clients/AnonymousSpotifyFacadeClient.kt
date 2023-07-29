@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.clients
+package nl.tijsgroenendaal.idpservice.clients.spotifyfacade.clients
 
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PostMapping

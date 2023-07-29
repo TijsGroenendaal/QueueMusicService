@@ -29,5 +29,4 @@ class SpotifyService(
             throw BadRequestSerializer.getBadRequestException(e)
         }
     }
-
 }

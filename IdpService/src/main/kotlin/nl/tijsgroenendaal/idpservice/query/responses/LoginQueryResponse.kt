@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.queuemusicfacade.query.responses
+package nl.tijsgroenendaal.idpservice.query.responses
 
 import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil.Companion.JWT_TOKEN_VALIDITY
 

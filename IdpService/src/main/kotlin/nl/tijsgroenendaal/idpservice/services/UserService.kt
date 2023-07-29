@@ -1,7 +1,7 @@
-package nl.tijsgroenendaal.queuemusicfacade.services
+package nl.tijsgroenendaal.idpservice.services
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
-import nl.tijsgroenendaal.queuemusicfacade.repositories.UserRepository
+import nl.tijsgroenendaal.idpservice.entity.UserModel
+import nl.tijsgroenendaal.idpservice.repositories.UserRepository
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.UserErrorCodes
 

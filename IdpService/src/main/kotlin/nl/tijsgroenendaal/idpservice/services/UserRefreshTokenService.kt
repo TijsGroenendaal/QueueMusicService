@@ -1,7 +1,7 @@
-package nl.tijsgroenendaal.queuemusicfacade.services
+package nl.tijsgroenendaal.idpservice.services
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserRefreshTokenModel
-import nl.tijsgroenendaal.queuemusicfacade.repositories.UserRefreshTokenRepository
+import nl.tijsgroenendaal.idpservice.entity.UserRefreshTokenModel
+import nl.tijsgroenendaal.idpservice.repositories.UserRefreshTokenRepository
 
 import org.springframework.stereotype.Service
 

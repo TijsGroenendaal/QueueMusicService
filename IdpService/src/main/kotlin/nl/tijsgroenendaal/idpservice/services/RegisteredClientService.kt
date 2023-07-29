@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.idpservice.services
 
-import nl.tijsgroenendaal.idpservice.entities.RegisteredClient
+import nl.tijsgroenendaal.idpservice.entity.RegisteredClient
 import nl.tijsgroenendaal.idpservice.repositories.RegisteredClientRepository
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.RegisteredClientErrorCodes

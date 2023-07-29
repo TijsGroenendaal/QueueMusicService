@@ -1,7 +1,7 @@
-package nl.tijsgroenendaal.queuemusicfacade.controllers
+package nl.tijsgroenendaal.idpservice.controllers
 
-import nl.tijsgroenendaal.queuemusicfacade.facades.AuthFacade
-import nl.tijsgroenendaal.queuemusicfacade.query.responses.LoginQueryResponse
+import nl.tijsgroenendaal.idpservice.facades.AuthFacade
+import nl.tijsgroenendaal.idpservice.query.responses.LoginQueryResponse
 
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader

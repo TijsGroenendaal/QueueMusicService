@@ -1,6 +1,6 @@
-package nl.tijsgroenendaal.queuemusicfacade.repositories
+package nl.tijsgroenendaal.idpservice.repositories
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
+import nl.tijsgroenendaal.idpservice.entity.UserModel
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository

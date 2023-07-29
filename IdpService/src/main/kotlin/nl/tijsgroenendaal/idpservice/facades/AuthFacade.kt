@@ -1,11 +1,11 @@
-package nl.tijsgroenendaal.queuemusicfacade.facades
+package nl.tijsgroenendaal.idpservice.facades
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.UserLinkService
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserRefreshTokenModel
-import nl.tijsgroenendaal.queuemusicfacade.query.responses.LoginQueryResponse
-import nl.tijsgroenendaal.queuemusicfacade.services.DeviceLinkService
-import nl.tijsgroenendaal.queuemusicfacade.services.UserRefreshTokenService
-import nl.tijsgroenendaal.queuemusicfacade.services.UserService
+import nl.tijsgroenendaal.idpservice.entity.UserRefreshTokenModel
+import nl.tijsgroenendaal.idpservice.query.responses.LoginQueryResponse
+import nl.tijsgroenendaal.idpservice.services.DeviceLinkService
+import nl.tijsgroenendaal.idpservice.services.UserRefreshTokenService
+import nl.tijsgroenendaal.idpservice.services.UserService
+import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.services.UserLinkService
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.InvalidRefreshJwtException
 import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil
