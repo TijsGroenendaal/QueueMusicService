@@ -40,7 +40,7 @@ class SessionFacade(
         val sessionCode = SessionModel.generateSessionCode()
 
         val playlist = if (command.autoplay) {
-            spotifyService.createPlaylist(sessionCode)
+            spotifyService.createPlaylist(sessionCode, userId)
         } else null
 
         return sessionService.createSession(nl.tijsgroenendaal.queuemusicfacade.services.commands.CreateSessionCommand(

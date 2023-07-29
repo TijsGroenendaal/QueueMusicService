@@ -22,9 +22,11 @@ queuemusic:
     algorithme: ${QUEUEMUSIC_ENCRYPTION_ALGORITHME}
     secret: ${QUEUEMUSIC_ENCRYPTION_SECRET}
   jwt:
-    secret: ${QUEUEMUSIC_JWT_SECRET}
+    private-secret: ${QUEUEMUSIC_JWT_SECRET}
+    public-secret: ${QUEUEMUSIC_JWT_PUBLIC_SECRET}
     refresh:
-      secret: ${QUEUEMUSIC_REFRESH_JWT_SECRET}
+      private-secret: ${QUEUEMUSIC_REFRESH_JWT_SECRET}
+      public-secret: ${QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET}
   session:
     song:
       timeout: PT5M
@@ -34,3 +36,8 @@ queuemusic:
       routingKey: autoqueue
       queueName: autoqueue
 
+clients:
+  idp:
+    spotify-facade:
+      id: ${SPOTIFY_FACADE_CLIENT_ID}
+      secret: ${SPOTIFY_FACADE_CLIENT_SECRET}

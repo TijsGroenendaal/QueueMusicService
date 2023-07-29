@@ -1,7 +1,5 @@
 package nl.tijsgroenendaal.idpservice.query.responses
 
-import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil.Companion.JWT_TOKEN_VALIDITY
-
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class LoginQueryResponse(
@@ -9,5 +7,5 @@ data class LoginQueryResponse(
     @JsonProperty("refresh_token")
     val refreshToken: String,
     @JsonProperty("expires_in")
-    val expiresIn: Long = JWT_TOKEN_VALIDITY
+    val expiresIn: Long
 )

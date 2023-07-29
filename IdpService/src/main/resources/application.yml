@@ -17,6 +17,14 @@ queuemusic:
       /v1/client/jwt,
       /v1/auth/login/**
   jwt:
-    secret: ${QUEUEMUSIC_JWT_SECRET}
+    private-secret: ${QUEUEMUSIC_JWT_SECRET}
+    public-secret: ${QUEUEMUSIC_JWT_PUBLIC_SECRET}
     refresh:
-      secret: ${QUEUEMUSIC_REFRESH_JWT_SECRET}
+      private-secret: ${QUEUEMUSIC_REFRESH_JWT_SECRET}
+      public-secret: ${QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET}
+
+clients:
+  idp:
+    spotify-facade:
+      id: ${SPOTIFY_FACADE_CLIENT_ID}
+      secret: ${SPOTIFY_FACADE_CLIENT_SECRET}

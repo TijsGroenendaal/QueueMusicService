@@ -1,5 +1,6 @@
 clients:
   spotify-facade: localhost:8081
+  idp-service: localhost:8082
 
 spring:
   rabbitmq:

@@ -6,10 +6,12 @@ import nl.tijsgroenendaal.idpservice.services.DeviceLinkService
 import nl.tijsgroenendaal.idpservice.services.UserRefreshTokenService
 import nl.tijsgroenendaal.idpservice.services.UserService
 import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.services.UserLinkService
+import nl.tijsgroenendaal.idpservice.security.JwtGenerator
+import nl.tijsgroenendaal.idpservice.security.JwtGenerator.Companion.JWT_REFRESH_TOKEN_VALIDITY
+import nl.tijsgroenendaal.idpservice.security.JwtGenerator.Companion.JWT_TOKEN_VALIDITY
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.InvalidRefreshJwtException
 import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil
-import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil.Companion.JWT_REFRESH_TOKEN_VALIDITY
 import nl.tijsgroenendaal.qumusecurity.security.JwtTypes
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 import nl.tijsgroenendaal.qumusecurity.security.model.QuMuAuthority
@@ -27,7 +29,8 @@ class AuthFacade(
     private val userService: UserService,
     private val userRefreshTokenService: UserRefreshTokenService,
     private val userLinkService: UserLinkService,
-    private val deviceLinkService: DeviceLinkService
+    private val deviceLinkService: DeviceLinkService,
+    private val jwtGenerator: JwtGenerator
 ) {
 
     fun loginLinkUser(code: String): LoginQueryResponse {
@@ -82,26 +85,30 @@ class AuthFacade(
                 setUserId(userModel.id)
             }
 
+        val refreshTokenString = jwtGenerator.generateToken(userDetails, JwtTypes.REFRESH)
+        val expireTime = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(JWT_REFRESH_TOKEN_VALIDITY)
+
         if (userModel.userRefreshToken == null) {
             userModel.userRefreshToken = UserRefreshTokenModel(
                 userModel,
-                jwtTokenUtil.generateToken(userDetails, JwtTypes.REFRESH),
-                LocalDateTime.now(ZoneOffset.UTC).plusSeconds(JWT_REFRESH_TOKEN_VALIDITY)
+                refreshTokenString,
+                expireTime
             )
         } else {
             userModel.userRefreshToken!!.apply {
-                this.refreshToken = jwtTokenUtil.generateToken(userDetails, JwtTypes.REFRESH)
-                this.expireTime = LocalDateTime.now(ZoneOffset.UTC).plusSeconds(JWT_REFRESH_TOKEN_VALIDITY)
+                this.refreshToken = refreshTokenString
+                this.expireTime = expireTime
             }
         }
 
         userRefreshTokenService.save(userModel.userRefreshToken!!)
 
-        val jwtToken = jwtTokenUtil.generateToken(userDetails, JwtTypes.ACCESS)
+        val jwtToken = jwtGenerator.generateToken(userDetails, JwtTypes.ACCESS)
 
         return LoginQueryResponse(
             jwtToken,
-            userModel.userRefreshToken!!.refreshToken
+            userModel.userRefreshToken!!.refreshToken,
+            JWT_TOKEN_VALIDITY
         )
     }
 }

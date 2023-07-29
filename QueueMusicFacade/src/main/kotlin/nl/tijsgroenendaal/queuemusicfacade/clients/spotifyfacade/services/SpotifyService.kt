@@ -5,6 +5,8 @@ import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.query.responses
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.clients.SpotifyFacadeClient
 import nl.tijsgroenendaal.qumu.helper.BadRequestSerializer
 
+import java.util.UUID
+
 import feign.FeignException
 
 import org.springframework.stereotype.Service
@@ -22,9 +24,9 @@ class SpotifyService(
         }
     }
 
-    fun createPlaylist(name: String): CreatePlaylistCommandResponse {
+    fun createPlaylist(name: String, userId: UUID): CreatePlaylistCommandResponse {
         return try {
-            spotifyFacadeClient.createPlaylist(name)
+            spotifyFacadeClient.createPlaylist(name, userId)
         } catch (e: FeignException) {
             throw BadRequestSerializer.getBadRequestException(e)
         }

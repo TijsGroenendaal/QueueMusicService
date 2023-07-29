@@ -5,6 +5,8 @@ import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.t
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.services.SpotifyApiClientService
 import nl.tijsgroenendaal.spotifyfacade.facades.SpotifyApiFacade
 
+import java.util.UUID
+
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,8 +27,8 @@ class SpotifyController(
     }
 
     @PostMapping("/playlists")
-    fun createPlaylist(@RequestParam("name") name: String): CreatePlaylistCommandResponse {
-        return spotifyFacade.createPlaylist(name)
+    fun createPlaylist(@RequestParam("name") name: String, @RequestParam("user") userId: UUID): CreatePlaylistCommandResponse {
+        return spotifyFacade.createPlaylist(name, userId)
     }
 
 }
