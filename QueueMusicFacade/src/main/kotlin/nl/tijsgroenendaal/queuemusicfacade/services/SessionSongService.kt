@@ -22,9 +22,9 @@ class SessionSongService(
     private val songTimeout: Duration
 ) {
 
-    private fun canDeviceCreateSong(userId: UUID) {
+    private fun verifyCanUserCreateSong(userId: UUID) {
         val lowerBoundDateTime = LocalDateTime.now(ZoneOffset.UTC).minus(songTimeout)
-        val sessionSongCount = sessionSongRepository.countByUserIdAndCreatedAtAfter(userId, lowerBoundDateTime)
+        val sessionSongCount = sessionSongRepository.countByUserAndCreatedAtAfter(userId, lowerBoundDateTime)
 
         if (sessionSongCount >= 1)
             throw BadRequestException(SessionSongErrorCode.ADD_SONG_TIMEOUT_NOT_PASSED)
@@ -35,7 +35,7 @@ class SessionSongService(
             throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
         }
 
-        canDeviceCreateSong(command.user.id)
+        verifyCanUserCreateSong(command.userId)
 
         return sessionSongRepository.save(SessionSongModel.new(command))
     }

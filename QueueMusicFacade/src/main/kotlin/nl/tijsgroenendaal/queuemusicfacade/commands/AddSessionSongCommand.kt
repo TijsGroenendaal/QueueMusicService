@@ -1,10 +1,10 @@
 package nl.tijsgroenendaal.queuemusicfacade.commands
 
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
+import java.util.UUID
 
 data class AddSessionSongCommand(
-    val user: UserModel,
+    val userId: UUID,
     val trackId: String?,
     val trackAlbum: String,
     val trackName: String,

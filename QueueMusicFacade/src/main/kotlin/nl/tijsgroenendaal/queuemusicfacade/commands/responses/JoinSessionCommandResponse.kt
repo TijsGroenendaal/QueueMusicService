@@ -13,7 +13,7 @@ data class JoinSessionCommandResponse(
         fun SessionUserModel.toResponse(): JoinSessionCommandResponse {
             return JoinSessionCommandResponse(
                 JoinSessionCommandResponseUser(
-                    this.user.id,
+                    this.user,
                 ),
                 JoinSessionCommandResponseSession(
                     this.session.id,

@@ -20,7 +20,7 @@ data class AddSessionSongCommandResponse(
             return AddSessionSongCommandResponse(
                 this.id,
                 AddSessionSongCommandResponseUser(
-                    this.user.id,
+                    this.user,
                 ),
                 AddSessionSongCommandResponseSession(
                     this.session.id,

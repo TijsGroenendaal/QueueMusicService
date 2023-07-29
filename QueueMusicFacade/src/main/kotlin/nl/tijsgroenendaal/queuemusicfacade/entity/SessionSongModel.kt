@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.UUID
+import jakarta.persistence.Column
 
 @Entity(
     name = "queuemusic_session_song"
@@ -16,8 +17,8 @@ import java.util.UUID
 class SessionSongModel(
     @Id
     val id: UUID,
-    @ManyToOne
-    val user: UserModel,
+    @Column(name = "user_id")
+    val user: UUID,
     @ManyToOne
     val session: SessionModel,
     val trackId: String?,
@@ -33,7 +34,7 @@ class SessionSongModel(
         ): SessionSongModel {
             return SessionSongModel(
                 UUID.randomUUID(),
-                command.user,
+                command.userId,
                 command.session,
                 command.trackId,
                 command.trackName,

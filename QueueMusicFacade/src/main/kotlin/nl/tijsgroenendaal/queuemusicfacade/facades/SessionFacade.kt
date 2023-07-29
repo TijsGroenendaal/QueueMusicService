@@ -6,7 +6,6 @@ import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionUserModel
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionUserService
-import nl.tijsgroenendaal.queuemusicfacade.services.UserService
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
@@ -23,7 +22,6 @@ class SessionFacade(
     private val sessionService: SessionService,
     private val sessionUserService: SessionUserService,
     private val spotifyService: SpotifyService,
-    private val userService: UserService
 ) {
 
     fun createSession(command: CreateSessionCommand): SessionModel {
@@ -45,24 +43,22 @@ class SessionFacade(
             spotifyService.createPlaylist(sessionCode)
         } else null
 
-        val user = userService.findById(userId)
-
         return sessionService.createSession(nl.tijsgroenendaal.queuemusicfacade.services.commands.CreateSessionCommand(
             playlist?.id,
             sessionCode,
             command.duration,
-            user,
+            userId,
             command.maxUsers
         ))
     }
 
     @Transactional
     fun joinSession(code: String): SessionUserModel {
-        val user = userService.findById(getAuthenticationContextSubject())
+        val userId = getAuthenticationContextSubject()
 
         val session = sessionService.findSessionByCode(code)
 
-        if (session.hasJoined(user))
+        if (session.hasJoined(userId))
             throw BadRequestException(SessionErrorCodes.ALREADY_JOINED)
 
         if (!session.isActive())
@@ -71,30 +67,30 @@ class SessionFacade(
         if (!session.hasRoom())
             throw BadRequestException(SessionErrorCodes.MAX_USERS_EXCEEDED)
 
-        sessionUserService.leaveActiveJoinedSessions(user.id)
+        sessionUserService.leaveActiveJoinedSessions(userId)
 
-        return sessionUserService.createNew(user, session)
+        return sessionUserService.createNew(userId, session)
     }
 
     @Transactional
     fun leaveSession(code: String) {
-        val user = getAuthenticationContextSubject()
+        val userId = getAuthenticationContextSubject()
         val session = sessionService.findSessionByCode(code)
 
         if (!session.isActive())
             throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
 
-        if (!session.hasJoined(user))
+        if (!session.hasJoined(userId))
             throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
 
-        sessionUserService.leaveSession(session, user)
+        sessionUserService.leaveSession(session, userId)
     }
 
     fun endSession(code: String) {
-        val user = getAuthenticationContextSubject()
+        val userId = getAuthenticationContextSubject()
         val session = sessionService.findSessionByCode(code)
 
-        if (!session.isHost(user))
+        if (!session.isHost(userId))
             throw BadRequestException(SessionErrorCodes.NOT_HOST)
 
         sessionService.endSession(code)

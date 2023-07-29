@@ -19,7 +19,7 @@ class SessionService(
 
     fun getActiveSessionsByUser(userId: UUID): List<SessionModel> {
         val now = LocalDateTime.now(ZoneOffset.UTC)
-        return sessionRepository.findAllByHostIdAndEndAtAfterAndManualEnded(userId, now)
+        return sessionRepository.findAllByHostAndEndAtAfterAndManualEnded(userId, now)
     }
 
     fun createSession(command: CreateSessionCommand): SessionModel {

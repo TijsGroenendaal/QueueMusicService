@@ -12,7 +12,6 @@ import nl.tijsgroenendaal.queuemusicfacade.services.AutoQueueService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionSongService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionSongUserVoteService
-import nl.tijsgroenendaal.queuemusicfacade.services.UserService
 import nl.tijsgroenendaal.queuemusicfacade.services.commands.AutoplayUpdateTask
 import nl.tijsgroenendaal.queuemusicfacade.services.commands.AutoplayUpdateTaskType
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
@@ -31,16 +30,16 @@ class SessionSongFacade(
     private val sessionSongService: SessionSongService,
     private val sessionService: SessionService,
     private val spotifyService: SpotifyService,
-    private val deviceLinkService: UserService,
     private val sessionSongUserVoteService: SessionSongUserVoteService,
     private val autoQueueService: AutoQueueService
 ) {
 
     fun addSpotifySessionSong(command: AddSpotifySessionSongCommand, sessionId: UUID): SessionSongModel {
         val track = spotifyService.getTrack(command.songId)
+        val userId = getAuthenticationContextSubject()
 
         return createSessionSong(AddSessionSongCommand(
-            deviceLinkService.findById(getAuthenticationContextSubject()),
+            userId,
             track.id,
             track.album.name,
             track.name,
@@ -50,8 +49,10 @@ class SessionSongFacade(
     }
 
     fun addSessionSong(command: AddSessionSongControllerCommand, sessionId: UUID): SessionSongModel {
+        val userId = getAuthenticationContextSubject()
+
         return createSessionSong(AddSessionSongCommand(
-            deviceLinkService.findById(getAuthenticationContextSubject()),
+            userId,
             null,
             command.album,
             command.name,
@@ -61,10 +62,11 @@ class SessionSongFacade(
     }
 
     fun voteSessionSong(sessionId: UUID, songId: UUID, vote: VoteEnum): SessionSongUserVoteModel {
+        val userId = getAuthenticationContextSubject()
         val session = sessionService.findSessionById(sessionId)
 
-        val user = session.getUser(getAuthenticationContextSubject())
-            ?: throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
+        if (!session.hasJoined(userId))
+            throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
 
         if (!session.isActive())
             throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
@@ -72,7 +74,7 @@ class SessionSongFacade(
         val song = sessionSongService.getById(songId)
 
         val oldPosition = sessionSongService.calculateQueuePosition(songId, sessionId)
-        val userVote = sessionSongUserVoteService.vote(song, user, vote)
+        val userVote = sessionSongUserVoteService.vote(song, userId, vote)
 
         // Short circuit because nothing has changed.
         if (userVote.first == 0) {
@@ -86,7 +88,7 @@ class SessionSongFacade(
     }
 
     private fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {
-        if (!command.session.hasJoined(command.user))
+        if (!command.session.hasJoined(command.userId))
             throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
 
         val song = sessionSongService.createSessionSong(command)
@@ -107,7 +109,7 @@ class SessionSongFacade(
             if (oldPosition == position) return@launch
 
             autoQueueService.publish(AutoplayUpdateTask(
-                song.session.host.id,
+                song.session.host,
                 song.trackId,
                 song.session.playListId,
                 position,

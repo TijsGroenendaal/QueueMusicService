@@ -2,7 +2,6 @@ package nl.tijsgroenendaal.queuemusicfacade.services
 
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongUserVoteModel
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.enums.VoteEnum
 import nl.tijsgroenendaal.queuemusicfacade.repositories.SessionSongUserVoteRepository
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
@@ -18,7 +17,7 @@ class SessionSongUserVoteService(
     private val sessionSongUserVoteRepository: SessionSongUserVoteRepository
 ) {
 
-    fun vote(song: SessionSongModel, user: UserModel, vote: VoteEnum): Pair<Int, SessionSongUserVoteModel> {
+    fun vote(song: SessionSongModel, userId: UUID, vote: VoteEnum): Pair<Int, SessionSongUserVoteModel> {
         try {
             val oldUserVote = findBySongAndUser(song.id, getAuthenticationContextSubject())
             if (oldUserVote.vote == vote) {
@@ -30,13 +29,13 @@ class SessionSongUserVoteService(
             return Pair(vote.value * 2, userVote)
         }
         catch (e: BadRequestException) {
-            val userVote = sessionSongUserVoteRepository.save(SessionSongUserVoteModel.new(song, user, vote))
+            val userVote = sessionSongUserVoteRepository.save(SessionSongUserVoteModel.new(song, userId, vote))
             return Pair(vote.value, userVote)
         }
     }
 
     private fun findBySongAndUser(song: UUID, user: UUID): SessionSongUserVoteModel {
-        return sessionSongUserVoteRepository.findBySongIdAndUserId(song, user)
+        return sessionSongUserVoteRepository.findBySongIdAndUser(song, user)
             ?: throw BadRequestException(SessionSongUserVoteErrorCodes.VOTE_NOT_FOUND)
     }
 

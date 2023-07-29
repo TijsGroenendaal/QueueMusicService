@@ -17,8 +17,7 @@ private const val SESSION_CODE_LENGTH = 8
 class SessionModel(
     @Id
     val id: UUID,
-    @ManyToOne
-    val host: UserModel,
+    val host: UUID,
     val duration: Long,
     val createdAt: LocalDateTime,
     val endAt: LocalDateTime,
@@ -35,7 +34,7 @@ class SessionModel(
         fun new(command: CreateSessionCommand): SessionModel {
             return SessionModel(
                 UUID.randomUUID(),
-                command.userModel,
+                command.userId,
                 command.duration,
                 LocalDateTime.now(ZoneOffset.UTC),
                 LocalDateTime.now(ZoneOffset.UTC).plusMinutes(command.duration),
@@ -62,18 +61,11 @@ class SessionModel(
         return sessionUsers.size < maxUsers
     }
 
-    fun hasJoined(user: UserModel): Boolean {
-        return sessionUsers.any { it.user.id == user.id }
-    }
-
     fun hasJoined(user: UUID): Boolean {
-        return sessionUsers.any { it.user.id == user }
+        return sessionUsers.any { it.user == user }
     }
 
-    fun getUser(user: UUID): UserModel? = sessionUsers.firstOrNull { it.user.id == user }?.user
-
-
-    fun isHost(user: UUID): Boolean = this.host.id == user
+    fun isHost(user: UUID): Boolean = this.host == user
 
     fun end() {
         this.manualEnded = true

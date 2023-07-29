@@ -1,11 +1,11 @@
 package nl.tijsgroenendaal.queuemusicfacade.services.commands
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.UserModel
+import java.util.UUID
 
 data class CreateSessionCommand(
     val playlistId: String?,
     val code: String,
     val duration: Long,
-    val userModel: UserModel,
+    val userId: UUID,
     val maxUsers: Int
 )

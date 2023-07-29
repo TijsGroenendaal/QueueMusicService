@@ -12,6 +12,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
 
 import java.util.UUID
+import jakarta.persistence.Column
 
 @Entity(
     name = "queuemusic_session_uservote"
@@ -19,18 +20,18 @@ import java.util.UUID
 class SessionSongUserVoteModel(
     @Id
     val id: UUID,
-    @ManyToOne
-    val user: UserModel,
+    @Column(name = "user_id")
+    val user: UUID,
     @ManyToOne
     val song: SessionSongModel,
     @Enumerated(EnumType.STRING)
     var vote: VoteEnum
 ) {
     companion object {
-        fun new(song: SessionSongModel, user: UserModel, vote: VoteEnum): SessionSongUserVoteModel {
+        fun new(song: SessionSongModel, userId: UUID, vote: VoteEnum): SessionSongUserVoteModel {
             return SessionSongUserVoteModel(
                 UUID.randomUUID(),
-                user,
+                userId,
                 song,
                 vote
             )
@@ -48,7 +49,7 @@ class SessionSongUserVoteModel(
                     this.song.createdAt
                 ),
                 VoteSessionSongCommandResponseUser(
-                    this.user.id
+                    this.user
                 ),
                 this.vote
             )

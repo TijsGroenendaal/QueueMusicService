@@ -5,6 +5,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.ManyToOne
 
 import java.util.UUID
+import jakarta.persistence.Column
 
 @Entity(
     name = "queuemusic_session_user"
@@ -12,16 +13,16 @@ import java.util.UUID
 class SessionUserModel(
     @Id
     val id: UUID,
-    @ManyToOne
-    val user: UserModel,
+    @Column(name = "user_id")
+    val user: UUID,
     @ManyToOne
     val session: SessionModel
 ) {
     companion object {
-        fun new(user: UserModel, session: SessionModel): SessionUserModel {
+        fun new(userId: UUID, session: SessionModel): SessionUserModel {
             return SessionUserModel(
                 UUID.randomUUID(),
-                user,
+                userId,
                 session
             )
         }

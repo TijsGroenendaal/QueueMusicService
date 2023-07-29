@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface SessionSongUserVoteRepository: JpaRepository<SessionSongUserVoteModel, UUID> {
 
-    fun findBySongIdAndUserId(songId: UUID, userId: UUID): SessionSongUserVoteModel?
+    fun findBySongIdAndUser(songId: UUID, userId: UUID): SessionSongUserVoteModel?
 
 }

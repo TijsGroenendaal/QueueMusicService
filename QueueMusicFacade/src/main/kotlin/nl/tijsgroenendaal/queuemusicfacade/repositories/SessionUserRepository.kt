@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface SessionUserRepository: JpaRepository<SessionUserModel, UUID> {
-    fun deleteAllByUserIdAndSessionEndAtAfterAndSessionManualEnded(user: UUID, endDate: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC), manualEnded: Boolean = false)
+    fun deleteAllByUserAndSessionEndAtAfterAndSessionManualEnded(user: UUID, endDate: LocalDateTime = LocalDateTime.now(ZoneOffset.UTC), manualEnded: Boolean = false)
 }

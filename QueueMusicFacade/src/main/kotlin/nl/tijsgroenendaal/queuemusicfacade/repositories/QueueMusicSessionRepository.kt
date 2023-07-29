@@ -12,7 +12,7 @@ import java.util.UUID
 @Repository
 interface QueueMusicSessionRepository: PagingAndSortingRepository<SessionModel, UUID>, JpaRepository<SessionModel, UUID> {
 
-    fun findAllByHostIdAndEndAtAfterAndManualEnded(hostId: UUID, endAt: LocalDateTime, manualEnded: Boolean = false): List<SessionModel>
+    fun findAllByHostAndEndAtAfterAndManualEnded(hostId: UUID, endAt: LocalDateTime, manualEnded: Boolean = false): List<SessionModel>
     fun findByCode(code: String): SessionModel?
 
 }
