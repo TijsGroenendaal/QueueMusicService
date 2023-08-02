@@ -14,6 +14,7 @@ class AutoPlayController {
         when(message.type) {
             AutoplayUpdateTaskType.MOVE -> println("Moving track ${message.trackId} in playlist ${message.playlistId} to position ${message.position}")
             AutoplayUpdateTaskType.ADD -> println("Adding track ${message.trackId} in playlist ${message.playlistId} at position ${message.position}")
+            AutoplayUpdateTaskType.DELETE -> println("Deleting track ${message.trackId} in playlist ${message.playlistId} at position ${message.position}")
         }
     }
 }
