@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/v1/client")
+@RequestMapping("/v1")
 class JwtController(
     private val jwtFacade: JwtFacade
 ) {
 
-    @PostMapping("/jwt")
+    @PostMapping("/secure/client-jwt")
     fun generateJwtForClient(@RequestBody command: GenerateJwtCommand) = jwtFacade.generateJwtForClient(command)
 
 }

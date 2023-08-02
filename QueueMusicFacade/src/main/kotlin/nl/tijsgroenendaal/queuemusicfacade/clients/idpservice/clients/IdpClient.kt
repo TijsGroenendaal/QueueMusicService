@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 )
 interface IdpClient {
 
-    @PostMapping("/v1/client/jwt")
+    @PostMapping("/v1/secure/client-jwt")
     fun generateClientJwt(@RequestBody command: GenerateJwtCommand): String
 
 }

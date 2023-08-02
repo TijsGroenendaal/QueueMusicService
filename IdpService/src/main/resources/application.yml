@@ -14,7 +14,7 @@ spring:
 queuemusic:
   security:
     permitted: >
-      /v1/client/jwt,
+      /v1/secure/client-jwt,
       /v1/auth/login/**
   encryption:
     algorithme: ${QUEUEMUSIC_ENCRYPTION_ALGORITHME}
