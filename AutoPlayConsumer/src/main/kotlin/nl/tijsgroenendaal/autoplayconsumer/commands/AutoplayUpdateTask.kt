@@ -21,5 +21,6 @@ data class AutoplayUpdateTask(
 
 enum class AutoplayUpdateTaskType {
     MOVE,
-    ADD
+    ADD,
+    DELETE
 }

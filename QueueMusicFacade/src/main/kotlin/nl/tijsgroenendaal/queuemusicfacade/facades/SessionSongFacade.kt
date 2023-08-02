@@ -7,6 +7,7 @@ import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongControllerComm
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSpotifySessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongUserVoteModel
+import nl.tijsgroenendaal.queuemusicfacade.entity.enums.SongState
 import nl.tijsgroenendaal.queuemusicfacade.entity.enums.VoteEnum
 import nl.tijsgroenendaal.queuemusicfacade.services.AutoQueueService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
@@ -85,6 +86,23 @@ class SessionSongFacade(
 
         createAutoplayMessage(song, AutoplayUpdateTaskType.MOVE, oldPosition)
         return userVote.second
+    }
+
+    fun deleteSessionSong(sessionId: UUID, songId: UUID) {
+        val session = sessionService.findSessionById(sessionId)
+
+        if (!session.isHost(getAuthenticationContextSubject()))
+            throw BadRequestException(SessionErrorCodes.NOT_HOST)
+
+        if (!session.isActive())
+            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
+
+        val song = sessionSongService.getById(songId)
+
+        song.state = SongState.DELETED
+
+        sessionSongService.save(song)
+        createAutoplayMessage(song, AutoplayUpdateTaskType.DELETE)
     }
 
     private fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {

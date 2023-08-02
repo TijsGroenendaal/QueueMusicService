@@ -59,6 +59,8 @@ class SessionSongService(
         return sessionSongRepository.save(song)
     }
 
+    fun save(song: SessionSongModel) = sessionSongRepository.save(song)
+
     private fun getSongsBySession(id: UUID): List<SessionSongModel> = sessionSongRepository.findAllBySessionId(id)
 
 }
