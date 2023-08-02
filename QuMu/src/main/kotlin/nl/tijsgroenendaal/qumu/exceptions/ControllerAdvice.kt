@@ -26,7 +26,7 @@ class ControllerAdvice {
     @ExceptionHandler(value = [Exception::class])
     protected fun handleGenericException(exception: Exception): ResponseEntity<ErrorResponse> {
         log(exception)
-        return ResponseEntity.badRequest().body(
+        return ResponseEntity.internalServerError().body(
             ErrorResponse(
             "Internal Server Error",
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
