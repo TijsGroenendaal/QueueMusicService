@@ -13,10 +13,8 @@ queuemusic:
     algorithme: ${QUEUEMUSIC_ENCRYPTION_ALGORITHME}
     secret: ${QUEUEMUSIC_ENCRYPTION_SECRET}
   jwt:
-    private-secret: ${QUEUEMUSIC_JWT_SECRET}
     public-secret: ${QUEUEMUSIC_JWT_PUBLIC_SECRET}
     refresh:
-      private-secret: ${QUEUEMUSIC_REFRESH_JWT_SECRET}
       public-secret: ${QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET}
   spotify:
     id: ${SPOTIFY_CLIENT_ID}
