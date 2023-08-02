@@ -74,7 +74,7 @@ class AuthFacade(
 
         val userLink = if (checkUserLink) userLinkService.getByUserId(userModel.id) else null
 
-        val authorities = mutableListOf(QuMuAuthority("REFRESH"))
+        val authorities = mutableListOf<QuMuAuthority>()
         if (userLink != null) {
             authorities.add(QuMuAuthority("SPOTIFY"))
         }
