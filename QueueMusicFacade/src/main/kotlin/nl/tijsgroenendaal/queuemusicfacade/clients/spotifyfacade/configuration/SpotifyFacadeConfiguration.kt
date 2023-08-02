@@ -18,7 +18,7 @@ class SpotifyFacadeRequestInterceptor(
 ) : RequestInterceptor {
 
     override fun apply(request: RequestTemplate) {
-        val jwt = idpService.generateClientJwt()
+        val jwt = idpService.generateClientJwt().token
         request.header("Authorization", "Bearer $jwt")
     }
 }

@@ -1,7 +1,8 @@
 package nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.service
 
 import nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.clients.IdpClient
-import nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.command.GenerateJwtCommand
+import nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.command.GenerateClientTokenCommand
+import nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.command.responses.GenerateClientTokenCommandResponse
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -15,8 +16,8 @@ class IdpService(
     private val spotifyFacadeClientSecret: String
 ) {
 
-    fun generateClientJwt(): String {
-        val command = GenerateJwtCommand(
+    fun generateClientJwt(): GenerateClientTokenCommandResponse {
+        val command = GenerateClientTokenCommand(
             spotifyFacadeClientId,
             spotifyFacadeClientSecret
         )

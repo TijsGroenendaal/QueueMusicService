@@ -1,6 +1,7 @@
 package nl.tijsgroenendaal.idpservice.controllers
 
-import nl.tijsgroenendaal.idpservice.commands.GenerateJwtCommand
+import nl.tijsgroenendaal.idpservice.commands.GenerateClientTokenCommand
+import nl.tijsgroenendaal.idpservice.commands.responses.GenerateClientTokenCommandResponse
 import nl.tijsgroenendaal.idpservice.facades.JwtFacade
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -14,6 +15,8 @@ class JwtController(
 ) {
 
     @PostMapping("/secure/client-jwt")
-    fun generateJwtForClient(@RequestBody command: GenerateJwtCommand) = jwtFacade.generateJwtForClient(command)
+    fun generateJwtForClient(@RequestBody command: GenerateClientTokenCommand): GenerateClientTokenCommandResponse{
+        return jwtFacade.generateJwtForClient(command)
+    }
 
 }

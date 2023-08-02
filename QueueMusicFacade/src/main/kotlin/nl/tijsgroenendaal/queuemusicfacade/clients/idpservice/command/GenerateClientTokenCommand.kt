@@ -2,7 +2,7 @@ package nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.command
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class GenerateJwtCommand(
+data class GenerateClientTokenCommand(
     @JsonProperty("client_id")
     val clientId: String,
     @JsonProperty("client_secret")

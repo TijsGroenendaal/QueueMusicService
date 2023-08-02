@@ -1,7 +1,9 @@
 package nl.tijsgroenendaal.idpservice.facades
 
-import nl.tijsgroenendaal.idpservice.commands.GenerateJwtCommand
+import nl.tijsgroenendaal.idpservice.commands.GenerateClientTokenCommand
+import nl.tijsgroenendaal.idpservice.commands.responses.GenerateClientTokenCommandResponse
 import nl.tijsgroenendaal.idpservice.security.JwtGenerator
+import nl.tijsgroenendaal.idpservice.security.JwtGenerator.Companion.JWT_TOKEN_VALIDITY
 import nl.tijsgroenendaal.idpservice.services.RegisteredClientService
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.RegisteredClientErrorCodes
@@ -17,7 +19,7 @@ class JwtFacade(
     private val jwtGenerator: JwtGenerator
 ) {
 
-    fun generateJwtForClient(command: GenerateJwtCommand): String {
+    fun generateJwtForClient(command: GenerateClientTokenCommand): GenerateClientTokenCommandResponse {
         val client = registeredClientService.getById(command.clientId)
 
         if (client.clientSecret != command.clientSecret)
@@ -28,6 +30,9 @@ class JwtFacade(
             clientClaims.setScope(client.scopes.split(",").map { QuMuAuthority(it) })
         }
 
-        return jwtGenerator.generateToken(clientClaims, JwtTypes.ACCESS)
+        return GenerateClientTokenCommandResponse(
+            jwtGenerator.generateToken(clientClaims, JwtTypes.ACCESS),
+            JWT_TOKEN_VALIDITY
+        )
     }
 }

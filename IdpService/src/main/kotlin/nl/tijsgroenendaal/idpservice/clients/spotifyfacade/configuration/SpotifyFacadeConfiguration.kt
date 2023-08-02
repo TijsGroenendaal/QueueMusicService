@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.idpservice.clients.spotifyfacade.configuration
 
-import nl.tijsgroenendaal.idpservice.commands.GenerateJwtCommand
+import nl.tijsgroenendaal.idpservice.commands.GenerateClientTokenCommand
 import nl.tijsgroenendaal.idpservice.facades.JwtFacade
 
 import feign.RequestInterceptor
@@ -29,11 +29,11 @@ class SpotifyFacadeRequestInterceptor(
 ) : RequestInterceptor {
 
     override fun apply(request: RequestTemplate) {
-        val command = GenerateJwtCommand(
+        val command = GenerateClientTokenCommand(
             spotifyFacadeId,
             spotifyFacadeSecret
         )
 
-        request.header("Authorization", jwtFacade.generateJwtForClient(command))
+        request.header("Authorization", jwtFacade.generateJwtForClient(command).token)
     }
 }
