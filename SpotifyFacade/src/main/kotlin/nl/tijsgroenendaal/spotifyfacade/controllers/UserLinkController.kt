@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.security.access.prepost.PreAuthorize
 
 import java.util.UUID
 
@@ -16,6 +17,7 @@ class UserLinkController(
     private val userLinkFacade: UserLinkFacade
 ) {
 
+    @PreAuthorize("hasAuthority('SPOTIFY')")
     @GetMapping("/user/{userId}")
     fun getByUserId(@PathVariable userId: UUID): GetUserLinkByUserIdQueryResponse {
         return userLinkFacade.getByUserId(userId)

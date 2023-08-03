@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 import java.util.UUID
+import org.springframework.security.access.prepost.PreAuthorize
 
 @RestController
 @RequestMapping("/v1/sessions/{sessionId}/songs")
@@ -35,7 +36,7 @@ class SessionSongController(
         return sessionSongFacade.addSpotifySessionSong(command, sessionId).toResponse()
     }
 
-    @PostMapping()
+    @PostMapping
     fun addSessionSong(
         @PathVariable sessionId: UUID,
         @RequestBody command: AddSessionSongControllerCommand
@@ -52,6 +53,7 @@ class SessionSongController(
         return sessionSongFacade.voteSessionSong(sessionId, songId, vote).toResponse()
     }
 
+    @PreAuthorize("hasAuthority('SPOTIFY')")
     @DeleteMapping("/{songId}")
     fun deleteSessionSong(
         @PathVariable sessionId: UUID,

@@ -34,6 +34,7 @@ class SpotifyFacadeRequestInterceptor(
             spotifyFacadeSecret
         )
 
-        request.header("Authorization", jwtFacade.generateJwtForClient(command).token)
+        val token = jwtFacade.generateJwtForClient(command).token
+        request.header("Authorization", "Bearer $token")
     }
 }

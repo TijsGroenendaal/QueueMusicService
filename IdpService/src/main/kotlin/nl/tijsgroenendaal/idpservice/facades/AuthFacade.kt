@@ -41,7 +41,7 @@ class AuthFacade(
         } catch (e: BadRequestException) {
             userService.createUser(userId)
         }
-        return createNewAccessTokens(user.id)
+        return createNewAccessTokens(user.id, true)
     }
 
     fun loginAnonymous(deviceId: String): LoginQueryResponse {
@@ -61,7 +61,7 @@ class AuthFacade(
         if (userModel.userRefreshToken?.refreshToken != jwtTokenUtil.getTokenFromHeader(refreshToken))
             throw InvalidRefreshJwtException()
 
-        return createNewAccessTokens(userModel.id)
+        return createNewAccessTokens(userModel.id, true)
     }
 
     fun logout() {

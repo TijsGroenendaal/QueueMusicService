@@ -44,6 +44,7 @@ class SessionController(
         sessionFacade.leaveSession(code)
     }
 
+    @PreAuthorize("hasAuthority('SPOTIFY')")
     @PutMapping("/{code}/close")
     fun endSession(
         @PathVariable code: String
