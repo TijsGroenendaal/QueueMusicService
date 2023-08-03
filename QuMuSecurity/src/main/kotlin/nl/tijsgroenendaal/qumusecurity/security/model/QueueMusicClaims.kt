@@ -36,7 +36,7 @@ class QueueMusicClaims : DefaultClaims {
         if (!containsKey(SCOPES))
             return emptySet()
 
-        return get(SCOPES, Array<String>::class.java).map { QuMuAuthority(it) }.toSet()
+        return (get(SCOPES) as Collection<String>).map { QuMuAuthority(it) }.toSet()
     }
 
     fun setScope(scopes: Collection<GrantedAuthority>) {
