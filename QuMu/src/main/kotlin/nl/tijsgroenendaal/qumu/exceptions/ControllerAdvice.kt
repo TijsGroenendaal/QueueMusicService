@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.security.access.AccessDeniedException
 
 import kotlin.Exception
 
@@ -16,10 +17,22 @@ class ControllerAdvice {
         log(exception)
         return ResponseEntity.status(HttpStatusCode.valueOf(exception.status)).body(
             ErrorResponse(
-            exception.code,
-            exception.status,
-            exception.message
+                exception.code,
+                exception.status,
+                exception.message
+            )
         )
+    }
+
+    @ExceptionHandler(value = [AccessDeniedException::class])
+    protected fun handleAccessDeniedException(exception: AccessDeniedException): ResponseEntity<ErrorResponse> {
+        log(exception)
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+            ErrorResponse(
+                "Forbidden",
+                HttpStatus.FORBIDDEN.value(),
+                "Access Denied"
+            )
         )
     }
 
@@ -28,10 +41,10 @@ class ControllerAdvice {
         log(exception)
         return ResponseEntity.internalServerError().body(
             ErrorResponse(
-            "Internal Server Error",
-            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            "Something went wrong"
-        )
+               "Internal Server Error",
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Something went wrong"
+            )
         )
     }
 
