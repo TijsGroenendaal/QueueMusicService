@@ -12,3 +12,9 @@ queuemusic:
     autoqueue:
       routingKey: autoqueue
       queueName: autoqueue
+
+clients:
+  idp:
+    spotify-facade:
+      id: ${SPOTIFY_FACADE_CLIENT_ID}
+      secret: ${SPOTIFY_FACADE_CLIENT_SECRET}

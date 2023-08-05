@@ -1,5 +1,6 @@
 package nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.clients
 
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.AddPlaylistTrackCommand
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.CreatePlaylistCommand
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.responses.CreatePlaylistCommandResponse
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.users.GetMeQueryResponse
@@ -22,5 +23,8 @@ interface SpotifyApiClient {
 
     @PostMapping("/v1/users/{userId}/playlists")
     fun createPlaylists(@PathVariable userId: String, @RequestBody command: CreatePlaylistCommand, @RequestHeader("Authorization") token: String): CreatePlaylistCommandResponse
+
+    @PostMapping("/v1/playlists/{playlistId}/tracks")
+    fun addPlaylistTrack(@PathVariable playlistId: String, @RequestBody addPlaylistTrackCommand: AddPlaylistTrackCommand, @RequestHeader("Authorization") token: String)
 
 }

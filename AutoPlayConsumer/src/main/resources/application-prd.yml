@@ -1,5 +1,6 @@
 clients:
   spotify-facade: ${SPOTIFY_FACADE_URL}
+  idp-service: ${IDP_SERVICE_URL}
 
 spring:
   rabbitmq:

@@ -4,6 +4,7 @@ import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.clients.SpotifyApiClient
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.clients.SpotifyOpenClient
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.AddPlaylistTrackCommand
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.tracks.GetTrackQueryResponse
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.users.GetMeQueryResponse
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.CreatePlaylistCommand
@@ -46,5 +47,15 @@ class SpotifyApiClientService(
             ),
             "Bearer $accessCode"
         )
+    }
+
+    fun addPlaylistTrack(playlistId: String, trackId: String, position: Int, accessToken: String) {
+        spotifyApiClient.addPlaylistTrack(
+            playlistId,
+            AddPlaylistTrackCommand(
+                arrayOf("spotify:track:$trackId"),
+                position
+            ),
+            "Bearer $accessToken")
     }
 }
