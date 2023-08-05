@@ -2,6 +2,7 @@ package nl.tijsgroenendaal.queuemusicfacade.services
 
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongModel
+import nl.tijsgroenendaal.queuemusicfacade.entity.enums.SongState
 import nl.tijsgroenendaal.queuemusicfacade.repositories.SessionSongRepository
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
@@ -44,7 +45,8 @@ class SessionSongService(
         .orElseThrow { BadRequestException(SessionSongErrorCode.SESSION_SONG_NOT_FOUND) }
 
     fun calculateQueuePosition(songId: UUID, sessionId: UUID): Int {
-        val songs = getSongsBySession(sessionId)
+        val groupedSongs = getSongsBySession(sessionId).groupBy { it.state }
+        val songs = groupedSongs.getOrDefault(SongState.PLAYED, listOf()) + groupedSongs.getOrDefault(SongState.QUEUED, listOf())
 
         val orderedSongs = songs.sortedByDescending { it.votes }
 
