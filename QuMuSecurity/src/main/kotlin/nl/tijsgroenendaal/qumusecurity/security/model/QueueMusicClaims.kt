@@ -2,7 +2,7 @@ package nl.tijsgroenendaal.qumusecurity.security.model
 
 import nl.tijsgroenendaal.qumu.exceptions.AuthErrorCodes
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
-import nl.tijsgroenendaal.qumusecurity.security.exceptions.InvalidUserIdException
+import nl.tijsgroenendaal.qumusecurity.security.helper.getUserIdFromClaim
 
 import java.util.UUID
 
@@ -25,7 +25,7 @@ class QueueMusicClaims : DefaultClaims {
         if (!containsKey(USER_ID))
             throw BadRequestException(AuthErrorCodes.ANONYMOUS_CLIENT_CLAIMS)
 
-        return getUserIdFromSubject(getString(USER_ID))
+        return getUserIdFromClaim(getString(USER_ID))
     }
 
     fun setUserId(userId: UUID) {
@@ -43,11 +43,5 @@ class QueueMusicClaims : DefaultClaims {
         put(SCOPES, scopes.map { it.authority })
     }
 
-    private fun getUserIdFromSubject(subject: String): UUID {
-        return try {
-            UUID.fromString(subject)
-        } catch (e: IllegalArgumentException) {
-            throw InvalidUserIdException("UserId is not a uuid")
-        }
-    }
+
 }
