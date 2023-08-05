@@ -2,10 +2,12 @@ package nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.clients
 
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.AddPlaylistTrackCommand
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.CreatePlaylistCommand
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.DeletePlaylistTrackCommand
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.responses.CreatePlaylistCommandResponse
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.users.GetMeQueryResponse
 
 import org.springframework.cloud.openfeign.FeignClient
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -26,5 +28,8 @@ interface SpotifyApiClient {
 
     @PostMapping("/v1/playlists/{playlistId}/tracks")
     fun addPlaylistTrack(@PathVariable playlistId: String, @RequestBody addPlaylistTrackCommand: AddPlaylistTrackCommand, @RequestHeader("Authorization") token: String)
+
+    @DeleteMapping("/v1/playlists/{playlistId}/tracks")
+    fun deletePlaylistTrack(@PathVariable playlistId: String, @RequestBody deletePlaylistTrackCommand: DeletePlaylistTrackCommand, @RequestHeader("Authorization") token: String)
 
 }

@@ -4,6 +4,7 @@ import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.response
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.tracks.GetTrackQueryResponse
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.services.SpotifyApiClientService
 import nl.tijsgroenendaal.spotifyfacade.commands.AddPlaylistTrackCommand
+import nl.tijsgroenendaal.spotifyfacade.commands.DeletePlaylistTrackCommand
 import nl.tijsgroenendaal.spotifyfacade.services.UserLinkService
 
 import java.util.UUID
@@ -32,5 +33,11 @@ class SpotifyApiFacade(
         val accessToken = userLinkFacade.getAccessToken(command.userId)
 
         spotifyApiClientService.addPlaylistTrack(command.playlistId, command.trackId, command.position, accessToken)
+    }
+
+    fun deletePlaylistTrack(command: DeletePlaylistTrackCommand) {
+        val accessToken = userLinkFacade.getAccessToken(command.userId)
+
+        spotifyApiClientService.deletePlaylistTrack(command.playlistId, command.trackId, accessToken)
     }
 }

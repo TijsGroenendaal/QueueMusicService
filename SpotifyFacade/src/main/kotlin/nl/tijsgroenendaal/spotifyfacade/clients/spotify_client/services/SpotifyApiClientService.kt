@@ -8,6 +8,7 @@ import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.AddPlayl
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.tracks.GetTrackQueryResponse
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.users.GetMeQueryResponse
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.CreatePlaylistCommand
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.DeletePlaylistTrackCommand
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.responses.CreatePlaylistCommandResponse
 
 import feign.FeignException
@@ -57,5 +58,15 @@ class SpotifyApiClientService(
                 position
             ),
             "Bearer $accessToken")
+    }
+
+    fun deletePlaylistTrack(playlistId: String, trackId: String, accessToken: String) {
+        spotifyApiClient.deletePlaylistTrack(
+            playlistId,
+            DeletePlaylistTrackCommand(
+                arrayOf("spotify:track:$trackId")
+            ),
+            "Bearer $accessToken"
+        )
     }
 }

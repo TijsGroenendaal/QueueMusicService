@@ -4,6 +4,8 @@ import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.response
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.tracks.GetTrackQueryResponse
 import nl.tijsgroenendaal.spotifyfacade.commands.AddPlaylistTrackCommand
 import nl.tijsgroenendaal.spotifyfacade.commands.AddPlaylistTrackControllerCommand
+import nl.tijsgroenendaal.spotifyfacade.commands.DeletePlaylistTrackCommand
+import nl.tijsgroenendaal.spotifyfacade.commands.DeletePlaylistTrackControllerCommand
 import nl.tijsgroenendaal.spotifyfacade.facades.SpotifyApiFacade
 
 import org.springframework.security.access.prepost.PreAuthorize
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestBody
 
 import java.util.UUID
+import org.springframework.web.bind.annotation.DeleteMapping
 
 @RestController
 @RequestMapping("/v1/spotify")
@@ -43,6 +46,18 @@ class SpotifyController(
                 command.userId,
                 command.trackId,
                 command.position,
+                playlistId
+            )
+        )
+    }
+
+    @PreAuthorize("hasAuthority('SPOTIFY')")
+    @DeleteMapping("/playlists/{playlistId}/tracks")
+    fun deleteTrack(@PathVariable playlistId: String, @RequestBody command: DeletePlaylistTrackControllerCommand) {
+        spotifyFacade.deletePlaylistTrack(
+            DeletePlaylistTrackCommand(
+                command.userId,
+                command.trackId,
                 playlistId
             )
         )
