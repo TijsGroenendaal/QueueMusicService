@@ -13,7 +13,9 @@ import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.InvalidRefreshJwtException
 import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil
 import nl.tijsgroenendaal.qumusecurity.security.JwtTypes
+import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContext
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
+import nl.tijsgroenendaal.qumusecurity.security.helper.getUserIdFromClaim
 import nl.tijsgroenendaal.qumusecurity.security.model.QuMuAuthority
 import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicClaims
 
@@ -56,7 +58,8 @@ class AuthFacade(
     }
 
     fun refresh(refreshToken: String): LoginQueryResponse {
-        val userModel = userService.findById(getAuthenticationContextSubject())
+        val userId = getUserIdFromClaim(getAuthenticationContext().claims.subject)
+        val userModel = userService.findById(userId)
 
         if (userModel.userRefreshToken?.refreshToken != jwtTokenUtil.getTokenFromHeader(refreshToken))
             throw InvalidRefreshJwtException()
