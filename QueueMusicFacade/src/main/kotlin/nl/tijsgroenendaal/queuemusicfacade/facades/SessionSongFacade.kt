@@ -5,6 +5,7 @@ import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.Spotif
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongControllerCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSpotifySessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongUserVoteModel
 import nl.tijsgroenendaal.queuemusicfacade.entity.enums.SongState
@@ -74,7 +75,7 @@ class SessionSongFacade(
 
         val song = sessionSongService.getById(songId)
 
-        if (song.state != SongState.QUEUED)
+        if (song.state == SongState.PLAYED)
             throw BadRequestException(SessionSongErrorCode.SONG_ALREADY_QUEUED)
 
         val userVote = sessionSongUserVoteService.vote(song, userId, vote)
@@ -86,11 +87,8 @@ class SessionSongFacade(
 
         val updatedSong = sessionSongService.updateVoteAggregate(songId, userVote.first)
 
-        if (session.autoplayAcceptance != null && song.trackId != null && updatedSong.votes >= session.autoplayAcceptance) {
-            CoroutineScope(Dispatchers.IO).launch {
-                sessionSongService.save(updatedSong.apply { this.state = SongState.PLAYED })
-                createAutoplayMessage(song.trackId, session.host)
-            }
+        if (session.autoplayAcceptance != null && updatedSong.votes >= session.autoplayAcceptance) {
+            acceptSessionSong(session, updatedSong)
         }
 
         return userVote.second
@@ -111,6 +109,16 @@ class SessionSongFacade(
         sessionSongService.save(song)
     }
 
+    fun acceptSessionSong(sessionId: UUID, songId: UUID) {
+        val session = sessionService.findSessionById(sessionId)
+        val song = sessionSongService.getById(songId)
+
+        if (!session.isHost(getAuthenticationContextSubject()))
+            throw BadRequestException(SessionErrorCodes.NOT_HOST)
+
+        acceptSessionSong(session, song)
+    }
+
     private fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {
         if (!command.session.hasJoined(command.userId))
             throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
@@ -123,5 +131,23 @@ class SessionSongFacade(
             hostId,
             trackId
         ))
+    }
+
+    private fun acceptSessionSong(session: SessionModel, song: SessionSongModel) {
+        if (!session.isActive())
+            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
+
+        if (song.state == SongState.DELETED)
+            throw BadRequestException(SessionSongErrorCode.SESSION_SONG_NOT_FOUND)
+
+        if (song.state == SongState.PLAYED)
+            throw BadRequestException(SessionSongErrorCode.SONG_ALREADY_QUEUED)
+
+        if (session.autoplayAcceptance != null && song.trackId != null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                sessionSongService.save(song.apply { this.state = SongState.PLAYED })
+                createAutoplayMessage(song.trackId, session.host)
+            }
+        }
     }
 }

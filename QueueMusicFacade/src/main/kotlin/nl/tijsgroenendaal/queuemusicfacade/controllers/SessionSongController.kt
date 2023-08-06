@@ -64,4 +64,13 @@ class SessionSongController(
         return ResponseEntity.noContent().build()
     }
 
+    @PreAuthorize("hasAuthority('SPOTIFY')")
+    @PutMapping("/{songId}/accept")
+    fun acceptSessionSong(
+        @PathVariable sessionId: UUID,
+        @PathVariable songId: UUID
+    ){
+        sessionSongFacade.acceptSessionSong(sessionId, songId)
+    }
+
 }
