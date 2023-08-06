@@ -1,12 +1,9 @@
 package nl.tijsgroenendaal.autoplayconsumer.clients.spotifyfacade.clients
 
-import nl.tijsgroenendaal.autoplayconsumer.clients.spotifyfacade.commands.AddPlaylistTrackCommand
-import nl.tijsgroenendaal.autoplayconsumer.clients.spotifyfacade.commands.DeletePlaylistTrackCommand
+import nl.tijsgroenendaal.autoplayconsumer.clients.spotifyfacade.commands.QueueTrackCommand
 import nl.tijsgroenendaal.autoplayconsumer.clients.spotifyfacade.configuration.SpotifyFacadeConfiguration
 
 import org.springframework.cloud.openfeign.FeignClient
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 
@@ -17,10 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody
 )
 interface SpotifyFacadeClient {
 
-    @PostMapping("/v1/spotify/playlists/{playlistId}/tracks")
-    fun addPlaylistTrack(@PathVariable playlistId: String, @RequestBody command: AddPlaylistTrackCommand)
-
-    @DeleteMapping("/v1/spotify/playlists/{playlistId}/tracks")
-    fun deletePlaylistTrack(@PathVariable playlistId: String, @RequestBody command: DeletePlaylistTrackCommand)
-
+    @PostMapping("/v1/spotify/player/queue")
+    fun queueTrack(@RequestBody command: QueueTrackCommand)
 }

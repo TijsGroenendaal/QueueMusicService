@@ -33,18 +33,22 @@ class SessionFacade(
         if (command.duration * 60 > MAX_SECONDS_DURATION)
             throw BadRequestException(SessionErrorCodes.DURATION_EXCEEDED)
 
+        if (command.autoplay != null && command.autoplay.acceptance < 1)
+            throw BadRequestException(SessionErrorCodes.NEGATIVE_AUTOPLAY_ACCEPTANCE)
+
         val activeSessions = sessionService.getActiveSessionsByUser(userId).size
         if (activeSessions >= MAX_ACTIVE_SESSION)
             throw BadRequestException(SessionErrorCodes.HOSTING_SESSIONS_EXCEEDED)
 
         val sessionCode = SessionModel.generateSessionCode()
 
-        val playlist = if (command.autoplay) {
+        val playlist = if (command.autoplay != null) {
             spotifyService.createPlaylist(sessionCode, userId)
         } else null
 
         return sessionService.createSession(nl.tijsgroenendaal.queuemusicfacade.services.commands.CreateSessionCommand(
             playlist?.id,
+            command.autoplay?.acceptance,
             sessionCode,
             command.duration,
             userId,

@@ -3,16 +3,6 @@ package nl.tijsgroenendaal.queuemusicfacade.services.commands
 import java.util.UUID
 
 data class AutoplayUpdateTask(
-    val host: UUID,
-    val trackId: String,
-    val playlistId: String,
-    val position: Int,
-    val oldPosition: Int?,
-    val type: AutoplayUpdateTaskType
+    val hostId: UUID,
+    val trackId: String
 )
-
-enum class AutoplayUpdateTaskType {
-    MOVE,
-    ADD,
-    DELETE
-}

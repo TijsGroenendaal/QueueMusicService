@@ -1,12 +1,17 @@
 package nl.tijsgroenendaal.queuemusicfacade.entity
 
-import jakarta.persistence.*
 import nl.tijsgroenendaal.queuemusicfacade.services.commands.CreateSessionCommand
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.Random
 import java.util.UUID
+
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
 
 private val ALLOWED_CODE_CHARS = ('A'..'Z') + ('a'..'z').toList()
 private const val SESSION_CODE_LENGTH = 8
@@ -24,6 +29,8 @@ class SessionModel(
     val code: String,
     @Column(nullable = true)
     val playListId: String?,
+    @Column(nullable = true)
+    val autoplayAcceptance: Int?,
     @Column(name = "maximum_users")
     val maxUsers: Int,
     var manualEnded: Boolean = false,
@@ -40,6 +47,7 @@ class SessionModel(
                 LocalDateTime.now(ZoneOffset.UTC).plusMinutes(command.duration),
                 command.code,
                 command.playlistId,
+                command.autoplayAcceptance,
                 command.maxUsers,
             )
         }

@@ -5,22 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.UUID
 
 data class AutoplayUpdateTask(
-    @JsonProperty("host")
-    val host: UUID,
+    @JsonProperty("hostId")
+    val hostId: UUID,
     @JsonProperty("trackId")
-    val trackId: String,
-    @JsonProperty("playlistId")
-    val playlistId: String,
-    @JsonProperty("position")
-    val position: Int,
-    @JsonProperty("oldPosition")
-    val oldPosition: Int?,
-    @JsonProperty("type")
-    val type: AutoplayUpdateTaskType
+    val trackId: String
 )
-
-enum class AutoplayUpdateTaskType {
-    MOVE,
-    ADD,
-    DELETE
-}

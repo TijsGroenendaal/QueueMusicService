@@ -14,9 +14,9 @@ import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionSongService
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionSongUserVoteService
 import nl.tijsgroenendaal.queuemusicfacade.services.commands.AutoplayUpdateTask
-import nl.tijsgroenendaal.queuemusicfacade.services.commands.AutoplayUpdateTaskType
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
+import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 
 import org.springframework.stereotype.Service
@@ -74,7 +74,9 @@ class SessionSongFacade(
 
         val song = sessionSongService.getById(songId)
 
-        val oldPosition = sessionSongService.calculateQueuePosition(songId, sessionId)
+        if (song.state != SongState.QUEUED)
+            throw BadRequestException(SessionSongErrorCode.SONG_ALREADY_QUEUED)
+
         val userVote = sessionSongUserVoteService.vote(song, userId, vote)
 
         // Short circuit because nothing has changed.
@@ -82,9 +84,15 @@ class SessionSongFacade(
             return userVote.second
         }
 
-        sessionSongService.updateVoteAggregate(songId, userVote.first)
+        val updatedSong = sessionSongService.updateVoteAggregate(songId, userVote.first)
 
-        createAutoplayMessage(song, AutoplayUpdateTaskType.MOVE, oldPosition)
+        if (session.autoplayAcceptance != null && song.trackId != null && updatedSong.votes >= session.autoplayAcceptance) {
+            CoroutineScope(Dispatchers.IO).launch {
+                sessionSongService.save(updatedSong.apply { this.state = SongState.PLAYED })
+                createAutoplayMessage(song.trackId, session.host)
+            }
+        }
+
         return userVote.second
     }
 
@@ -97,43 +105,23 @@ class SessionSongFacade(
         if (!session.isActive())
             throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
 
-        val song = sessionSongService.getById(songId)
-
-        song.state = SongState.DELETED
-
+        val song = sessionSongService.getById(songId).apply {
+            this.state = SongState.DELETED
+        }
         sessionSongService.save(song)
-        createAutoplayMessage(song, AutoplayUpdateTaskType.DELETE)
     }
 
     private fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {
         if (!command.session.hasJoined(command.userId))
             throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
 
-        val song = sessionSongService.createSessionSong(command)
-        createAutoplayMessage(song, AutoplayUpdateTaskType.ADD)
-        return song
+        return sessionSongService.createSessionSong(command)
     }
 
-    private fun createAutoplayMessage(song: SessionSongModel, type: AutoplayUpdateTaskType, oldPosition: Int? = null) {
-        if (song.trackId == null) return
-        if (song.session.playListId == null) return
-
-        // This function might take some time when there are a large number of songs, also it is not needed for the
-        // response. So this is delegated to another coroutine
-        CoroutineScope(Dispatchers.IO).launch {
-            val position = sessionSongService.calculateQueuePosition(song.id, song.session.id)
-
-            // Short circuit because nothing has changed
-            if (oldPosition == position) return@launch
-
-            autoQueueService.publish(AutoplayUpdateTask(
-                song.session.host,
-                song.trackId,
-                song.session.playListId,
-                position,
-                oldPosition,
-                type
-            ))
-        }
+    private fun createAutoplayMessage(trackId: String, hostId: UUID) {
+        autoQueueService.publish(AutoplayUpdateTask(
+            hostId,
+            trackId
+        ))
     }
 }
