@@ -1,0 +1,12 @@
+clients:
+  idp-service: ${IDP_SERVICE_URL}
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_SESSION_HOST}:5432/${POSTGRES_SESSION_DB}?user=${POSTGRES_SESSION_USER}&password=${POSTGRES_SESSION_PASSWORD}
+    hikari:
+      minimum-idle: 4
+      maximum-pool-size: 16
+  jpa:
+    hibernate:
+      ddl-auto: none
