@@ -5,7 +5,7 @@
 
     <artifactId>SessionService</artifactId>
     <groupId>nl.tijsgroenendaal</groupId>
-    <version>0.0.0</version>
+    <version>0.0.1</version>
     <name>SessionService</name>
 
     <properties>
