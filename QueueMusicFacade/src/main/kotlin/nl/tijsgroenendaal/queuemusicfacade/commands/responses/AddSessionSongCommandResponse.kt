@@ -1,7 +1,5 @@
 package nl.tijsgroenendaal.queuemusicfacade.commands.responses
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongModel
-
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -14,29 +12,7 @@ data class AddSessionSongCommandResponse(
     val album: String,
     val authors: String,
     val createdAt: LocalDateTime,
-) {
-    companion object {
-        fun SessionSongModel.toResponse(): AddSessionSongCommandResponse {
-            return AddSessionSongCommandResponse(
-                this.id,
-                AddSessionSongCommandResponseUser(
-                    this.user,
-                ),
-                AddSessionSongCommandResponseSession(
-                    this.session.id,
-                    this.session.createdAt,
-                    this.session.endAt,
-                    this.session.code
-                ),
-                this.trackId,
-                this.title,
-                this.album,
-                this.authors,
-                this.createdAt
-            )
-        }
-    }
-}
+)
 
 data class AddSessionSongCommandResponseUser(
     val id: UUID,

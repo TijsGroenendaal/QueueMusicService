@@ -1,51 +1,54 @@
 package nl.tijsgroenendaal.queuemusicfacade.services
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
-import nl.tijsgroenendaal.queuemusicfacade.repositories.QueueMusicSessionRepository
-import nl.tijsgroenendaal.queuemusicfacade.services.commands.CreateSessionCommand
-import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
-import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
+import nl.tijsgroenendaal.queuemusicfacade.commands.AcceptSessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.DeleteSessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.EndSessionCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.JoinSessionCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.LeaveSessionCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.VoteSessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.responses.AddSessionSongCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.commands.responses.CreateSessionCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.commands.responses.JoinSessionCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.commands.responses.VoteSessionSongCommandResponse
+
+import java.util.UUID
 
 import org.springframework.stereotype.Service
 
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.util.UUID
-
 @Service
-class SessionService(
-    private val sessionRepository: QueueMusicSessionRepository
-) {
+class SessionService {
+	fun createNew(command: JoinSessionCommand, authenticationContextSubject: UUID): JoinSessionCommandResponse {
+		TODO("Not yet implemented")
+	}
 
-    fun getActiveSessionsByUser(userId: UUID): List<SessionModel> {
-        val now = LocalDateTime.now(ZoneOffset.UTC)
-        return sessionRepository.findAllByHostAndEndAtAfterAndManualEnded(userId, now)
-    }
+	fun leaveSession(command: LeaveSessionCommand, authenticationContextSubject: UUID) {
+		TODO("Not yet implemented")
+	}
 
-    fun createSession(command: CreateSessionCommand): SessionModel {
-        return sessionRepository.save(SessionModel.new(command))
-    }
+	fun endSession(command: EndSessionCommand, authenticationContextSubject: UUID) {
+		TODO("Not yet implemented")
+	}
 
-    fun findSessionById(sessionId: UUID): SessionModel {
-        return sessionRepository.findById(sessionId).let {
-            if (it.isEmpty) throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
-            else it.get()
-        }
-    }
+	fun createSession(createSessionCommand: Any): CreateSessionCommandResponse {
+		TODO("Not yet implemented")
+	}
 
-    fun findSessionByCode(code: String): SessionModel {
-        return sessionRepository.findByCode(code)
-            ?: throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
-    }
+	fun createSessionSong(command: AddSessionSongCommand, userId: UUID): AddSessionSongCommandResponse {
+		TODO("Not yet implemented")
+	}
 
-    fun endSession(code: String): SessionModel {
-        val session = this.findSessionByCode(code)
+	fun vote(command: VoteSessionSongCommand, authenticationContextSubject: UUID): VoteSessionSongCommandResponse {
+		TODO("Not yet implemented")
+	}
 
-        if (!session.isActive())
-            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
+	fun deleteSessionSong(command: DeleteSessionSongCommand, authenticationContextSubject: UUID) {
+		TODO("Not yet implemented")
+	}
 
-        session.end()
+	fun acceptSessionSong(command: AcceptSessionSongCommand, authenticationContextSubject: UUID) {
+		TODO("Not yet implemented")
+	}
 
-        return sessionRepository.save(session)
-    }
+
 }

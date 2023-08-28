@@ -1,7 +1,5 @@
 package nl.tijsgroenendaal.queuemusicfacade.commands.responses
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
-
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -13,18 +11,4 @@ data class CreateSessionCommandResponse(
     val duration: Long,
     val code: String,
     val manualEnded: Boolean
-) {
-    companion object {
-        fun SessionModel.toResponse(): CreateSessionCommandResponse {
-            return CreateSessionCommandResponse(
-                this.id,
-                this.playListId,
-                this.createdAt,
-                this.endAt,
-                this.duration,
-                this.code,
-                this.manualEnded
-            )
-        }
-    }
-}
+)

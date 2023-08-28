@@ -1,7 +1,5 @@
 package nl.tijsgroenendaal.queuemusicfacade.commands.responses
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.enums.VoteEnum
-
 import java.time.LocalDateTime
 
 import java.util.UUID
@@ -10,7 +8,7 @@ data class VoteSessionSongCommandResponse(
     val id: UUID,
     val song: VoteSessionSongCommandResponseSong,
     val user: VoteSessionSongCommandResponseUser,
-    val vote: VoteEnum
+    val vote: String
 )
 
 data class VoteSessionSongCommandResponseSong(

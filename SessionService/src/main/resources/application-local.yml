@@ -5,6 +5,8 @@ clients:
   idp-service: localhost:8082
 
 spring:
+  rabbitmq:
+    host: localhost
   datasource:
     url: jdbc:postgresql://localhost:5432/${POSTGRES_SESSION_DB}?user=${POSTGRES_SESSION_USER}&password=${POSTGRES_SESSION_PASSWORD}
     hikari:

@@ -14,7 +14,3 @@ data class GetTrackQueryResponseArtist(
 data class GetTrackQueryResponseAlbum(
     val name: String
 )
-
-fun List<GetTrackQueryResponseArtist>.concatArtistNames(): String {
-    return this.joinToString(", ") { it.name }
-}

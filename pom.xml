@@ -16,6 +16,7 @@
         <module>QueueMusicFacade</module>
         <module>AutoPlayConsumer</module>
         <module>IdpService</module>
+        <module>SessionService</module>
     </modules>
 
 </project>
