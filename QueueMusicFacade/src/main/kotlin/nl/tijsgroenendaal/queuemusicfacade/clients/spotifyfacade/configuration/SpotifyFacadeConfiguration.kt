@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.configuration
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.service.IdpService
+import nl.tijsgroenendaal.queuemusicfacade.services.IdpService
 
 import feign.RequestInterceptor
 import feign.RequestTemplate
@@ -12,18 +12,18 @@ class SpotifyFacadeConfiguration {
 
     @Bean
     fun feignRequestInterceptor(
-            idpService: IdpService,
-            @Value("\${clients.idp.spotify-facade.id}")
+			idpService: IdpService,
+			@Value("\${clients.idp.spotify-facade.id}")
             clientId: String,
-            @Value("\${clients.idp.spotify-facade.secret}")
+			@Value("\${clients.idp.spotify-facade.secret}")
             clientSecret: String
     ) = SpotifyFacadeRequestInterceptor(idpService, clientId, clientSecret)
 }
 
 class SpotifyFacadeRequestInterceptor(
-    private val idpService: IdpService,
-    private val clientId: String,
-    private val clientSecret: String
+		private val idpService: IdpService,
+		private val clientId: String,
+		private val clientSecret: String
 ) : RequestInterceptor {
 
     override fun apply(request: RequestTemplate) {

@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.autoplayconsumer.clients.idpservice.service
+package nl.tijsgroenendaal.autoplayconsumer.services
 
 import nl.tijsgroenendaal.autoplayconsumer.clients.idpservice.clients.IdpClient
 import nl.tijsgroenendaal.autoplayconsumer.clients.idpservice.command.GenerateClientTokenCommand

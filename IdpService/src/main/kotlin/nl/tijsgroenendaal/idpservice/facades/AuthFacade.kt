@@ -5,7 +5,7 @@ import nl.tijsgroenendaal.idpservice.query.responses.LoginQueryResponse
 import nl.tijsgroenendaal.idpservice.services.DeviceLinkService
 import nl.tijsgroenendaal.idpservice.services.UserRefreshTokenService
 import nl.tijsgroenendaal.idpservice.services.UserService
-import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.services.UserLinkService
+import nl.tijsgroenendaal.idpservice.services.UserLinkService
 import nl.tijsgroenendaal.idpservice.security.JwtGenerator
 import nl.tijsgroenendaal.idpservice.security.JwtGenerator.Companion.JWT_REFRESH_TOKEN_VALIDITY
 import nl.tijsgroenendaal.idpservice.security.JwtGenerator.Companion.JWT_TOKEN_VALIDITY
@@ -27,12 +27,12 @@ import java.util.UUID
 
 @Service
 class AuthFacade(
-    private val jwtTokenUtil: JwtTokenUtil,
-    private val userService: UserService,
-    private val userRefreshTokenService: UserRefreshTokenService,
-    private val userLinkService: UserLinkService,
-    private val deviceLinkService: DeviceLinkService,
-    private val jwtGenerator: JwtGenerator
+		private val jwtTokenUtil: JwtTokenUtil,
+		private val userService: UserService,
+		private val userRefreshTokenService: UserRefreshTokenService,
+		private val userLinkService: UserLinkService,
+		private val deviceLinkService: DeviceLinkService,
+		private val jwtGenerator: JwtGenerator
 ) {
 
     fun loginLinkUser(code: String): LoginQueryResponse {

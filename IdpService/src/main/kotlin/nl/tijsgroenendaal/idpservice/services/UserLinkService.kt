@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.idpservice.clients.spotifyfacade.services
+package nl.tijsgroenendaal.idpservice.services
 
 import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.clients.AnonymousSpotifyFacadeClient
 import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.clients.SpotifyFacadeClient

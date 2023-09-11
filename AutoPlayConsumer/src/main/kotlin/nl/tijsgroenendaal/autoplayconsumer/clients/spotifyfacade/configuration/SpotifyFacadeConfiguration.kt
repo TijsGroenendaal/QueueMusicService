@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.autoplayconsumer.clients.spotifyfacade.configuration
 
-import nl.tijsgroenendaal.autoplayconsumer.clients.idpservice.service.IdpService
+import nl.tijsgroenendaal.autoplayconsumer.services.IdpService
 
 import feign.RequestInterceptor
 import feign.RequestTemplate
@@ -14,7 +14,7 @@ class SpotifyFacadeConfiguration {
 }
 
 class SpotifyFacadeRequestInterceptor(
-    private val idpService: IdpService,
+		private val idpService: IdpService,
 ) : RequestInterceptor {
 
     override fun apply(request: RequestTemplate) {

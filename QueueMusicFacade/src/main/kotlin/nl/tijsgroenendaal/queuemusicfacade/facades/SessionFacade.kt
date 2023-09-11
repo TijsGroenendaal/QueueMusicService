@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.queuemusicfacade.facades
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.SpotifyService
+import nl.tijsgroenendaal.queuemusicfacade.services.SpotifyService
 import nl.tijsgroenendaal.queuemusicfacade.commands.CreateSessionCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.EndSessionCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.JoinSessionCommand
@@ -22,8 +22,8 @@ private const val SESSION_CODE_LENGTH = 8
 
 @Service
 class SessionFacade(
-    private val spotifyService: SpotifyService,
-    private val sessionService: SessionService
+		private val spotifyService: SpotifyService,
+		private val sessionService: SessionService
 ) {
 
     fun createSession(command: CreateSessionCommand): CreateSessionCommandResponse {

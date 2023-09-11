@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.configuration
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.service.IdpService
+import nl.tijsgroenendaal.queuemusicfacade.services.IdpService
 
 import feign.RequestInterceptor
 import feign.RequestTemplate
@@ -12,18 +12,18 @@ class SessionServiceConfiguration {
 
     @Bean
     fun feignRequestInterceptor(
-        idpService: IdpService,
-        @Value("\${clients.idp.session-service.id}")
+			idpService: IdpService,
+			@Value("\${clients.idp.session-service.id}")
         clientId: String,
-        @Value("\${clients.idp.session-service.secret}")
+			@Value("\${clients.idp.session-service.secret}")
         clientSecret: String
     ) = SessionServiceRequestInterceptor(idpService, clientId, clientSecret)
 }
 
 class SessionServiceRequestInterceptor(
-    private val idpService: IdpService,
-    private val clientId: String,
-    private val clientSecret: String
+		private val idpService: IdpService,
+		private val clientId: String,
+		private val clientSecret: String
 ) : RequestInterceptor {
 
     override fun apply(request: RequestTemplate) {

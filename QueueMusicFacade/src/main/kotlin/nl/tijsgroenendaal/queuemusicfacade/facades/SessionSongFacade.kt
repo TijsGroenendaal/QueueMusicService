@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.queuemusicfacade.facades
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.SpotifyService
+import nl.tijsgroenendaal.queuemusicfacade.services.SpotifyService
 import nl.tijsgroenendaal.queuemusicfacade.commands.AcceptSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSpotifySessionSongCommand
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class SessionSongFacade(
-    private val spotifyService: SpotifyService,
-    private val sessionService: SessionService
+		private val spotifyService: SpotifyService,
+		private val sessionService: SessionService
 ) {
 
     fun addSpotifySessionSong(command: AddSpotifySessionSongCommand): AddSessionSongCommandResponse {

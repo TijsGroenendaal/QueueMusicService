@@ -1,10 +1,9 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.service
+package nl.tijsgroenendaal.queuemusicfacade.services
 
 import nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.clients.IdpClient
 import nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.command.GenerateClientTokenCommand
 import nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.command.responses.GenerateClientTokenCommandResponse
 
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service

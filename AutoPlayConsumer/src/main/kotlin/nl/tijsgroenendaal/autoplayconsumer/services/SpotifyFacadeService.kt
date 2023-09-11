@@ -1,4 +1,4 @@
-package nl.tijsgroenendaal.autoplayconsumer.clients.spotifyfacade.services
+package nl.tijsgroenendaal.autoplayconsumer.services
 
 import nl.tijsgroenendaal.autoplayconsumer.clients.spotifyfacade.clients.SpotifyFacadeClient
 import nl.tijsgroenendaal.autoplayconsumer.clients.spotifyfacade.commands.QueueTrackCommand
