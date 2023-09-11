@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: local
+  rabbitmq:
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
   datasource:
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -21,3 +25,8 @@ queuemusic:
   session:
     song:
       timeout: PT5M
+  rabbitmq:
+    exchange: queuemusic
+    autoqueue:
+      routingKey: autoqueue
+      queueName: autoqueue

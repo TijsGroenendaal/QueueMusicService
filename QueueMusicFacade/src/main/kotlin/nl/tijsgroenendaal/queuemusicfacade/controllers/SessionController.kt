@@ -1,11 +1,10 @@
 package nl.tijsgroenendaal.queuemusicfacade.controllers
 
-import nl.tijsgroenendaal.queuemusicfacade.commands.CreateSessionCommand
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.CreateSessionCommandResponse
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.CreateSessionCommandResponse.Companion.toResponse
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.JoinSessionCommandResponse
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.JoinSessionCommandResponse.Companion.toResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.CreateSessionCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.JoinSessionCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.facades.SessionFacade
+
+import java.util.UUID
 
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -16,6 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+import nl.tijsgroenendaal.queuemusicfacade.commands.EndSessionCommand as EndSessionFacadeCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.CreateSessionCommand as CreateSessionFacadeCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.LeaveSessionCommand as LeaveSessionFacadeCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.JoinSessionCommand as JoinSessionFacadeCommand
+
 @RestController
 @RequestMapping("/v1/sessions")
 class SessionController(
@@ -25,31 +29,37 @@ class SessionController(
     @PostMapping()
     @PreAuthorize("hasAuthority('SPOTIFY')")
     fun createSession(
-        @RequestBody command: CreateSessionCommand
+        @RequestBody command: CreateSessionFacadeCommand
     ): CreateSessionCommandResponse {
-        return sessionFacade.createSession(command).toResponse()
+        return sessionFacade.createSession(command)
     }
 
     @PostMapping("/{code}/join")
     fun joinSession(
         @PathVariable code: String
     ): JoinSessionCommandResponse {
-        return sessionFacade.joinSession(code).toResponse()
+        return sessionFacade.joinSession(JoinSessionFacadeCommand(
+            code
+        ))
     }
 
-    @DeleteMapping("/{code}/leave")
+    @DeleteMapping("/{sessionId}/leave")
     fun leaveSession(
-        @PathVariable code: String
+        @PathVariable sessionId: UUID
     ) {
-        sessionFacade.leaveSession(code)
+        sessionFacade.leaveSession(LeaveSessionFacadeCommand(
+            sessionId
+        ))
     }
 
     @PreAuthorize("hasAuthority('SPOTIFY')")
-    @PutMapping("/{code}/close")
+    @PutMapping("/{sessionId}/close")
     fun endSession(
-        @PathVariable code: String
+        @PathVariable sessionId: UUID
     ) {
-        sessionFacade.endSession(code)
+        sessionFacade.endSession(EndSessionFacadeCommand(
+            sessionId
+        ))
     }
 
 }

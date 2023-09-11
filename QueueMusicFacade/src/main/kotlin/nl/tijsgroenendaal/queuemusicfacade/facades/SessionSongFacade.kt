@@ -1,153 +1,51 @@
 package nl.tijsgroenendaal.queuemusicfacade.facades
 
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.query.responses.concatArtistNames
-import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services.SpotifyService
+import nl.tijsgroenendaal.queuemusicfacade.services.SpotifyService
+import nl.tijsgroenendaal.queuemusicfacade.commands.AcceptSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
-import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongControllerCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSpotifySessionSongCommand
-import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
-import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongModel
-import nl.tijsgroenendaal.queuemusicfacade.entity.SessionSongUserVoteModel
-import nl.tijsgroenendaal.queuemusicfacade.entity.enums.SongState
-import nl.tijsgroenendaal.queuemusicfacade.entity.enums.VoteEnum
-import nl.tijsgroenendaal.queuemusicfacade.services.AutoQueueService
+import nl.tijsgroenendaal.queuemusicfacade.commands.DeleteSessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.VoteSessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.AddSessionSongCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.VoteSessionSongCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
-import nl.tijsgroenendaal.queuemusicfacade.services.SessionSongService
-import nl.tijsgroenendaal.queuemusicfacade.services.SessionSongUserVoteService
-import nl.tijsgroenendaal.queuemusicfacade.services.commands.AutoplayUpdateTask
-import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
-import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
-import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 
 import org.springframework.stereotype.Service
 
-import java.util.UUID
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
 @Service
 class SessionSongFacade(
-    private val sessionSongService: SessionSongService,
-    private val sessionService: SessionService,
-    private val spotifyService: SpotifyService,
-    private val sessionSongUserVoteService: SessionSongUserVoteService,
-    private val autoQueueService: AutoQueueService
+		private val spotifyService: SpotifyService,
+		private val sessionService: SessionService
 ) {
 
-    fun addSpotifySessionSong(command: AddSpotifySessionSongCommand, sessionId: UUID): SessionSongModel {
+    fun addSpotifySessionSong(command: AddSpotifySessionSongCommand): AddSessionSongCommandResponse {
         val track = spotifyService.getTrack(command.songId)
-        val userId = getAuthenticationContextSubject()
 
-        return createSessionSong(AddSessionSongCommand(
-            userId,
+        return addSessionSong(AddSessionSongCommand(
             track.id,
             track.album.name,
             track.name,
-            track.artists.concatArtistNames(),
-            sessionService.findSessionById(sessionId)
+            track.artists.map { it.name },
+            command.sessionId
         ))
     }
 
-    fun addSessionSong(command: AddSessionSongControllerCommand, sessionId: UUID): SessionSongModel {
+    fun addSessionSong(command: AddSessionSongCommand): AddSessionSongCommandResponse {
         val userId = getAuthenticationContextSubject()
 
-        return createSessionSong(AddSessionSongCommand(
-            userId,
-            null,
-            command.album,
-            command.name,
-            command.authors,
-            sessionService.findSessionById(sessionId)
-        ))
+        return sessionService.createSessionSong(command, userId)
     }
 
-    fun voteSessionSong(sessionId: UUID, songId: UUID, vote: VoteEnum): SessionSongUserVoteModel {
-        val userId = getAuthenticationContextSubject()
-        val session = sessionService.findSessionById(sessionId)
-
-        if (!session.hasJoined(userId))
-            throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
-
-        if (!session.isActive())
-            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
-
-        val song = sessionSongService.getById(songId)
-
-        if (song.state == SongState.PLAYED)
-            throw BadRequestException(SessionSongErrorCode.SONG_ALREADY_QUEUED)
-
-        val userVote = sessionSongUserVoteService.vote(song, userId, vote)
-
-        // Short circuit because nothing has changed.
-        if (userVote.first == 0) {
-            return userVote.second
-        }
-
-        val updatedSong = sessionSongService.updateVoteAggregate(songId, userVote.first)
-
-        if (session.autoplayAcceptance != null && updatedSong.votes >= session.autoplayAcceptance) {
-            acceptSessionSong(session, updatedSong)
-        }
-
-        return userVote.second
+    fun voteSessionSong(command: VoteSessionSongCommand): VoteSessionSongCommandResponse {
+        return sessionService.vote(command, getAuthenticationContextSubject())
     }
 
-    fun deleteSessionSong(sessionId: UUID, songId: UUID) {
-        val session = sessionService.findSessionById(sessionId)
-
-        if (!session.isHost(getAuthenticationContextSubject()))
-            throw BadRequestException(SessionErrorCodes.NOT_HOST)
-
-        if (!session.isActive())
-            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
-
-        val song = sessionSongService.getById(songId).apply {
-            this.state = SongState.DELETED
-        }
-        sessionSongService.save(song)
+    fun deleteSessionSong(command: DeleteSessionSongCommand) {
+        sessionService.deleteSessionSong(command, getAuthenticationContextSubject())
     }
 
-    fun acceptSessionSong(sessionId: UUID, songId: UUID) {
-        val session = sessionService.findSessionById(sessionId)
-        val song = sessionSongService.getById(songId)
-
-        if (!session.isHost(getAuthenticationContextSubject()))
-            throw BadRequestException(SessionErrorCodes.NOT_HOST)
-
-        acceptSessionSong(session, song)
-    }
-
-    private fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {
-        if (!command.session.hasJoined(command.userId))
-            throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
-
-        return sessionSongService.createSessionSong(command)
-    }
-
-    private fun createAutoplayMessage(trackId: String, hostId: UUID) {
-        autoQueueService.publish(AutoplayUpdateTask(
-            hostId,
-            trackId
-        ))
-    }
-
-    private fun acceptSessionSong(session: SessionModel, song: SessionSongModel) {
-        if (!session.isActive())
-            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
-
-        if (song.state == SongState.DELETED)
-            throw BadRequestException(SessionSongErrorCode.SESSION_SONG_NOT_FOUND)
-
-        if (song.state == SongState.PLAYED)
-            throw BadRequestException(SessionSongErrorCode.SONG_ALREADY_QUEUED)
-
-        if (session.autoplayAcceptance != null && song.trackId != null) {
-            CoroutineScope(Dispatchers.IO).launch {
-                sessionSongService.save(song.apply { this.state = SongState.PLAYED })
-                createAutoplayMessage(song.trackId, session.host)
-            }
-        }
+    fun acceptSessionSong(command: AcceptSessionSongCommand) {
+        sessionService.acceptSessionSong(command, getAuthenticationContextSubject())
     }
 }

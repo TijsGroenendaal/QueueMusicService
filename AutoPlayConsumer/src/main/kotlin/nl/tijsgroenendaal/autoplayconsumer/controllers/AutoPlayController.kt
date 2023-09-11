@@ -1,6 +1,6 @@
 package nl.tijsgroenendaal.autoplayconsumer.controllers
 
-import nl.tijsgroenendaal.autoplayconsumer.clients.spotifyfacade.services.SpotifyFacadeService
+import nl.tijsgroenendaal.autoplayconsumer.services.SpotifyFacadeService
 import nl.tijsgroenendaal.autoplayconsumer.commands.AutoplayUpdateTask
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener

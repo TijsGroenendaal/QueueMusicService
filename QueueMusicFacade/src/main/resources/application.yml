@@ -1,19 +1,6 @@
 spring:
   profiles:
     active: local
-  rabbitmq:
-    port: ${RABBITMQ_PORT}
-    username: ${RABBITMQ_USERNAME}
-    password: ${RABBITMQ_PASSWORD}
-  datasource:
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: false
-    generate-ddl: true
-    show-sql: false
 
 queuemusic:
   security:
@@ -22,17 +9,12 @@ queuemusic:
     public-secret: ${QUEUEMUSIC_JWT_PUBLIC_SECRET}
     refresh:
       public-secret: ${QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET}
-  session:
-    song:
-      timeout: PT5M
-  rabbitmq:
-    exchange: queuemusic
-    autoqueue:
-      routingKey: autoqueue
-      queueName: autoqueue
 
 clients:
   idp:
     spotify-facade:
       id: ${SPOTIFY_FACADE_CLIENT_ID}
       secret: ${SPOTIFY_FACADE_CLIENT_SECRET}
+    session-service:
+      id: ${SESSION_SERVICE_CLIENT_ID}
+      secret: ${SESSION_SERVICE_CLIENT_SECRET}

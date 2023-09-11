@@ -1,15 +1,4 @@
 clients:
   spotify-facade: ${SPOTIFY_FACADE_URL}
   idp-service: ${IDP_SERVICE_URL}
-
-spring:
-  rabbitmq:
-    host: ${RABBITMQ_HOST}
-  datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}?user=${POSTGRES_USER}&password=${POSTGRES_PASSWORD}
-    hikari:
-      minimum-idle: 4
-      maximum-pool-size: 16
-  jpa:
-    hibernate:
-      ddl-auto: none
+  session-service: ${SESSION_SERVICE_URL}

@@ -1,15 +1,4 @@
 clients:
   spotify-facade: localhost:8081
   idp-service: localhost:8082
-
-spring:
-  rabbitmq:
-    host: localhost
-  datasource:
-    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?user=${POSTGRES_USER}&password=${POSTGRES_PASSWORD}
-    hikari:
-      minimum-idle: 1
-      maximum-pool-size: 10
-  jpa:
-    hibernate:
-      ddl-auto: update
+  session-service: localhost:8083

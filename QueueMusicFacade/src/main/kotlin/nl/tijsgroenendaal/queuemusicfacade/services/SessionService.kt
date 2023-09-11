@@ -1,51 +1,66 @@
 package nl.tijsgroenendaal.queuemusicfacade.services
 
-import nl.tijsgroenendaal.queuemusicfacade.entity.SessionModel
-import nl.tijsgroenendaal.queuemusicfacade.repositories.QueueMusicSessionRepository
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.clients.SessionClient
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.clients.SessionSongClient
+import nl.tijsgroenendaal.queuemusicfacade.commands.AcceptSessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.DeleteSessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.EndSessionCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.JoinSessionCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.LeaveSessionCommand
+import nl.tijsgroenendaal.queuemusicfacade.commands.VoteSessionSongCommand
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.AddSessionSongCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.CreateSessionCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.JoinSessionCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.VoteSessionSongCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.services.commands.CreateSessionCommand
-import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
-import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
+import nl.tijsgroenendaal.qumu.helper.catchingFeignRequest
+
+import java.util.UUID
 
 import org.springframework.stereotype.Service
 
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.util.UUID
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.AddSessionSongCommand as AddSessionSongClientCommand
 
 @Service
 class SessionService(
-    private val sessionRepository: QueueMusicSessionRepository
+	private val sessionClient: SessionClient,
+	private val sessionSongClient: SessionSongClient
 ) {
 
-    fun getActiveSessionsByUser(userId: UUID): List<SessionModel> {
-        val now = LocalDateTime.now(ZoneOffset.UTC)
-        return sessionRepository.findAllByHostAndEndAtAfterAndManualEnded(userId, now)
-    }
+	fun joinSession(command: JoinSessionCommand, userId: UUID): JoinSessionCommandResponse {
+		return catchingFeignRequest { sessionClient.joinSession(command.code, userId) }
+	}
 
-    fun createSession(command: CreateSessionCommand): SessionModel {
-        return sessionRepository.save(SessionModel.new(command))
-    }
+	fun leaveSession(command: LeaveSessionCommand, userId: UUID) {
+		return catchingFeignRequest { sessionClient.leaveSession(command.sessionId, userId) }
+	}
 
-    fun findSessionById(sessionId: UUID): SessionModel {
-        return sessionRepository.findById(sessionId).let {
-            if (it.isEmpty) throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
-            else it.get()
-        }
-    }
+	fun endSession(command: EndSessionCommand, userId: UUID) {
+		return catchingFeignRequest { sessionClient.endSession(command.sessionId, userId) }
+	}
 
-    fun findSessionByCode(code: String): SessionModel {
-        return sessionRepository.findByCode(code)
-            ?: throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
-    }
+	fun createSession(command: CreateSessionCommand, userId: UUID): CreateSessionCommandResponse {
+		return catchingFeignRequest { sessionClient.createSession(command, userId) }
+	}
 
-    fun endSession(code: String): SessionModel {
-        val session = this.findSessionByCode(code)
+	fun createSessionSong(command: AddSessionSongCommand, userId: UUID): AddSessionSongCommandResponse {
+		return catchingFeignRequest { sessionSongClient.addSong(
+			command.sessionId,
+			AddSessionSongClientCommand(command.trackId, command.album, command.name, command.artists),
+			userId
+		) }
+	}
 
-        if (!session.isActive())
-            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
+	fun vote(command: VoteSessionSongCommand, userId: UUID): VoteSessionSongCommandResponse {
+		return catchingFeignRequest { sessionSongClient.voteSong(command.sessionId, command.songId, command.vote, userId) }
+	}
 
-        session.end()
+	fun deleteSessionSong(command: DeleteSessionSongCommand, userId: UUID) {
+		return catchingFeignRequest { sessionSongClient.deleteSong(command.sessionId, command.songId, userId) }
+	}
 
-        return sessionRepository.save(session)
-    }
+	fun acceptSessionSong(command: AcceptSessionSongCommand, userId: UUID) {
+		return catchingFeignRequest { sessionSongClient.acceptSong(command.sessionId, command.songId, userId) }
+	}
 }
