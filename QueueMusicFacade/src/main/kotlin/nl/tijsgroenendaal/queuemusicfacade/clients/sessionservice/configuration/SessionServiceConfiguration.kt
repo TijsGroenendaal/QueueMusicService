@@ -1,26 +1,26 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.configuration
+package nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.configuration
 
 import nl.tijsgroenendaal.queuemusicfacade.clients.idpservice.service.IdpService
 
 import feign.RequestInterceptor
 import feign.RequestTemplate
-import org.springframework.beans.factory.annotation.Value
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 
-class SpotifyFacadeConfiguration {
+class SessionServiceConfiguration {
 
     @Bean
     fun feignRequestInterceptor(
-            idpService: IdpService,
-            @Value("\${clients.idp.spotify-facade.id}")
-            clientId: String,
-            @Value("\${clients.idp.spotify-facade.secret}")
-            clientSecret: String
-    ) = SpotifyFacadeRequestInterceptor(idpService, clientId, clientSecret)
+        idpService: IdpService,
+        @Value("\${clients.idp.session-service.id}")
+        clientId: String,
+        @Value("\${clients.idp.session-service.secret}")
+        clientSecret: String
+    ) = SessionServiceRequestInterceptor(idpService, clientId, clientSecret)
 }
 
-class SpotifyFacadeRequestInterceptor(
+class SessionServiceRequestInterceptor(
     private val idpService: IdpService,
     private val clientId: String,
     private val clientSecret: String

@@ -15,3 +15,6 @@ clients:
     spotify-facade:
       id: ${SPOTIFY_FACADE_CLIENT_ID}
       secret: ${SPOTIFY_FACADE_CLIENT_SECRET}
+    session-service:
+      id: ${SESSION_SERVICE_CLIENT_ID}
+      secret: ${SESSION_SERVICE_CLIENT_SECRET}

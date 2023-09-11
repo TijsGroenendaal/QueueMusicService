@@ -6,7 +6,6 @@ import nl.tijsgroenendaal.sessionservice.entity.enums.VoteEnum
 import nl.tijsgroenendaal.sessionservice.repositories.SessionSongUserVoteRepository
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionSongUserVoteErrorCodes
-import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 
 import java.util.UUID
 
@@ -19,13 +18,13 @@ class SessionSongUserVoteService(
 
     fun vote(song: SessionSongModel, userId: UUID, vote: VoteEnum): Pair<Int, SessionSongUserVoteModel> {
         try {
-            val oldUserVote = findBySongAndUser(song.id, getAuthenticationContextSubject())
+            val oldUserVote = findBySongAndUser(song.id, userId)
             if (oldUserVote.vote == vote) {
                 return Pair(0, oldUserVote)
             }
 
             val userVote = sessionSongUserVoteRepository.save(oldUserVote.apply { this.vote = vote })
-            // Vote is multiplied to take into account that the difference from +1 to -1, 2 is.
+            // Vote is multiplied to take into account that the difference between -1 and +1 is 2. And vice versa
             return Pair(vote.value * 2, userVote)
         }
         catch (e: BadRequestException) {

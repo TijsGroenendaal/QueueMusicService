@@ -14,7 +14,6 @@ import nl.tijsgroenendaal.sessionservice.services.commands.AutoplayUpdateTask
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
-import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 
 import org.springframework.stereotype.Service
 
@@ -33,8 +32,7 @@ class SessionSongFacade(
     private val autoQueueService: AutoQueueService
 ) {
 
-    fun voteSessionSong(sessionId: UUID, songId: UUID, vote: VoteEnum): SessionSongUserVoteModel {
-        val userId = getAuthenticationContextSubject()
+    fun voteSessionSong(sessionId: UUID, songId: UUID, vote: VoteEnum, userId: UUID): SessionSongUserVoteModel {
         val session = sessionService.findSessionById(sessionId)
 
         if (!session.hasJoined(userId))
@@ -64,10 +62,10 @@ class SessionSongFacade(
         return userVote.second
     }
 
-    fun deleteSessionSong(sessionId: UUID, songId: UUID) {
+    fun deleteSessionSong(sessionId: UUID, songId: UUID, userId: UUID) {
         val session = sessionService.findSessionById(sessionId)
 
-        if (!session.isHost(getAuthenticationContextSubject()))
+        if (!session.isHost(userId))
             throw BadRequestException(SessionErrorCodes.NOT_HOST)
 
         if (!session.isActive())
@@ -79,20 +77,18 @@ class SessionSongFacade(
         sessionSongService.save(song)
     }
 
-    fun acceptSessionSong(sessionId: UUID, songId: UUID) {
+    fun acceptSessionSong(sessionId: UUID, songId: UUID, userId: UUID) {
         val session = sessionService.findSessionById(sessionId)
         val song = sessionSongService.getById(songId)
 
-        if (!session.isHost(getAuthenticationContextSubject()))
+        if (!session.isHost(userId))
             throw BadRequestException(SessionErrorCodes.NOT_HOST)
 
         acceptSessionSong(session, song)
     }
 
-    fun createSessionSong(command: AddSessionSongCommand): SessionSongModel {
+    fun createSessionSong(command: AddSessionSongCommand, userId: UUID): SessionSongModel {
         val session = sessionService.findSessionById(command.sessionId)
-
-        val userId = getAuthenticationContextSubject()
 
         if (!session.hasJoined(userId))
             throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)

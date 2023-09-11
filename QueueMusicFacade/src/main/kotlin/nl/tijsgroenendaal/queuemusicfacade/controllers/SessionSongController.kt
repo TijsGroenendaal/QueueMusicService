@@ -1,7 +1,7 @@
 package nl.tijsgroenendaal.queuemusicfacade.controllers
 
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.AddSessionSongCommandResponse
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.VoteSessionSongCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.AddSessionSongCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.VoteSessionSongCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.controllers.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.controllers.commands.AddSpotifySessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.facades.SessionSongFacade

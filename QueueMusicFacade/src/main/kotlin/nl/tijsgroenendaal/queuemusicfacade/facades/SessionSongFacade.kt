@@ -6,8 +6,8 @@ import nl.tijsgroenendaal.queuemusicfacade.commands.AddSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.AddSpotifySessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.DeleteSessionSongCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.VoteSessionSongCommand
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.AddSessionSongCommandResponse
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.VoteSessionSongCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.AddSessionSongCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.VoteSessionSongCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 

@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+
+import java.util.UUID
 
 @RestController
 @RequestMapping("/v1/sessions")
@@ -22,34 +25,37 @@ class SessionController(
     private val sessionFacade: SessionFacade
 ) {
 
-    @PostMapping()
+    @PostMapping
     @PreAuthorize("hasAuthority('SPOTIFY')")
     fun createSession(
-        @RequestBody command: CreateSessionCommand
+        @RequestBody command: CreateSessionCommand,
+        @RequestParam userId: UUID
     ): CreateSessionCommandResponse {
-        return sessionFacade.createSession(command).toResponse()
+        return sessionFacade.createSession(command, userId).toResponse()
     }
 
     @PostMapping("/{code}/join")
     fun joinSession(
-        @PathVariable code: String
+        @PathVariable code: String,
+        @RequestParam userId: UUID
     ): JoinSessionCommandResponse {
-        return sessionFacade.joinSession(code).toResponse()
+        return sessionFacade.joinSession(code, userId).toResponse()
     }
 
-    @DeleteMapping("/{code}/leave")
+    @DeleteMapping("/{sessionId}/leave")
     fun leaveSession(
-        @PathVariable code: String
+        @PathVariable sessionId: UUID,
+        @RequestParam userId: UUID
     ) {
-        sessionFacade.leaveSession(code)
+        sessionFacade.leaveSession(sessionId, userId)
     }
 
     @PreAuthorize("hasAuthority('SPOTIFY')")
-    @PutMapping("/{code}/close")
+    @PutMapping("/{sessionId}/close")
     fun endSession(
-        @PathVariable code: String
+        @PathVariable sessionId: UUID,
+        @RequestParam userId: UUID
     ) {
-        sessionFacade.endSession(code)
+        sessionFacade.endSession(sessionId, userId)
     }
-
 }

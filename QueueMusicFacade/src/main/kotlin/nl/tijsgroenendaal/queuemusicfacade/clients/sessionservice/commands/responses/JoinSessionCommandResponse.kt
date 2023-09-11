@@ -1,11 +1,11 @@
-package nl.tijsgroenendaal.queuemusicfacade.commands.responses
+package nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses
 
 import java.time.LocalDateTime
 import java.util.UUID
 
 data class JoinSessionCommandResponse(
-    val user: JoinSessionCommandResponseUser,
-    val session: JoinSessionCommandResponseSession
+		val user: JoinSessionCommandResponseUser,
+		val session: JoinSessionCommandResponseSession
 )
 
 data class JoinSessionCommandResponseSession(

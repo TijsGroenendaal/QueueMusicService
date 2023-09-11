@@ -8,7 +8,7 @@ data class AddSessionSongCommand(
 	val trackId: String?,
 	val trackAlbum: String,
 	val trackName: String,
-	val trackArtists: String,
+	val trackArtists: List<String>,
 	val session: SessionModel,
 	val userId: UUID
 )

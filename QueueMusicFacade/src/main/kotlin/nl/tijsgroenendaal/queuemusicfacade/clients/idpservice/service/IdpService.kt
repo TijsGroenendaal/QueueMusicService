@@ -10,19 +10,10 @@ import org.springframework.stereotype.Service
 @Service
 class IdpService(
     private val idpClient: IdpClient,
-    @Value("\${clients.idp.spotify-facade.id}")
-    private val spotifyFacadeClientId: String,
-    @Value("\${clients.idp.spotify-facade.secret}")
-    private val spotifyFacadeClientSecret: String
+
 ) {
-
-    fun generateClientJwt(): GenerateClientTokenCommandResponse {
-        val command = GenerateClientTokenCommand(
-            spotifyFacadeClientId,
-            spotifyFacadeClientSecret
-        )
-
+    fun generateClientJwt(clientId: String, clientSecret: String): GenerateClientTokenCommandResponse {
+        val command = GenerateClientTokenCommand(clientId, clientSecret)
         return idpClient.generateClientJwt(command)
     }
-
 }

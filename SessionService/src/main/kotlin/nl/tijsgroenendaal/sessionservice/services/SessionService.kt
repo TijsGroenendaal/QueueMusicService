@@ -38,8 +38,8 @@ class SessionService(
             ?: throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
     }
 
-    fun endSession(code: String): SessionModel {
-        val session = this.findSessionByCode(code)
+    fun endSession(sessionId: UUID): SessionModel {
+        val session = this.findSessionById(sessionId)
 
         if (!session.isActive())
             throw BadRequestException(SessionErrorCodes.SESSION_ENDED)

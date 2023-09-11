@@ -3,11 +3,9 @@ package nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.services
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.commands.reponses.CreatePlaylistCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.query.responses.GetTrackQueryResponse
 import nl.tijsgroenendaal.queuemusicfacade.clients.spotifyfacade.clients.SpotifyFacadeClient
-import nl.tijsgroenendaal.qumu.helper.BadRequestSerializer
+import nl.tijsgroenendaal.qumu.helper.catchingFeignRequest
 
 import java.util.UUID
-
-import feign.FeignException
 
 import org.springframework.stereotype.Service
 
@@ -17,18 +15,10 @@ class SpotifyService(
 ) {
 
     fun getTrack(trackId: String): GetTrackQueryResponse {
-        return try {
-            spotifyFacadeClient.getTrack(trackId)
-        } catch (e: FeignException) {
-            throw BadRequestSerializer.getBadRequestException(e)
-        }
+        return catchingFeignRequest { spotifyFacadeClient.getTrack(trackId) }
     }
 
     fun createPlaylist(name: String, userId: UUID): CreatePlaylistCommandResponse {
-        return try {
-            spotifyFacadeClient.createPlaylist(name, userId)
-        } catch (e: FeignException) {
-            throw BadRequestSerializer.getBadRequestException(e)
-        }
+        return catchingFeignRequest { spotifyFacadeClient.createPlaylist(name, userId) }
     }
 }

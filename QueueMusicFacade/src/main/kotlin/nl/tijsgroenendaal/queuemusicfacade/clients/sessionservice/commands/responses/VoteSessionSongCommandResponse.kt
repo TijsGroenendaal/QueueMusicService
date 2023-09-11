@@ -1,14 +1,14 @@
-package nl.tijsgroenendaal.queuemusicfacade.commands.responses
+package nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses
 
 import java.time.LocalDateTime
 
 import java.util.UUID
 
 data class VoteSessionSongCommandResponse(
-    val id: UUID,
-    val song: VoteSessionSongCommandResponseSong,
-    val user: VoteSessionSongCommandResponseUser,
-    val vote: String
+		val id: UUID,
+		val song: VoteSessionSongCommandResponseSong,
+		val user: VoteSessionSongCommandResponseUser,
+		val vote: String
 )
 
 data class VoteSessionSongCommandResponseSong(

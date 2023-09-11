@@ -7,10 +7,11 @@ import nl.tijsgroenendaal.sessionservice.services.SessionService
 import nl.tijsgroenendaal.sessionservice.services.SessionUserService
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
-import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+
+import java.util.UUID
 
 private const val MAX_SECONDS_DURATION = 14400L
 private const val MAX_ACTIVE_SESSION = 1
@@ -22,9 +23,7 @@ class SessionFacade(
     private val sessionUserService: SessionUserService,
 ) {
 
-    fun createSession(command: CreateSessionCommand): SessionModel {
-        val userId = getAuthenticationContextSubject()
-
+    fun createSession(command: CreateSessionCommand, userId: UUID): SessionModel {
         if (command.maxUsers > MAX_USERS)
             throw BadRequestException(SessionErrorCodes.MAX_USERS_EXCEEDED)
 
@@ -51,9 +50,7 @@ class SessionFacade(
     }
 
     @Transactional
-    fun joinSession(code: String): SessionUserModel {
-        val userId = getAuthenticationContextSubject()
-
+    fun joinSession(code: String, userId: UUID): SessionUserModel {
         val session = sessionService.findSessionByCode(code)
 
         if (session.hasJoined(userId))
@@ -71,9 +68,8 @@ class SessionFacade(
     }
 
     @Transactional
-    fun leaveSession(code: String) {
-        val userId = getAuthenticationContextSubject()
-        val session = sessionService.findSessionByCode(code)
+    fun leaveSession(sessionId: UUID, userId: UUID) {
+        val session = sessionService.findSessionById(sessionId)
 
         if (!session.isActive())
             throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
@@ -84,13 +80,12 @@ class SessionFacade(
         sessionUserService.leaveSession(session, userId)
     }
 
-    fun endSession(code: String) {
-        val userId = getAuthenticationContextSubject()
-        val session = sessionService.findSessionByCode(code)
+    fun endSession(sessionId: UUID, userId: UUID) {
+        val session = sessionService.findSessionById(sessionId)
 
         if (!session.isHost(userId))
             throw BadRequestException(SessionErrorCodes.NOT_HOST)
 
-        sessionService.endSession(code)
+        sessionService.endSession(sessionId)
     }
 }

@@ -5,8 +5,8 @@ import nl.tijsgroenendaal.queuemusicfacade.commands.CreateSessionCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.EndSessionCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.JoinSessionCommand
 import nl.tijsgroenendaal.queuemusicfacade.commands.LeaveSessionCommand
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.CreateSessionCommandResponse
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.JoinSessionCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.CreateSessionCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.JoinSessionCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.services.SessionService
 import nl.tijsgroenendaal.qumusecurity.security.helper.getAuthenticationContextSubject
 
@@ -42,14 +42,14 @@ class SessionFacade(
                     playlist.id,
                     command.autoplay!!.acceptance
                 )}
-            ))
+            ), userId)
         } catch (e: Exception) {
             TODO("If creation fails the spotifyplaylist should be deleted....")
         }
     }
 
     fun joinSession(command: JoinSessionCommand): JoinSessionCommandResponse {
-        return sessionService.createNew(command, getAuthenticationContextSubject())
+        return sessionService.joinSession(command, getAuthenticationContextSubject())
     }
 
     fun leaveSession(command: LeaveSessionCommand) {

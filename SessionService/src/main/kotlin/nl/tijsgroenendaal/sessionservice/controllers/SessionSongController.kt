@@ -18,9 +18,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.security.access.prepost.PreAuthorize
 
 import java.util.UUID
-import org.springframework.security.access.prepost.PreAuthorize
 
 @RestController
 @RequestMapping("/v1/sessions/{sessionId}/songs")
@@ -31,24 +31,26 @@ class SessionSongController(
     @PostMapping
     fun addSessionSong(
         @PathVariable sessionId: UUID,
-        @RequestBody command: AddSessionSongControllerCommand
+        @RequestBody command: AddSessionSongControllerCommand,
+        @RequestParam userId: UUID
     ): AddSessionSongCommandResponse {
         return sessionSongFacade.createSessionSong(AddSessionSongCommand(
             command.trackId,
             command.trackAlbum,
-            command.trackArtists,
             command.trackName,
+            command.trackArtists,
             sessionId
-        )).toResponse()
+        ), userId).toResponse()
     }
 
     @PutMapping("/{songId}")
     fun voteSessionSong(
         @PathVariable sessionId: UUID,
         @PathVariable songId: UUID,
-        @RequestParam vote: VoteEnum
+        @RequestParam vote: VoteEnum,
+        @RequestParam userId: UUID
     ): VoteSessionSongCommandResponse {
-        return sessionSongFacade.voteSessionSong(sessionId, songId, vote).toResponse()
+        return sessionSongFacade.voteSessionSong(sessionId, songId, vote, userId).toResponse()
     }
 
     @PreAuthorize("hasAuthority('SPOTIFY')")
@@ -56,8 +58,9 @@ class SessionSongController(
     fun deleteSessionSong(
         @PathVariable sessionId: UUID,
         @PathVariable songId: UUID,
+        @RequestParam userId: UUID
     ): ResponseEntity<Any> {
-        sessionSongFacade.deleteSessionSong(sessionId, songId)
+        sessionSongFacade.deleteSessionSong(sessionId, songId, userId)
 
         return ResponseEntity.noContent().build()
     }
@@ -66,9 +69,10 @@ class SessionSongController(
     @PutMapping("/{songId}/accept")
     fun acceptSessionSong(
         @PathVariable sessionId: UUID,
-        @PathVariable songId: UUID
+        @PathVariable songId: UUID,
+        @RequestParam userId: UUID
     ){
-        sessionSongFacade.acceptSessionSong(sessionId, songId)
+        sessionSongFacade.acceptSessionSong(sessionId, songId, userId)
     }
 
 }

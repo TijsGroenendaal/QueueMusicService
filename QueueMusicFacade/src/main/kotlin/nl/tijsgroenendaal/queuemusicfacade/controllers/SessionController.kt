@@ -1,7 +1,7 @@
 package nl.tijsgroenendaal.queuemusicfacade.controllers
 
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.CreateSessionCommandResponse
-import nl.tijsgroenendaal.queuemusicfacade.commands.responses.JoinSessionCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.CreateSessionCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.JoinSessionCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.facades.SessionFacade
 
 import java.util.UUID

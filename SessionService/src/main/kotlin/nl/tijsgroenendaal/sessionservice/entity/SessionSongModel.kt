@@ -18,19 +18,19 @@ import jakarta.persistence.Enumerated
     name = "queuemusic_session_song"
 )
 class SessionSongModel(
-        @Id
+    @Id
     val id: UUID,
-        @Column(name = "user_id")
+    @Column(name = "user_id")
     val user: UUID,
-        @ManyToOne
+    @ManyToOne
     val session: SessionModel,
-        val trackId: String?,
-        val title: String,
-        val album: String,
-        val authors: String,
-        var votes: Int,
-        val createdAt: LocalDateTime,
-        @Enumerated(EnumType.STRING)
+    val trackId: String?,
+    val title: String,
+    val album: String,
+    val authors: String,
+    var votes: Int,
+    val createdAt: LocalDateTime,
+    @Enumerated(EnumType.STRING)
     var state: SongState
 ) {
     companion object {
@@ -44,7 +44,7 @@ class SessionSongModel(
                 command.trackId,
                 command.trackName,
                 command.trackAlbum,
-                command.trackArtists,
+                command.trackArtists.joinToString(","),
                 0,
                 LocalDateTime.now(ZoneOffset.UTC),
                 SongState.QUEUED
