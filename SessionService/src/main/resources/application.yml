@@ -26,7 +26,10 @@ queuemusic:
     song:
       timeout: PT5M
   rabbitmq:
-    exchange: queuemusic
     autoqueue:
+      exchange: queuemusic
       routingKey: autoqueue
       queueName: autoqueue
+    userevent:
+      exchange: user_event
+      queueName: user_event_streamer

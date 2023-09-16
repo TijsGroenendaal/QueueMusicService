@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 class AutoQueueService(
     private val rabbitTemplate: RabbitTemplate,
-    @Value("\${queuemusic.rabbitmq.exchange}")
+    @Value("\${queuemusic.rabbitmq.autoqueue.exchange}")
     private val exchange: String,
     @Value("\${queuemusic.rabbitmq.autoqueue.routingKey}")
     private val routingKey: String

@@ -1,9 +1,7 @@
 import * as amqp from "amqplib";
 import { WebSocket, WebSocketServer } from "ws";
 import { Connection, credentials } from "amqplib";
-import { UserEvent } from "./interfaces";
-
-const wss = new WebSocketServer({ port: 8010 })
+import { UserEventTask } from "./interfaces";
 
 const amqp_opt = {
     credentials: credentials.plain(
@@ -11,9 +9,9 @@ const amqp_opt = {
         process.env.RABBITMQ_PASSWORD
     )
 }
-
 let amqpConnection: Connection;
 
+const wss = new WebSocketServer({ port: 8010 })
 const wsConnections = new Map<string, WebSocket[]>()
 
 async function setupAMQPConnection() {
@@ -21,16 +19,13 @@ async function setupAMQPConnection() {
     const channel = await amqpConnection.createChannel()
 
     const exchange = 'user_event';
-    const queue = 'user_event_streamer';
-    const routes = ['song.remove', 'song.vote', 'song.add']
+    const queue = `user_event_streamer`;
 
     await channel.assertExchange(exchange, 'fanout', { durable: false })
     await channel.assertQueue(queue, { durable: false })
 
-    routes.forEach((route) => channel.bindQueue(queue, exchange, route))
-
     await channel.consume(queue, (msg) => {
-        const message = JSON.parse(msg.content.toString()) as UserEvent
+        const message = JSON.parse(msg.content.toString()) as UserEventTask
 
         (wsConnections.get(message.sessionId) ?? [])
             .forEach((socket) => {
