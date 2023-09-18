@@ -58,6 +58,12 @@ wss.on('connection', async (ws, request) => {
     try {
         const sessionId: string | undefined = new URL(request.url, `https://${request.headers.host}`).searchParams.get('session')
 
+        if (!await verifyToken((request.headers["authentication"] as string).slice(7))) {
+            logger.warn("Invalid Authentication")
+            ws.close(1011, "Invalid Authentication")
+            return
+        }
+
         if (sessionId == undefined) {
             logger.warn("No Session Provided")
             ws.close(1007, "No Session Provided")
@@ -86,6 +92,16 @@ wss.on('connection', async (ws, request) => {
         })
     } catch (err) {
         logger.error(err)
-        ws.close(1011)
+        ws.close(1011, "Internal Server Error")
     }
 })
+
+async function verifyToken(token: string): Promise<boolean> {
+    const response = await fetch(`http://localhost:8082/v1/secure/verify-jwt`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+
+    return response.ok;
+}
