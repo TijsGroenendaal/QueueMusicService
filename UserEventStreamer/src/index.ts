@@ -23,11 +23,11 @@ const amqp_opt = {
 }
 let amqpConnection: Connection;
 
-const wss = new WebSocketServer({ port: 80 })
+const wss = new WebSocketServer({ port: 8080 })
 const wsConnections = new Map<string, WebSocket[]>()
 
 async function setupAMQPConnection() {
-    amqpConnection = await amqp.connect(`amqp://localhost:${process.env.RABBITMQ_PORT}`, amqp_opt);
+    amqpConnection = await amqp.connect(process.env.RABBITMQ_USER_EVENT_URL, amqp_opt);
     const channel = await amqpConnection.createChannel()
 
     const exchange = 'user_event';
@@ -38,12 +38,14 @@ async function setupAMQPConnection() {
 
     await channel.consume(queue, (msg) => {
         try {
-            const message = JSON.parse(msg.content.toString()) as UserEventTask
+            const message = JSON.parse(msg.content.toString()) as UserEventTask;
 
-            (wsConnections.get(message.sessionId) ?? [])
-                .forEach((socket) => {
-                    if (socket.readyState === WebSocket.OPEN) socket.send(msg.content.toString())
-                })
+            const connections: WebSocket[] = (wsConnections.get(message.sessionId) ?? []);
+            connections.forEach((socket) => {
+                if (socket.readyState === WebSocket.OPEN) socket.send(msg.content.toString())
+            })
+
+            logger.info(`Processed ${message.type} for session ${message.sessionId} for ${connections.length} connections`);
         } catch(err) {
             logger.error(err)
         } finally {
@@ -54,7 +56,7 @@ async function setupAMQPConnection() {
 
 wss.on('connection', async (ws, request) => {
     try {
-        const sessionId: string | undefined = new URL(request.headers.host + request.url).searchParams.get('session')
+        const sessionId: string | undefined = new URL(request.url, `https://${request.headers.host}`).searchParams.get('session')
 
         if (sessionId == undefined) {
             logger.warn("No Session Provided")

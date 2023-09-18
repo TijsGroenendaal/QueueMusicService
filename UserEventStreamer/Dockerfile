@@ -6,5 +6,5 @@ RUN npm install --omit=dev
 COPY . .
 RUN npm run build
 
-EXPOSE 80:80
+EXPOSE 8080:8080
 ENTRYPOINT npm run start
