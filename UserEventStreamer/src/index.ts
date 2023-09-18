@@ -2,7 +2,7 @@ import * as amqp from "amqplib";
 import { WebSocket, WebSocketServer } from "ws";
 import { Connection, credentials } from "amqplib";
 import { UserEventTask } from "./interfaces";
-import {createLogger, format, transports} from "winston";
+import { createLogger, format, transports } from "winston";
 
 const logger = createLogger({
     transports: [new transports.Console()],
@@ -23,7 +23,7 @@ const amqp_opt = {
 }
 let amqpConnection: Connection;
 
-const wss = new WebSocketServer({ port: 8010 })
+const wss = new WebSocketServer({ port: 80 })
 const wsConnections = new Map<string, WebSocket[]>()
 
 async function setupAMQPConnection() {
