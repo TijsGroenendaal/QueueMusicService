@@ -32,4 +32,3 @@ queuemusic:
       queueName: autoqueue
     userevent:
       exchange: user_event
-      queueName: user_event_streamer

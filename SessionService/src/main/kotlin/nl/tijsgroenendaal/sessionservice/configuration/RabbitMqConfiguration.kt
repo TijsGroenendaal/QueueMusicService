@@ -28,9 +28,6 @@ class RabbitMqConfiguration {
     @Value("\${queuemusic.rabbitmq.userevent.exchange}")
     private lateinit var userEventExchange: String
 
-    @Value("\${queuemusic.rabbitmq.userevent.queueName}")
-    private lateinit var userEventQueue: String
-
     @Bean
     fun autoplayQueue(): Queue = Queue(autoplayQueue, false)
 
@@ -41,13 +38,7 @@ class RabbitMqConfiguration {
     fun autoplayBinding(@Qualifier("autoplayQueue") queue: Queue, exchange: DirectExchange): Binding = BindingBuilder.bind(queue).to(exchange).with(autoplayRouting)
 
     @Bean
-    fun userEventQueue(): Queue = Queue(userEventQueue, false)
-
-    @Bean
     fun userEventExchange(): FanoutExchange = FanoutExchange(userEventExchange, false, false)
-
-    @Bean
-    fun userEventBinding(@Qualifier("userEventQueue") queue: Queue, exchange: FanoutExchange): Binding = BindingBuilder.bind(queue).to(exchange)
 
     @Bean
     fun rabbitTemplate(connectionFactory: ConnectionFactory): RabbitTemplate {

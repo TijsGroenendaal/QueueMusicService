@@ -11,12 +11,10 @@ import org.springframework.stereotype.Service
 class UserEventService(
 	private val rabbitTemplate: RabbitTemplate,
 	@Value("\${queuemusic.rabbitmq.userevent.exchange}")
-	private val exchange: String,
-	@Value("\${queuemusic.rabbitmq.userevent.queueName}")
-	private val queue: String
+	private val exchange: String
 ) {
 
 	fun publish(task: UserEventTask) {
-		rabbitTemplate.convertAndSend(exchange, queue, task)
+		rabbitTemplate.convertAndSend(exchange, task)
 	}
 }

@@ -1,8 +1,9 @@
 import * as amqp from "amqplib";
 import { WebSocket, WebSocketServer } from "ws";
-import { Connection, credentials } from "amqplib";
+import { credentials } from "amqplib";
 import { UserEventTask } from "./interfaces";
 import { createLogger, format, transports } from "winston";
+import * as crypto from "crypto";
 
 const logger = createLogger({
     transports: [new transports.Console()],
@@ -21,20 +22,23 @@ const amqp_opt = {
         process.env.RABBITMQ_PASSWORD
     )
 }
-let amqpConnection: Connection;
 
-const wss = new WebSocketServer({ port: 8080 })
+setupAMQPConnection().then()
+
+const wss = new WebSocketServer({ port: 8094 })
 const wsConnections = new Map<string, WebSocket[]>()
 
 async function setupAMQPConnection() {
-    amqpConnection = await amqp.connect(process.env.RABBITMQ_USER_EVENT_URL, amqp_opt);
+    const amqpConnection = await amqp.connect(process.env.RABBITMQ_USER_EVENT_URL, amqp_opt);
     const channel = await amqpConnection.createChannel()
 
     const exchange = 'user_event';
-    const queue = `user_event_streamer`;
+    const queue = `user_event_streamer-` + crypto.randomUUID().slice(0, 8);
 
     await channel.assertExchange(exchange, 'fanout', { durable: false })
     await channel.assertQueue(queue, { durable: false })
+
+    await channel.bindQueue(queue, exchange, "")
 
     await channel.consume(queue, (msg) => {
         try {
@@ -69,7 +73,6 @@ wss.on('connection', async (ws, request) => {
             ws.close(1007, "No Session Provided")
             return
         }
-        if (!amqpConnection) await setupAMQPConnection()
 
         const sockets : WebSocket[] | undefined = wsConnections.get(sessionId)
 
