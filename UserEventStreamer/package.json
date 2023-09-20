@@ -5,16 +5,18 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "npm run build && node -r dotenv/config dist/index.js dotenv_config_path='../.env'"
+    "start": "node dist/index.js --env prd",
+    "dev": "npm run build && node -r dotenv/config dist/index.js dotenv_config_path='../.env' --env local"
   },
   "dependencies": {
     "@types/amqplib": "^0.10.1",
+    "@types/minimist": "^1.2.2",
     "@types/ws": "^8.5.5",
     "amqplib": "^0.10.3",
+    "minimist": "^1.2.8",
+    "typescript": "^5.2.2",
     "winston": "^3.10.0",
-    "ws": "^8.14.1",
-    "typescript": "^5.2.2"
+    "ws": "^8.14.1"
   },
   "devDependencies": {
     "dotenv": "^16.3.1"

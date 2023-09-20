@@ -4,6 +4,41 @@ import { credentials } from "amqplib";
 import { UserEventTask } from "./interfaces";
 import { createLogger, format, transports } from "winston";
 import * as crypto from "crypto";
+import minimist from "minimist";
+
+interface Properties {
+    ws: { port: number },
+    amqp: {
+        url: string,
+        exchange: string
+        queue: string
+    },
+    idp: { url: string  }
+}
+
+const Props: {[key: string]: Properties} = {
+    local: {
+        ws: { port: 8090 },
+        amqp: {
+            url: "amqp://localhost:5672",
+            exchange: 'user-event',
+            queue: 'user-event-streamer-'
+        },
+        idp: { url: 'http://localhost:8082' }
+    },
+    prd: {
+        ws: { port: 8080 },
+        amqp: {
+            url: `amqp://${process.env.RABBITMQ_USER_EVENT_HOST}:5672`,
+            exchange: 'user-event',
+            queue: 'user-event-streamer-'
+        },
+        idp: { url: process.env.IDP_SERVICE_URL }
+    }
+}
+
+const args: {[key: string]: string} = minimist(process.argv.slice(2))
+const properties = Props[args['env'] ?? 'prd'] ?? Props.prd
 
 const logger = createLogger({
     transports: [new transports.Console()],
@@ -25,15 +60,15 @@ const amqp_opt = {
 
 setupAMQPConnection().then()
 
-const wss = new WebSocketServer({ port: 8094 })
+const wss = new WebSocketServer({ port: properties.ws.port })
 const wsConnections = new Map<string, WebSocket[]>()
 
 async function setupAMQPConnection() {
-    const amqpConnection = await amqp.connect(process.env.RABBITMQ_USER_EVENT_URL, amqp_opt);
+    const amqpConnection = await amqp.connect(properties.amqp.url, amqp_opt);
     const channel = await amqpConnection.createChannel()
 
-    const exchange = 'user_event';
-    const queue = `user_event_streamer-` + crypto.randomUUID().slice(0, 8);
+    const exchange = properties.amqp.exchange;
+    const queue = properties.amqp.queue + crypto.randomUUID().slice(0, 8);
 
     await channel.assertExchange(exchange, 'fanout', { durable: false })
     await channel.assertQueue(queue, { durable: false })
@@ -100,7 +135,7 @@ wss.on('connection', async (ws, request) => {
 })
 
 async function verifyToken(token: string): Promise<boolean> {
-    const response = await fetch(`http://localhost:8082/v1/secure/verify-jwt`, {
+    const response = await fetch(`${properties.idp.url}/v1/secure/verify-jwt`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
