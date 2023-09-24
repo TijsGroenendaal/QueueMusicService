@@ -2,11 +2,13 @@ package nl.tijsgroenendaal.idpservice.facades
 
 import nl.tijsgroenendaal.idpservice.commands.GenerateClientTokenCommand
 import nl.tijsgroenendaal.idpservice.commands.responses.GenerateClientTokenCommandResponse
+import nl.tijsgroenendaal.idpservice.commands.responses.VerifyTokenCommandResponse
 import nl.tijsgroenendaal.idpservice.security.JwtGenerator
 import nl.tijsgroenendaal.idpservice.security.JwtGenerator.Companion.JWT_TOKEN_VALIDITY
 import nl.tijsgroenendaal.idpservice.services.RegisteredClientService
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.RegisteredClientErrorCodes
+import nl.tijsgroenendaal.qumusecurity.security.JwtTokenUtil
 import nl.tijsgroenendaal.qumusecurity.security.JwtTypes
 import nl.tijsgroenendaal.qumusecurity.security.model.QuMuAuthority
 import nl.tijsgroenendaal.qumusecurity.security.model.QueueMusicClaims
@@ -16,7 +18,8 @@ import org.springframework.stereotype.Service
 @Service
 class JwtFacade(
     private val registeredClientService: RegisteredClientService,
-    private val jwtGenerator: JwtGenerator
+    private val jwtGenerator: JwtGenerator,
+    private val jwtTokenUtil: JwtTokenUtil
 ) {
 
     fun generateJwtForClient(command: GenerateClientTokenCommand): GenerateClientTokenCommandResponse {
@@ -34,5 +37,10 @@ class JwtFacade(
             jwtGenerator.generateToken(clientClaims, JwtTypes.ACCESS),
             JWT_TOKEN_VALIDITY
         )
+    }
+
+    fun verify(token: String): VerifyTokenCommandResponse {
+        jwtTokenUtil.parseToken(jwtTokenUtil.getTokenFromHeader(token), JwtTypes.ACCESS)
+        return VerifyTokenCommandResponse(true)
     }
 }

@@ -33,6 +33,8 @@ class SessionSongUserVoteService(
         }
     }
 
+    fun findBySong(song: UUID) = sessionSongUserVoteRepository.findBySongId(song)
+
     private fun findBySongAndUser(song: UUID, user: UUID): SessionSongUserVoteModel {
         return sessionSongUserVoteRepository.findBySongIdAndUser(song, user)
             ?: throw BadRequestException(SessionSongUserVoteErrorCodes.VOTE_NOT_FOUND)

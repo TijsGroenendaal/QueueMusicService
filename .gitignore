@@ -40,3 +40,4 @@ build/
 
 ### Project ###
 **/.env
+**/node_modules/

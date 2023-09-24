@@ -14,6 +14,11 @@ import nl.tijsgroenendaal.sessionservice.services.commands.AutoplayUpdateTask
 import nl.tijsgroenendaal.qumu.exceptions.BadRequestException
 import nl.tijsgroenendaal.qumu.exceptions.SessionErrorCodes
 import nl.tijsgroenendaal.qumu.exceptions.SessionSongErrorCode
+import nl.tijsgroenendaal.sessionservice.services.UserEventService
+import nl.tijsgroenendaal.sessionservice.services.commands.UserEventTask
+import nl.tijsgroenendaal.sessionservice.services.commands.UserEventTaskSong
+import nl.tijsgroenendaal.sessionservice.services.commands.UserEventTaskType
+import nl.tijsgroenendaal.sessionservice.services.commands.UserEventTaskVoter
 
 import org.springframework.stereotype.Service
 
@@ -29,7 +34,8 @@ class SessionSongFacade(
     private val sessionSongService: SessionSongService,
     private val sessionService: SessionService,
     private val sessionSongUserVoteService: SessionSongUserVoteService,
-    private val autoQueueService: AutoQueueService
+    private val autoQueueService: AutoQueueService,
+    private val userEventService: UserEventService
 ) {
 
     fun voteSessionSong(sessionId: UUID, songId: UUID, vote: VoteEnum, userId: UUID): SessionSongUserVoteModel {
@@ -59,6 +65,8 @@ class SessionSongFacade(
             acceptSessionSong(session, updatedSong)
         }
 
+        launch { createUserEventMessage(UserEventTaskType.VOTE, song, sessionSongUserVoteService.findBySong(songId)) }
+
         return userVote.second
     }
 
@@ -75,6 +83,8 @@ class SessionSongFacade(
             this.state = SongState.DELETED
         }
         sessionSongService.save(song)
+
+        launch { createUserEventMessage(UserEventTaskType.REMOVE, song, listOf()) }
     }
 
     fun acceptSessionSong(sessionId: UUID, songId: UUID, userId: UUID) {
@@ -93,7 +103,7 @@ class SessionSongFacade(
         if (!session.hasJoined(userId))
             throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
 
-        return sessionSongService.createSessionSong(ServiceAddSessionSongCommand(
+        val sessionSong = sessionSongService.createSessionSong(ServiceAddSessionSongCommand(
             command.trackId,
             command.trackAlbum,
             command.trackName,
@@ -101,12 +111,35 @@ class SessionSongFacade(
             session,
             userId
         ))
+
+        launch { createUserEventMessage(UserEventTaskType.ADD, sessionSong, listOf()) }
+        return sessionSong
     }
 
     private fun createAutoplayMessage(trackId: String, hostId: UUID) {
         autoQueueService.publish(AutoplayUpdateTask(
             hostId,
             trackId
+        ))
+    }
+
+    private fun createUserEventMessage(type: UserEventTaskType, song: SessionSongModel, voters: List<SessionSongUserVoteModel>) {
+        userEventService.publish(UserEventTask(
+            song.session.id,
+            type,
+            UserEventTaskSong(
+                song.id,
+                song.title,
+                song.authors,
+                song.album
+            ),
+            song.user,
+            voters.map {
+                UserEventTaskVoter(
+                    it.user,
+                    it.vote
+                )
+            }
         ))
     }
 
@@ -121,10 +154,16 @@ class SessionSongFacade(
             throw BadRequestException(SessionSongErrorCode.SONG_ALREADY_QUEUED)
 
         if (session.autoplayAcceptance != null && song.trackId != null) {
-            CoroutineScope(Dispatchers.IO).launch {
-                sessionSongService.save(song.apply { this.state = SongState.PLAYED })
-                createAutoplayMessage(song.trackId, session.host)
-            }
+            sessionSongService.save(song.apply { this.state = SongState.PLAYED })
+            createAutoplayMessage(song.trackId, session.host)
+        }
+
+        launch { createUserEventMessage(UserEventTaskType.ACCEPT, song, sessionSongUserVoteService.findBySong(song.id)) }
+    }
+
+    private fun launch(task: () -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            task.invoke()
         }
     }
 }

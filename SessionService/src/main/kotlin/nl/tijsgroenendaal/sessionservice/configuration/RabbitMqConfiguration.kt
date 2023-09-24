@@ -1,13 +1,14 @@
 package nl.tijsgroenendaal.sessionservice.configuration
 
-
 import org.springframework.amqp.core.Binding
 import org.springframework.amqp.core.BindingBuilder
 import org.springframework.amqp.core.DirectExchange
+import org.springframework.amqp.core.FanoutExchange
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.connection.ConnectionFactory
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,29 +16,29 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class RabbitMqConfiguration {
 
-    @Value("\${queuemusic.rabbitmq.exchange}")
-    private lateinit var exchange: String
+    @Value("\${queuemusic.rabbitmq.autoqueue.exchange}")
+    private lateinit var autoplayExchange: String
 
     @Value("\${queuemusic.rabbitmq.autoqueue.queueName}")
-    private lateinit var queueName: String
+    private lateinit var autoplayQueue: String
 
     @Value("\${queuemusic.rabbitmq.autoqueue.routingKey}")
-    private lateinit var routingKey: String
+    private lateinit var autoplayRouting: String
+
+    @Value("\${queuemusic.rabbitmq.userevent.exchange}")
+    private lateinit var userEventExchange: String
 
     @Bean
-    fun queue(): Queue {
-        return Queue(queueName, false)
-    }
+    fun autoplayQueue(): Queue = Queue(autoplayQueue, false)
 
     @Bean
-    fun exchange(): DirectExchange {
-        return DirectExchange(exchange, false, false)
-    }
+    fun autoplayExchange(): DirectExchange = DirectExchange(autoplayExchange, false, false)
 
     @Bean
-    fun binding(queue: Queue, exchange: DirectExchange): Binding {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey)
-    }
+    fun autoplayBinding(@Qualifier("autoplayQueue") queue: Queue, exchange: DirectExchange): Binding = BindingBuilder.bind(queue).to(exchange).with(autoplayRouting)
+
+    @Bean
+    fun userEventExchange(): FanoutExchange = FanoutExchange(userEventExchange, false, false)
 
     @Bean
     fun rabbitTemplate(connectionFactory: ConnectionFactory): RabbitTemplate {

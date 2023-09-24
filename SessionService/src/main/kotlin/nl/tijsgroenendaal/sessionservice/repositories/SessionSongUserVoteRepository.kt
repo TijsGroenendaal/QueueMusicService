@@ -11,5 +11,6 @@ import org.springframework.stereotype.Repository
 interface SessionSongUserVoteRepository: JpaRepository<SessionSongUserVoteModel, UUID> {
 
     fun findBySongIdAndUser(songId: UUID, userId: UUID): SessionSongUserVoteModel?
+	fun findBySongId(song: UUID): List<SessionSongUserVoteModel>
 
 }
