@@ -20,8 +20,6 @@ jobs:
       CI_GITHUB_USERNAME: ${{ secrets.CI_GITHUB_USERNAME }}
       IMAGE_NAME: user-event-streamer
     if: ${{ github.ref == 'refs/heads/main' }}
-    needs:
-      - test
     permissions:
       contents: write
     steps:
