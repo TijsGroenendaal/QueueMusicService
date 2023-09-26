@@ -5,37 +5,7 @@ import { UserEventTask } from "./interfaces";
 import { createLogger, format, transports } from "winston";
 import * as crypto from "crypto";
 import minimist from "minimist";
-
-interface Properties {
-    ws: { port: number },
-    amqp: {
-        url: string,
-        exchange: string
-        queue: string
-    },
-    idp: { url: string  }
-}
-
-const Props: {[key: string]: Properties} = {
-    local: {
-        ws: { port: 8090 },
-        amqp: {
-            url: "amqp://localhost:5672",
-            exchange: 'user-event',
-            queue: 'user-event-streamer-'
-        },
-        idp: { url: 'http://localhost:8082' }
-    },
-    prd: {
-        ws: { port: 8080 },
-        amqp: {
-            url: `amqp://${process.env.RABBITMQ_USER_EVENT_HOST}:5672`,
-            exchange: 'user-event',
-            queue: 'user-event-streamer-'
-        },
-        idp: { url: process.env.IDP_SERVICE_URL }
-    }
-}
+import { Props } from "./properties";
 
 const args: {[key: string]: string} = minimist(process.argv.slice(2))
 const properties = Props[args['env'] ?? 'prd'] ?? Props.prd
@@ -58,7 +28,7 @@ const amqp_opt = {
     )
 }
 
-setupAMQPConnection().then()
+setupAMQPConnection()
 
 const wss = new WebSocketServer({ port: properties.ws.port })
 const wsConnections = new Map<string, WebSocket[]>()
@@ -71,7 +41,7 @@ async function setupAMQPConnection() {
     const queue = properties.amqp.queue + crypto.randomUUID().slice(0, 8);
 
     await channel.assertExchange(exchange, 'fanout', { durable: false })
-    await channel.assertQueue(queue, { durable: false })
+    await channel.assertQueue(queue, { durable: false, exclusive: true})
 
     await channel.bindQueue(queue, exchange, "")
 
