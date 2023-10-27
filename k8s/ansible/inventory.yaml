@@ -1,0 +1,5 @@
+master:
+  hosts:
+    135.181.45.46
+  vars:
+    ansible_user: root
