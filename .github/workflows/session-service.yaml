@@ -10,6 +10,7 @@ on:
       - main
     paths:
       - 'SessionService/**'
+      - '!SessionService/helm/**'
 
 jobs:
   test:

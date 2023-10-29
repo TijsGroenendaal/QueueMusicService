@@ -1,0 +1,36 @@
+image: ghcr.io/tijsgroenendaal/session-service
+imageTag: 0.0.3
+imagePullPolicy: "IfNotPresent"
+name: session-service
+replicaCount: 4
+profile: prd
+command:
+  - /opt/entrypoint.sh
+  - -Dspring.profiles.active=prd
+
+service:
+  enabled: true
+  servicePort: 80
+  type: ClusterIP
+port: 8080
+
+labels:
+  app: session-service
+  chart: api-springboot
+  release: latest
+
+ingress:
+  enabled: true
+  hosts:
+    - k8s.tijsgroenendaal.nl
+  path: /sessions
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  tls:
+    - secretName: session-service-tijsgroenendaal-nl
+      hosts:
+        - k8s.tijsgroenendaal.nl
