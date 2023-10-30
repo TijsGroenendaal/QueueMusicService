@@ -1,0 +1,46 @@
+name: ArgoCD AppSet Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_file:
+        description: "App that needs to be updated"
+        required: true
+        type: string
+      tag:
+        description: "Tag to be used by ArgoCD"
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      app_file:
+        description: "App that needs to be updated"
+        required: true
+        type: string
+      tag:
+        description: "Tag to be used by ArgoCD"
+        required: true
+        type: string
+
+jobs:
+  release:
+    name: "Release App"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: "k8s/argocd-apps"
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull
+      - name: "Update Version"
+        run: |
+          sed -i 's/^targetRevision:.*/targetRevision: ${{ inputs.tag }}/' appsets/${{ inputs.app_file }}.yaml
+      - name: 'Commit Version Update'
+        run: |
+          git commit -am "Increment ${{ inputs.app_file }} to version ${{ inputs.tag }} [skip ci]"
+          git pull --rebase
+          git push 
