@@ -74,4 +74,11 @@ jobs:
         run: |
           git commit -am "Increment SessionService to version $NEW_VERSION [skip ci]"
           git pull --rebase
-          git push 
+          git push
+      - name: 'Release To Github'
+        uses: './.github/workflows/github-release.yaml'
+      - name: 'Release To ArgoCD'
+        uses: './.github/workflows/argocd-appset-releas.yaml'
+        with:
+          app_file: 'api-springboot/session-service'
+          tag: '${NEW_VERSION}-session-service'
