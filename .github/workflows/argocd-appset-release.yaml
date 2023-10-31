@@ -1,16 +1,6 @@
 name: ArgoCD AppSet Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      app_file:
-        description: "App that needs to be updated"
-        required: true
-        type: string
-      tag:
-        description: "Tag to be used by ArgoCD"
-        required: true
-        type: string
   workflow_call:
     inputs:
       app_file:
