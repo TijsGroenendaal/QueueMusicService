@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: default
 appPath: SessionService
-targetRevision: -session-service
+targetRevision: 0.0.5-session-service
 helm:
   chartVersion: 1.0.0
   envValues: helm/values.yaml
