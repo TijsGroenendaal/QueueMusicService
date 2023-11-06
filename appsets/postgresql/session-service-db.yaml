@@ -1,0 +1,8 @@
+name: session-service-db
+releaseName: ''
+project: default
+namespace: default
+appPath: SessionService
+targetRevision: HEAD
+helm:
+  envValues: helm/psql-values.yaml
