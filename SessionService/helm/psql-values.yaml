@@ -4,4 +4,4 @@ global:
     auth:
       username: root
       password: root
-      database: session-service-db
+      database: queuemusic
