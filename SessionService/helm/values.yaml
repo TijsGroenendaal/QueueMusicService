@@ -2,7 +2,7 @@ image: ghcr.io/tijsgroenendaal/session-service
 imageTag: 0.0.5
 imagePullPolicy: "IfNotPresent"
 name: session-service
-replicaCount: 4
+replicaCount: 1
 profile: prd
 command:
   - /opt/entrypoint.sh
