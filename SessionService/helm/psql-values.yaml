@@ -1,0 +1,7 @@
+global:
+  storageClass: local-storage
+  postgresql:
+    auth:
+      username: root
+      password: root
+      database: session-service-db
