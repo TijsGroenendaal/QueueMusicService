@@ -3,7 +3,7 @@ clients:
 
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:5432/${POSTGRES_DB}?user=${POSTGRES_USER}&password=${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://${IDP_S_POSTGRES_HOST}:5432/${IDP_S_POSTGRES_DB}?user=${IDP_S_POSTGRES_USER}&password=${IDP_S_POSTGRES_PASSWORD}
     hikari:
       minimum-idle: 4
       maximum-pool-size: 16

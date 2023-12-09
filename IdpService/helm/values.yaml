@@ -49,26 +49,26 @@ environmentVariables:
         key: QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET
 
   # Postgres Secrets
-  - name: POSTGRES_HOST
+  - name: IDP_S_POSTGRES_HOST
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_HOST
-  - name: POSTGRES_DB
+        key: IDP_S_POSTGRES_HOST
+  - name: IDP_S_POSTGRES_DB
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_DB
-  - name: POSTGRES_USER
+        key: IDP_S_POSTGRES_DB
+  - name: IDP_S_POSTGRES_USER
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_USER
-  - name: POSTGRES_PASSWORD
+        key: IDP_S_POSTGRES_USER
+  - name: IDP_S_POSTGRES_PASSWORD
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_PASSWORD
+        key: IDP_S_POSTGRES_PASSWORD
 
   # Service Secrets
   - name: SPOTIFY_FACADE_URL

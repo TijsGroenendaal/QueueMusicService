@@ -1,7 +1,7 @@
 global:
-  storageClass: local-storage
+  storageClass: spotify-facade-storage
   postgresql:
     auth:
       username: root
       password: root
-      database: queuemusic
+      database: spotify-facade

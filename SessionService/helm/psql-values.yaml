@@ -1,7 +1,7 @@
 global:
-  storageClass: local-storage
+  storageClass: session-service-storage
   postgresql:
     auth:
       username: root
       password: root
-      database: queuemusic
+      database: session-service

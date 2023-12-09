@@ -8,7 +8,7 @@ spring:
   rabbitmq:
     host: localhost
   datasource:
-    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?user=${POSTGRES_USER}&password=${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/${SESSION_S_POSTGRES_DB}?user=${SESSION_S_POSTGRES_USER}&password=${SESSION_S_POSTGRES_PASSWORD}
     hikari:
       minimum-idle: 1
       maximum-pool-size: 10

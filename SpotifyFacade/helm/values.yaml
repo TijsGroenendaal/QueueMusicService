@@ -49,26 +49,51 @@ environmentVariables:
         key: QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET
 
   # Postgres Secrets
-  - name: POSTGRES_HOST
+  - name: SPOTIFY_F_POSTGRES_HOST
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_HOST
-  - name: POSTGRES_DB
+        key: SPOTIFY_F_POSTGRES_HOST
+  - name: SPOTIFY_F_POSTGRES_DB
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_DB
-  - name: POSTGRES_USER
+        key: SPOTIFY_F_POSTGRES_DB
+  - name: SPOTIFY_F_POSTGRES_USER
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_USER
-  - name: POSTGRES_PASSWORD
+        key: SPOTIFY_F_POSTGRES_USER
+  - name: SPOTIFY_F_POSTGRES_PASSWORD
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_PASSWORD
+        key: SPOTIFY_F_POSTGRES_PASSWORD
+
+  # Service Secrets
+  - name: SPOTIFY_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_CLIENT_ID
+
+  - name: SPOTIFY_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_CLIENT_SECRET
+
+  - name: QUEUEMUSIC_ENCRYPTION_ALGORITHME
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_ENCRYPTION_ALGORITHME
+
+  - name: QUEUEMUSIC_ENCRYPTION_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_ENCRYPTION_SECRET
 labels:
   app: spotify-facade
   chart: api-springboot

@@ -1,7 +1,7 @@
 global:
-  storageClass: local-storage
+  storageClass: idp-service-storage
   postgresql:
     auth:
       username: root
       password: root
-      database: queuemusic
+      database: idp-service

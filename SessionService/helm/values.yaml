@@ -49,26 +49,26 @@ environmentVariables:
         key: QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET
 
   # Postgres Secrets
-  - name: POSTGRES_HOST
+  - name: SESSION_S_POSTGRES_HOST
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_HOST
-  - name: POSTGRES_DB
+        key: SESSION_S_POSTGRES_HOST
+  - name: SESSION_S_POSTGRES_DB
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_DB
-  - name: POSTGRES_USER
+        key: SESSION_S_POSTGRES_DB
+  - name: SESSION_S_POSTGRES_USER
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_USER
-  - name: POSTGRES_PASSWORD
+        key: SESSION_S_POSTGRES_USER
+  - name: SESSION_S_POSTGRES_PASSWORD
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: POSTGRES_PASSWORD
+        key: SESSION_S_POSTGRES_PASSWORD
 labels:
   app: session-service
   chart: api-springboot
