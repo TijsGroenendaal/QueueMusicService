@@ -1,0 +1,91 @@
+image: ghcr.io/tijsgroenendaal/idp-service
+imageTag: 0.0.10
+imagePullPolicy: "IfNotPresent"
+name: idp-service
+replicaCount: 1
+profile: prd
+command:
+  - /opt/entrypoint.sh
+  - -Dspring.profiles.active=prd
+
+service:
+  enabled: true
+  servicePort: 80
+  type: ClusterIP
+port: 8080
+
+environmentVariables:
+  - name: RABBITMQ_HOST
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: RABBITMQ_HOST
+  - name: RABBITMQ_PORT
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: RABBITMQ_PORT
+  - name: RABBITMQ_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: RABBITMQ_USERNAME
+  - name: RABBITMQ_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: RABBITMQ_PASSWORD
+
+  # JWT Secrets
+  - name: QUEUEMUSIC_JWT_PUBLIC_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_JWT_PUBLIC_SECRET
+  - name: QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET
+
+  # Postgres Secrets
+  - name: POSTGRES_HOST
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: POSTGRES_HOST
+  - name: POSTGRES_DB
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: POSTGRES_DB
+  - name: POSTGRES_USER
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: POSTGRES_USER
+  - name: POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: POSTGRES_PASSWORD
+labels:
+  app: idp-service
+  chart: api-springboot
+  release: latest
+
+ingress:
+  enabled: true
+  hosts:
+    - k8s.tijsgroenendaal.nl
+  path: /idp
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  tls:
+    - secretName: idp-service-tijsgroenendaal-nl
+      hosts:
+        - k8s.tijsgroenendaal.nl
