@@ -5,7 +5,7 @@
 
     <artifactId>idp-service</artifactId>
     <groupId>nl.tijsgroenendaal</groupId>
-    <version>0.0.12</version>
+    <version>0.0.13</version>
     <name>IdpService</name>
 
     <properties>
