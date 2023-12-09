@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/session-service
-imageTag: 0.0.6
+imageTag: 0.0.7
 imagePullPolicy: "IfNotPresent"
 name: session-service
 replicaCount: 1
