@@ -1,0 +1,8 @@
+name: spotify-facade-db
+releaseName: ''
+project: default
+namespace: default
+appPath: SpotifyFacade
+targetRevision: HEAD
+helm:
+  envValues: helm/psql-values.yaml
