@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/idp-service
-imageTag: 0.0.12
+imageTag: 0.0.13
 imagePullPolicy: "IfNotPresent"
 name: idp-service
 replicaCount: 1
@@ -69,6 +69,38 @@ environmentVariables:
       secretKeyRef:
         name: queuemusic-secrets
         key: POSTGRES_PASSWORD
+
+  # Service Secrets
+  - name: SPOTIFY_FACADE_URL
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_FACADE_URL
+
+  - name: SPOTIFY_FACADE_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_FACADE_CLIENT_ID
+
+  - name: SPOTIFY_FACADE_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_FACADE_CLIENT_SECRET
+
+  - name: QUEUEMUSIC_ENCRYPTION_ALGORITHME
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_ENCRYPTION_ALGORITHME
+
+  - name: QUEUEMUSIC_ENCRYPTION_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_ENCRYPTION_SECRET
+
 labels:
   app: idp-service
   chart: api-springboot

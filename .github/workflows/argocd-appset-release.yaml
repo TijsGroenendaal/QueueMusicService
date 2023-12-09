@@ -31,6 +31,6 @@ jobs:
           sed -i 's/^targetRevision:.*/targetRevision: ${{ inputs.tag }}/' appsets/${{ inputs.app_file }}.yaml
       - name: 'Commit Version Update'
         run: |
-          git commit -am "Increment ${{ inputs.app_file }} to version ${{ inputs.tag }} [skip ci]"
+          git diff-index --quiet HEAD || git commit -am "Increment ${{ inputs.app_file }} to version ${{ inputs.tag }} [skip ci]"
           git pull --rebase
           git push 
