@@ -1,0 +1,8 @@
+name: idp-service-db
+releaseName: ''
+project: default
+namespace: default
+appPath: IdpService
+targetRevision: HEAD
+helm:
+  envValues: helm/psql-values.yaml
