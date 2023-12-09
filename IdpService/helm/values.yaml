@@ -69,6 +69,14 @@ environmentVariables:
       secretKeyRef:
         name: queuemusic-secrets
         key: POSTGRES_PASSWORD
+
+  # Service Secrets
+  - name: SPOTIFY_FACADE_URL
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_FACADE_URL
+
 labels:
   app: idp-service
   chart: api-springboot
