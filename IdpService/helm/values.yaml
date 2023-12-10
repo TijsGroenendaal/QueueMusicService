@@ -48,6 +48,17 @@ environmentVariables:
         name: queuemusic-secrets
         key: QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET
 
+  - name: QUEUEMUSIC_JWT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_JWT_SECRET
+  - name: QUEUEMUSIC_REFRESH_JWT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_REFRESH_JWT_SECRET
+
   # Postgres Secrets
   - name: IDP_S_POSTGRES_HOST
     valueFrom:
