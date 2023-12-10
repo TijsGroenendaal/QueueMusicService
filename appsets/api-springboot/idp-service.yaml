@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: default
 appPath: IdpService
-targetRevision: 0.0.14-idp-service
+targetRevision: 0.0.15-idp-service
 helm:
   chartVersion: 1.0.0
   envValues: helm/values.yaml
