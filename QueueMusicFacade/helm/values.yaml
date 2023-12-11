@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/queuemusic-facade
-imageTag: 0.0.21
+imageTag: 0.0.22
 imagePullPolicy: "IfNotPresent"
 name: queuemusic-facade
 replicaCount: 2
