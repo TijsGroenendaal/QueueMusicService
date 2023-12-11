@@ -1,0 +1,9 @@
+name: queuemusic-facade
+releaseName: ''
+project: default
+namespace: default
+appPath: QueueMusicFacade
+targetRevision: 0.0.20-queuemusic-facade
+helm:
+  chartVersion: 1.0.0
+  envValues: helm/values.yaml
