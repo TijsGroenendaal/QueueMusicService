@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/spotify-facade
-imageTag: 0.0.17
+imageTag: 0.0.18
 imagePullPolicy: "IfNotPresent"
 name: spotify-facade
 replicaCount: 1
