@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: default
 appPath: SpotifyFacade
-targetRevision: 0.0.17-spotify-facade
+targetRevision: 0.0.18-spotify-facade
 helm:
   chartVersion: 1.0.0
   envValues: helm/values.yaml
