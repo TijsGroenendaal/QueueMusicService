@@ -1,0 +1,100 @@
+image: ghcr.io/tijsgroenendaal/queuemusic-facade
+imageTag: 0.0.20
+imagePullPolicy: "IfNotPresent"
+name: queuemusic-facade
+replicaCount: 2
+profile: prd
+command:
+  - /opt/entrypoint.sh
+  - -Dspring.profiles.active=prd
+
+service:
+  enabled: true
+  servicePort: 80
+  type: ClusterIP
+port: 8080
+
+environmentVariables:
+  # JWT Secrets
+  - name: QUEUEMUSIC_JWT_PUBLIC_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_JWT_PUBLIC_SECRET
+  - name: QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_REFRESH_JWT_PUBLIC_SECRET
+
+  # Service Secrets
+  - name: SPOTIFY_FACADE_URL
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_FACADE_URL
+  - name: IDP_SERVICE_URL
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: IDP_SERVICE_URL
+  - name: SESSION_SERVICE_URL
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SESSION_SERVICE_URL
+
+  - name: SPOTIFY_FACADE_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_FACADE_CLIENT_ID
+  - name: SPOTIFY_FACADE_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_FACADE_CLIENT_ID
+
+  - name: SESSION_SERVICE_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SESSION_SERVICE_CLIENT_ID
+  - name: SESSION_SERVICE_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SESSION_SERVICE_CLIENT_SECRET
+
+  - name: QUEUEMUSIC_ENCRYPTION_ALGORITHME
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_ENCRYPTION_ALGORITHME
+
+  - name: QUEUEMUSIC_ENCRYPTION_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: QUEUEMUSIC_ENCRYPTION_SECRET
+
+labels:
+  app: queuemusic-facade
+  chart: api-springboot
+  release: latest
+
+ingress:
+  enabled: true
+  hosts:
+    - k8s.tijsgroenendaal.nl
+  path: /queuemusic
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  tls:
+    - secretName: idp-service-tijsgroenendaal-nl
+      hosts:
+        - k8s.tijsgroenendaal.nl
