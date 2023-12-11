@@ -1,0 +1,9 @@
+name: spotify-facade
+releaseName: ''
+project: default
+namespace: default
+appPath: SpotifyFacade
+targetRevision: 0.0.15-spotify-facade
+helm:
+  chartVersion: 1.0.0
+  envValues: helm/values.yaml
