@@ -100,14 +100,14 @@ ingress:
   enabled: true
   hosts:
     - k8s.tijsgroenendaal.nl
-  path: /idp
+  path: /idp(/|$)(.*)
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
     ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
   tls:
     - secretName: idp-service-tijsgroenendaal-nl
       hosts:
