@@ -44,29 +44,56 @@ jobs:
       - test
     permissions:
       contents: write
+    outputs:
+      NEW_VERSION: ${{ steps.increment-version.outputs.NEW_VERSION }}
     steps:
       - uses: actions/checkout@v2
       - run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git pull
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: 'Login Github Container Registry'
         run: echo $CI_GITHUB_PASSWORD | docker login ghcr.io -u $CI_GITHUB_USERNAME --password-stdin
       - name: 'Increment Package Version'
+        id: increment-version
         working-directory: ./QueueMusicFacade
         run: |
           OLD_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -q -DforceStdout)
           NEW_VERSION=$(echo ${OLD_VERSION} |  awk -F'.' '{print $1"."$2"."$3+1}' |  sed s/[.]$//)
+          sed -i 's/^imageTag:.*/imageTag: '"$NEW_VERSION"'/' ./helm/values.yaml
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           mvn versions:set -DnewVersion=$NEW_VERSION -DprocessFromLocalAggregationRoot=false -DgenerateBackupPoms=false
+          echo "::set-output name=NEW_VERSION::$NEW_VERSION"
       - name: 'Release QueueMusicFacade Container'
         working-directory: ./QueueMusicFacade
         run: |
           IMAGE_TAG=$(echo "ghcr.io/$CI_GITHUB_USERNAME/$IMAGE_NAME:$NEW_VERSION" | tr '[:upper:]' '[:lower:]')
-          docker build --build-arg CI_GITHUB_USERNAME=${{ env.CI_GITHUB_USERNAME }} --build-arg CI_GITHUB_PASSWORD=${{ env.CI_GITHUB_PASSWORD }} --build-arg CI_GITHUB_REPOSITORY=${{ env.CI_GITHUB_REPOSITORY }} -t $IMAGE_TAG .
+          docker build --build-arg CI_GITHUB_USERNAME=${{ env.CI_GITHUB_USERNAME }} --build-arg CI_GITHUB_PASSWORD=${{ env.CI_GITHUB_PASSWORD }} --build-arg CI_GITHUB_REPOSITORY=${{ env.CI_GITHUB_REPOSITORY }} -t $IMAGE_TAG --platform linux/arm64 .
           docker push $IMAGE_TAG
       - name: 'Commit Version Update'
         run: |
           git commit -am "Increment QueueMusicFacade to version $NEW_VERSION [skip ci]"
           git pull --rebase
           git push 
+
+
+  release_github:
+    uses: './.github/workflows/github-release.yaml'
+    needs: [release]
+    permissions:
+      contents: write
+    with:
+      tag: "${{ needs.release.outputs.NEW_VERSION }}-queuemusic-facade"
+
+  release_argocd:
+    uses: './.github/workflows/argocd-appset-release.yaml'
+    needs: [release]
+    permissions:
+      contents: write
+    with:
+      tag: "${{ needs.release.outputs.NEW_VERSION }}-queuemusic-facade"
+      app_file: "api-springboot/queuemusic-facade"
