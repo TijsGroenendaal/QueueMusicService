@@ -15,27 +15,6 @@ service:
 port: 8080
 
 environmentVariables:
-  - name: RABBITMQ_HOST
-    valueFrom:
-      secretKeyRef:
-        name: queuemusic-secrets
-        key: RABBITMQ_HOST
-  - name: RABBITMQ_PORT
-    valueFrom:
-      secretKeyRef:
-        name: queuemusic-secrets
-        key: RABBITMQ_PORT
-  - name: RABBITMQ_USERNAME
-    valueFrom:
-      secretKeyRef:
-        name: queuemusic-secrets
-        key: RABBITMQ_USERNAME
-  - name: RABBITMQ_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: queuemusic-secrets
-        key: RABBITMQ_PASSWORD
-
   # JWT Secrets
   - name: QUEUEMUSIC_JWT_PUBLIC_SECRET
     valueFrom:

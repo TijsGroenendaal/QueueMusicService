@@ -77,3 +77,6 @@ labels:
   app: spotify-facade
   chart: api-springboot
   release: latest
+
+ingress:
+  enabled: false
