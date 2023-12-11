@@ -49,11 +49,11 @@ environmentVariables:
       secretKeyRef:
         name: queuemusic-secrets
         key: SPOTIFY_FACADE_CLIENT_ID
-  - name: SPOTIFY_FACADE_CLIENT_ID
+  - name: SPOTIFY_FACADE_CLIENT_SECRET
     valueFrom:
       secretKeyRef:
         name: queuemusic-secrets
-        key: SPOTIFY_FACADE_CLIENT_ID
+        key: SPOTIFY_FACADE_CLIENT_SECRET
 
   - name: SESSION_SERVICE_CLIENT_ID
     valueFrom:
