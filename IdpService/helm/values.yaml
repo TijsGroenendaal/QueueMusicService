@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/idp-service
-imageTag: 0.0.17
+imageTag: 0.0.18
 imagePullPolicy: "IfNotPresent"
 name: idp-service
 replicaCount: 1
