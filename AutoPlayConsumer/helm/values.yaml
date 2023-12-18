@@ -1,0 +1,66 @@
+image: ghcr.io/tijsgroenendaal/autoplay-consumer
+imageTag: 0.0.10
+imagePullPolicy: "IfNotPresent"
+name: autoplay-consumer
+replicaCount: 2
+profile: prd
+command:
+  - /opt/entrypoint.sh
+  - -Dspring.profiles.active=prd
+
+service:
+  enabled: false
+
+environmentVariables:
+  - name: RABBITMQ_HOST
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: RABBITMQ_HOST
+  - name: RABBITMQ_PORT
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: RABBITMQ_PORT
+  - name: RABBITMQ_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: RABBITMQ_USERNAME
+  - name: RABBITMQ_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: RABBITMQ_PASSWORD
+
+  # Service Secrets
+  - name: IDP_SERVICE_URL
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: IDP_SERVICE_URL
+  - name: SPOTIFY_FACADE_URL
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_FACADE_URL
+
+  - name: SPOTIFY_FACADE_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_FACADE_CLIENT_ID
+
+  - name: SPOTIFY_FACADE_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: SPOTIFY_FACADE_CLIENT_SECRET
+
+labels:
+  app: autoplay-consumer
+  chart: api-springboot
+  release: latest
+
+ingress:
+  enabled: false
