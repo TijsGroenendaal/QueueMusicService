@@ -86,7 +86,7 @@ jobs:
     permissions:
       contents: write
     with:
-      tag: "${{ needs.release.outputs.NEW_VERSION }}-idp-service"
+      tag: "${{ needs.release.outputs.NEW_VERSION }}-autoplay-consumer"
 
   release_argocd:
     uses: './.github/workflows/argocd-appset-release.yaml'
@@ -94,5 +94,5 @@ jobs:
     permissions:
       contents: write
     with:
-      tag: "${{ needs.release.outputs.NEW_VERSION }}-idp-service"
-      app_file: "api-springboot/idp-service"
+      tag: "${{ needs.release.outputs.NEW_VERSION }}-autoplay-consumer"
+      app_file: "api-springboot/autoplay-consumer"
