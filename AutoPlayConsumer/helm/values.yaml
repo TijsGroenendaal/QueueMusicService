@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/autoplay-consumer
-imageTag: 0.0.11
+imageTag: 0.0.12
 imagePullPolicy: "IfNotPresent"
 name: autoplay-consumer
 replicaCount: 2
