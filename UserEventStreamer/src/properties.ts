@@ -21,7 +21,7 @@ export const Props: {[key: string]: Properties} = {
     prd: {
         ws: { port: 8080 },
         amqp: {
-            url: `amqp://${process.env.RABBITMQ_USER_EVENT_HOST}:5672`,
+            url: `amqp://${process.env.RABBITMQ_HOST}:5672`,
             exchange: 'user-event',
             queue: 'user-event-streamer-'
         },
