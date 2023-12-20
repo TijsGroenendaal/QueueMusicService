@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/user-event-streamer
-imageTag: 1.0.3
+imageTag: 1.0.4
 imagePullPolicy: "IfNotPresent"
 name: user-event-streamer
 replicaCount: 4
