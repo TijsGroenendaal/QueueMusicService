@@ -22,27 +22,53 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' }}
     permissions:
       contents: write
+    outputs:
+      NEW_VERSION: ${{ steps.increment-version.outputs.NEW_VERSION }}
     steps:
       - uses: actions/checkout@v2
       - run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git pull
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: 'Login Github Container Registry'
         run: echo $CI_GITHUB_PASSWORD | docker login ghcr.io -u $CI_GITHUB_USERNAME --password-stdin
       - name: 'Increment Package Version'
+        id: increment-version
         working-directory: ./UserEventStreamer
         run: |
           NEW_VERSION=$(npm version patch)
+          sed -i 's/^imageTag:.*/imageTag: '"$NEW_VERSION"'/' ./helm/values.yaml
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "::set-output name=NEW_VERSION::$NEW_VERSION"
       - name: 'Release UserEventStreamer Container'
         working-directory: ./UserEventStreamer
         run: |
           IMAGE_TAG=$(echo "ghcr.io/$CI_GITHUB_USERNAME/$IMAGE_NAME:$NEW_VERSION" | tr '[:upper:]' '[:lower:]')
-          docker build -t $IMAGE_TAG .
+          docker build -t $IMAGE_TAG --platform linux/arm64 . 
           docker push $IMAGE_TAG
       - name: 'Commit Version Update'
         run: |
           git commit -am "Increment UserEventStreamer to version $NEW_VERSION [skip ci]"
           git pull --rebase
           git push 
+
+  release_github:
+    uses: './.github/workflows/github-release.yaml'
+    needs: [release]
+    permissions:
+      contents: write
+    with:
+      tag: "${{ needs.release.outputs.NEW_VERSION }}-user-event-streamer"
+
+  release_argocd:
+    uses: './.github/workflows/argocd-appset-release.yaml'
+    needs: [release]
+    permissions:
+      contents: write
+    with:
+      tag: "${{ needs.release.outputs.NEW_VERSION }}-user-event-streamer"
+      app_file: "api-springboot/user-event-streamer"
