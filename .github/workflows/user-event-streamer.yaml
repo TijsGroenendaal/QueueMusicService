@@ -38,14 +38,14 @@ jobs:
         run: echo $CI_GITHUB_PASSWORD | docker login ghcr.io -u $CI_GITHUB_USERNAME --password-stdin
       - name: 'Increment Package Version'
         id: increment-version
-        working-directory: ./UserEventStreamer
+        working-directory: ./UserEventStreamer/api
         run: |
           NEW_VERSION=$(npm version patch)
-          sed -i 's/^imageTag:.*/imageTag: '"$NEW_VERSION"'/' ./helm/values.yaml
+          sed -i 's/^imageTag:.*/imageTag: '"$NEW_VERSION"'/' ../helm/values.yaml
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           echo "::set-output name=NEW_VERSION::$NEW_VERSION"
       - name: 'Release UserEventStreamer Container'
-        working-directory: ./UserEventStreamer
+        working-directory: ./UserEventStreamer/api
         run: |
           IMAGE_TAG=$(echo "ghcr.io/$CI_GITHUB_USERNAME/$IMAGE_NAME:$NEW_VERSION" | tr '[:upper:]' '[:lower:]')
           docker build -t $IMAGE_TAG --platform linux/arm64 . 
