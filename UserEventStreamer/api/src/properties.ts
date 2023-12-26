@@ -25,6 +25,6 @@ export const Props: {[key: string]: Properties} = {
             exchange: 'user-event',
             queue: 'user-event-streamer-'
         },
-        idp: { url: process.env.IDP_SERVICE_URL }
+        idp: { url: `https://${process.env.IDP_SERVICE_URL}` }
     }
 }
