@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: default
 appPath: UserEventStreamer
-targetRevision: 1.0.4-user-event-streamer
+targetRevision: 1.0.5-user-event-streamer
 helm:
   chartVersion: 1.1.0
   envValues: helm/values.yaml
