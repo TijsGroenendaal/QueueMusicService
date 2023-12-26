@@ -1,6 +1,6 @@
 {
   "name": "user_event_streamer",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "license": "UNLICENSED",
   "scripts": {
     "build": "tsc",
