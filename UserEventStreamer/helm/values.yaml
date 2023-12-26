@@ -10,8 +10,12 @@ command:
 service:
   enabled: true
   servicePort: 80
+  targetPort: 8080
   type: ClusterIP
-port: 8080
+
+deployment:
+  enabled: true
+  replicaCount: 3
 
 environmentVariables:
   - name: RABBITMQ_HOST
@@ -40,4 +44,21 @@ labels:
   release: latest
 
 ingress:
-  enabled: false
+  enabled: true
+  hosts:
+    - k8s.tijsgroenendaal.nl
+  path: /streamer(/|$)(.*)
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade "websocket";
+      proxy_set_header Connection "Upgrade";
+  tls:
+    - secretName: user-event-streamer-tijsgroenendaal-nl
+      hosts:
+        - k8s.tijsgroenendaal.nl
