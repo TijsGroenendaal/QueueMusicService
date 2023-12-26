@@ -38,6 +38,12 @@ environmentVariables:
       secretKeyRef:
         name: queuemusic-secrets
         key: RABBITMQ_PASSWORD
+
+  - name: IDP_SERVICE_URL
+    valueFrom:
+      secretKeyRef:
+        name: queuemusic-secrets
+        key: IDP_SERVICE_URL
 labels:
   app: user-event-streamer
   chart: api-springboot
