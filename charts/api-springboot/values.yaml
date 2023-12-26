@@ -1,50 +1,46 @@
-image: ghcr.io/tijsgroenendaal/session-service
-imageTag: "latest"
+#image: ghcr.io/tijsgroenendaal/session-service
+#imageTag: "latest"
 imagePullPolicy: "IfNotPresent"
-name: example-app
+#name: example-app
 
 profile: prd
-command:
-  - /opt/run.sh
-  - -Dspring.profiles.active=prd
+#command:
+#  - /opt/run.sh
+#  - -Dspring.profiles.active=prd
+extraArgs:
 
 environmentVariables:
 
 labels:
-  app: example-app
-  chart: api-springboot
-  release: example-app
 
-resources:
-  limits:
-    cpu: 1000m
-    memory: 700Mi
-  requests:
-    cpu: 80m
-    memory: 500Mi
+annotations:
+
+podAnnotations:
 
 deployment:
-  enabled: true
-replicaCount: 1
+  enabled: false
+#  replicaCount: 1
 
 service:
-  enabled: true
-  servicePort: 80
-  type: ClusterIP
-port: 8080
+  enabled: false
+#  servicePort: 80
+#  targetPort: 8080
+#  type: ClusterIP
+#  externalIps:
+#    -
 
 ingress:
-  enabled: true
-  hosts:
-    - k8s.tijsgroenendaal.nl
-  path: /
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    kubernetes.io/tls-acme: "true"
-    ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-  tls:
-    - secretName: example-ssl-secret
-      hosts:
-        - k8s.tijsgroenendaal.nl
+  enabled: false
+#  hosts:
+#    - k8s.tijsgroenendaal.nl
+#  path: /
+#  annotations:
+#    kubernetes.io/ingress.class: nginx
+#    kubernetes.io/tls-acme: "true"
+#    ingress.kubernetes.io/ssl-redirect: "true"
+#    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+#  tls:
+#    - secretName: example-ssl-secret
+#      hosts:
+#        - k8s.tijsgroenendaal.nl

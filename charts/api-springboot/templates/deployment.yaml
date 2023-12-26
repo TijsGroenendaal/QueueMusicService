@@ -11,8 +11,8 @@ metadata:
 spec:
   selector:
     matchLabels: {{ include "selector-labels" . | indent 6 }}
-{{- if .Values.replicaCount }}
-  replicas: {{ .Values.replicaCount }}
+{{- if .Values.deployment.replicaCount }}
+  replicas: {{ .Values.deployment.replicaCount }}
 {{- end }}
 {{- if not .Values.strategy }}
   strategy:

@@ -7,10 +7,10 @@ entries:
       urls:
         - https://tijsgroenendaal.github.io/QueueMusicService/api-springboot-1.0.0.tgz
       version: 1.0.0
-    - created: 2023-12-1T22:3:00.499814565+01:00
+    - created: 2023-12-26T14:17:00.499814565+01:00
       description: Template for Springboot based API's.
       name: api-springboot
       urls:
-        - https://tijsgroenendaal.github.io/QueueMusicService/api-springboot-1.0.1.tgz
-      version: 1.0.1
+        - https://tijsgroenendaal.github.io/QueueMusicService/api-springboot-1.1.0.tgz
+      version: 1.1.0
 generated: 2023-10-29T17:40:00.499814565+01:00

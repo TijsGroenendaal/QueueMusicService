@@ -23,8 +23,6 @@ spec:
     protocol: TCP
     {{- if .Values.service.targetPort }}
     targetPort: {{ .Values.service.targetPort }}
-    {{- else }}
-    targetPort: {{ .Values.port }}
     {{- end }}
   {{- if .Values.service.ports }}
   {{- range $index, $port :=  .Values.service.ports }}
