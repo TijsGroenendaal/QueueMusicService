@@ -1,0 +1,9 @@
+name: user-event-streamer
+releaseName: ''
+project: default
+namespace: default
+appPath: UserEventStreamer
+targetRevision: 1.0.10-user-event-streamer
+helm:
+  chartVersion: 1.1.0
+  envValues: helm/values.yaml
