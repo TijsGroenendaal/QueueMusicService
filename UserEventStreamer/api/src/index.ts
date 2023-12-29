@@ -41,8 +41,8 @@ async function setupAMQPConnection() {
     const exchange = properties.amqp.exchange;
     const queue = properties.amqp.queue + crypto.randomUUID().slice(0, 8);
 
-    await channel.assertExchange(exchange, 'fanout', { durable: false })
-    await channel.assertQueue(queue, { durable: false, exclusive: true})
+    await channel.assertExchange(exchange, 'fanout', { durable: true })
+    await channel.assertQueue(queue, { durable: false, exclusive: true })
 
     await channel.bindQueue(queue, exchange, "")
 

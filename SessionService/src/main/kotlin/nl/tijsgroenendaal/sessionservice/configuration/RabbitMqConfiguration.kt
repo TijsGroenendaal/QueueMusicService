@@ -32,13 +32,13 @@ class RabbitMqConfiguration {
     fun autoplayQueue(): Queue = Queue(autoplayQueue, false)
 
     @Bean
-    fun autoplayExchange(): DirectExchange = DirectExchange(autoplayExchange, false, false)
+    fun autoplayExchange(): DirectExchange = DirectExchange(autoplayExchange, true, false)
 
     @Bean
     fun autoplayBinding(@Qualifier("autoplayQueue") queue: Queue, exchange: DirectExchange): Binding = BindingBuilder.bind(queue).to(exchange).with(autoplayRouting)
 
     @Bean
-    fun userEventExchange(): FanoutExchange = FanoutExchange(userEventExchange, false, false)
+    fun userEventExchange(): FanoutExchange = FanoutExchange(userEventExchange, true, false)
 
     @Bean
     fun rabbitTemplate(connectionFactory: ConnectionFactory): RabbitTemplate {

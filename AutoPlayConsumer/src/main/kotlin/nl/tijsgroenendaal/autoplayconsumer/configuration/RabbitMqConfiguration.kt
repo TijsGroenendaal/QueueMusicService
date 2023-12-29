@@ -31,7 +31,7 @@ class RabbitMqConfiguration {
 
     @Bean
     fun exchange(): DirectExchange {
-        return DirectExchange(exchange, false, false)
+        return DirectExchange(exchange, true, false)
     }
 
     @Bean
