@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: default
 appPath: AutoPlayConsumer
-targetRevision: 0.0.12-autoplay-consumer
+targetRevision: 0.0.13-autoplay-consumer
 helm:
   chartVersion: 1.0.0
   envValues: helm/values.yaml
