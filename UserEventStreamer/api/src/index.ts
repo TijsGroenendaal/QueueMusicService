@@ -6,6 +6,7 @@ import { createLogger, format, transports } from "winston";
 import * as crypto from "crypto";
 import minimist from "minimist";
 import { Props } from "./properties";
+import { setWsHeartbeat } from "ws-heartbeat/server";
 
 const args: {[key: string]: string} = minimist(process.argv.slice(2))
 const properties = Props[args['env'] ?? 'prd'] ?? Props.prd
@@ -101,6 +102,13 @@ wss.on('connection', async (ws, request) => {
     } catch (err) {
         logger.error(err)
         ws.close(1011, "Internal Server Error")
+    }
+})
+
+// Close connection after 60 seconds if no PING received
+setWsHeartbeat(wss, (ws, data) => {
+    if (data == "CLIENT: PING") {
+        ws.send('SERVER: PONG')
     }
 })
 
