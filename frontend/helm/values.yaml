@@ -1,0 +1,36 @@
+image: ghcr.io/tijsgroenendaal/frontend
+imageTag: 0.1.0
+imagePullPolicy: "IfNotPresent"
+name: frontend
+replicaCount: 2
+profile: prd
+
+service:
+  enabled: true
+  type: ClusterIP
+  servicePort: 80
+  targetPort: 80
+
+environmentVariables:
+
+labels:
+  app: frontend
+  chart: frontend
+  release: latest
+
+ingress:
+  enabled: true
+  hosts:
+    - queuemusic.tijsgroenendaal.nl
+  path:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  tls:
+    - secretName: idp-service-tijsgroenendaal-nl
+      hosts:
+        - queuemusic.tijsgroenendaal.nl
