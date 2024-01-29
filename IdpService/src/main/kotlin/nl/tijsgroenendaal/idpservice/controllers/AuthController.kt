@@ -18,8 +18,9 @@ class AuthController(
     @PostMapping("/login")
     fun login(
         @RequestParam("code") code: String,
+        @RequestParam("redirect_uri") redirectUri: String
     ): LoginQueryResponse {
-        return authFacade.loginLinkUser(code)
+        return authFacade.loginLinkUser(code, redirectUri)
     }
 
     @PostMapping("/login/anonymous")

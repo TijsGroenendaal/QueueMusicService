@@ -35,8 +35,8 @@ class AuthFacade(
 		private val jwtGenerator: JwtGenerator
 ) {
 
-    fun loginLinkUser(code: String): LoginQueryResponse {
-        val userId = userLinkService.login(code)
+    fun loginLinkUser(code: String, redirectUri: String): LoginQueryResponse {
+        val userId = userLinkService.login(code, redirectUri)
 
         val user = try {
             userService.findById(userId)

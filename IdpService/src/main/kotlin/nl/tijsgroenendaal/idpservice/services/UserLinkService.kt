@@ -21,7 +21,7 @@ class UserLinkService(
         spotifyFacadeClient.logout()
     }
 
-    fun login(code: String): UUID = catchingFeignRequest { anonymousSpotifyFacadeClient.login(code) }
+    fun login(code: String, redirectUri: String): UUID = catchingFeignRequest { anonymousSpotifyFacadeClient.login(code, redirectUri) }
 
     fun getByUserId(userId: UUID): GetUserLinkByUserIdQueryResponse? {
         return try {

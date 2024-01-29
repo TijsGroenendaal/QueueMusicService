@@ -13,6 +13,6 @@ import java.util.UUID
 interface AnonymousSpotifyFacadeClient {
 
     @PostMapping("/v1/auth/login")
-    fun login(@RequestParam(name = "code") code: String): UUID
+    fun login(@RequestParam(name = "code") code: String, @RequestParam(name = "redirect_uri") redirectUri: String): UUID
 
 }
