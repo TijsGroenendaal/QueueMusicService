@@ -20,10 +20,11 @@ class SpotifyTokenClientService(
     private val spotifyTokenClient: SpotifyTokenClient,
 ) {
 
-    fun getAccessToken(code: String): AccessTokenResponseModel {
+    fun getAccessToken(code: String, redirectUri: String): AccessTokenResponseModel {
         try {
-            return spotifyTokenClient.getAccessToken(AccessTokenQuery(code).toForm())
+            return spotifyTokenClient.getAccessToken(AccessTokenQuery(code, redirectUri).toForm())
         } catch(e: FeignException) {
+            e.printStackTrace()
             if (e.status() == 400) {
                 throw BadRequestException(AuthErrorCodes.UNABLE_TO_LOGIN_TO_LINK)
             }

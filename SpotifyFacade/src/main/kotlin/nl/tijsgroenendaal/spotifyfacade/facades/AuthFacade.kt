@@ -16,8 +16,8 @@ class AuthFacade(
     private val spotifyTokenClientService: SpotifyTokenClientService
 ) {
 
-    fun login(code: String): UserLinkModel {
-        val accessToken = spotifyTokenClientService.getAccessToken(code)
+    fun login(code: String, redirectUri: String): UserLinkModel {
+        val accessToken = spotifyTokenClientService.getAccessToken(code, redirectUri)
         val linkUser = spotifyApiClientService.getMe(accessToken.accessToken)
 
         return try {

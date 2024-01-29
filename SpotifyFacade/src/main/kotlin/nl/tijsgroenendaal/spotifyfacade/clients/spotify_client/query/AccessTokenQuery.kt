@@ -2,7 +2,7 @@ package nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query
 
 data class AccessTokenQuery(
     val code: String,
-    val redirectUri: String = "https://www.google.com",
+    val redirectUri: String,
     val grantType: String = "authorization_code"
 ) {
     fun toForm(): Map<String, Any> {

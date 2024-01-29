@@ -16,8 +16,8 @@ class AuthController(
 ) {
 
     @PostMapping("/login")
-    fun login(@RequestParam(name = "code") code: String): UUID {
-        return authFacade.login(code).userModelId
+    fun login(@RequestParam(name = "code") code: String, @RequestParam(name = "redirect_uri") redirectUri: String): UUID {
+        return authFacade.login(code, redirectUri).userModelId
     }
 
     @PostMapping("/logout")
