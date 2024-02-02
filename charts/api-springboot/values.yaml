@@ -44,3 +44,5 @@ ingress:
 #    - secretName: example-ssl-secret
 #      hosts:
 #        - k8s.tijsgroenendaal.nl
+
+resources:

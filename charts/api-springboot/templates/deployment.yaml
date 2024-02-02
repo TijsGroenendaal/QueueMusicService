@@ -72,3 +72,5 @@ spec:
 {{- /*
 # -- end environmentVariables injection
   */}}
+        resources:
+{{ toYaml .Values.resources | indent 10 -}}
