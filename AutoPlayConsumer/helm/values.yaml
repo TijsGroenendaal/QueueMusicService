@@ -7,6 +7,9 @@ profile: prd
 command:
   - /opt/entrypoint.sh
   - -Dspring.profiles.active=prd
+extraArgs:
+  - -XX:MaxRAMPercentage=70.0
+  - -XX:+UseG1GC
 
 service:
   enabled: false
@@ -64,3 +67,9 @@ labels:
 
 ingress:
   enabled: false
+
+resources:
+  limits:
+    memory: 500mi
+  requests:
+    memory: 150mi
