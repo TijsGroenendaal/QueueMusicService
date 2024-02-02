@@ -54,6 +54,8 @@ spec:
 {{- if .Values.extraArgs }}
 {{ toYaml .Values.extraArgs | indent 8 }}
 {{- end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 -}}
         env:
 {{- /*
   # -- start environmentVariables injection
@@ -72,5 +74,3 @@ spec:
 {{- /*
 # -- end environmentVariables injection
   */}}
-        resources:
-{{ toYaml .Values.resources | indent 10 -}}
