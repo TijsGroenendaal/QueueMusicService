@@ -1,7 +1,7 @@
 name: idp-service-db
 releaseName: ''
 project: default
-namespace: default
+namespace: queuemusic
 appPath: IdpService
 targetRevision: HEAD
 helm:

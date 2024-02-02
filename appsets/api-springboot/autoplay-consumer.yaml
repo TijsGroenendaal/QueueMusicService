@@ -1,7 +1,7 @@
 name: autoplay-consumer
 releaseName: ''
 project: default
-namespace: default
+namespace: queuemusic
 appPath: AutoPlayConsumer
 targetRevision: 0.0.13-autoplay-consumer
 helm:

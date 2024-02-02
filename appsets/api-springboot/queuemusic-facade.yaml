@@ -1,7 +1,7 @@
 name: queuemusic-facade
 releaseName: ''
 project: default
-namespace: default
+namespace: queuemusic
 appPath: QueueMusicFacade
 targetRevision: 0.0.23-queuemusic-facade
 helm:

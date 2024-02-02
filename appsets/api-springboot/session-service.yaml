@@ -1,7 +1,7 @@
 name: session-service
 releaseName: ''
 project: default
-namespace: default
+namespace: queuemusic
 appPath: SessionService
 targetRevision: 0.0.9-session-service
 helm:

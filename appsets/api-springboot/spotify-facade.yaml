@@ -1,7 +1,7 @@
 name: spotify-facade
 releaseName: ''
 project: default
-namespace: default
+namespace: queuemusic
 appPath: SpotifyFacade
 targetRevision: 0.0.19-spotify-facade
 helm:
