@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: queuemusic
 appPath: AutoPlayConsumer
-targetRevision: 0.0.13-autoplay-consumer
+targetRevision: 0.0.14-autoplay-consumer
 helm:
   chartVersion: 1.2.0
   envValues: helm/values.yaml
