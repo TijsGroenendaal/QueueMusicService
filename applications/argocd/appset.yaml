@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - chart: argo-cd
+      repoURL: 'https://argoproj.github.io/argo-helm'
+      targetRevision: 6.0.14
+      helm:
+        valueFiles:
+          - $values/applications/argocd/values.yaml
+    - repoURL: 'https://github.com/TijsGroenendaal/QueueMusicService'
+      targetRevision: "k8s/argocd-apps"
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false
+    automated:
+      prune: false
+      selfHeal: false
