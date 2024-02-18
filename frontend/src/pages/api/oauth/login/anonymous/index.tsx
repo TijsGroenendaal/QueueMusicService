@@ -1,22 +1,22 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import querystring from "querystring";
 import { stringifyCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   const { code } = req.query;
 
-  if (code == null) {
+  if (req.cookies.AT) {
+    res.status(200).end();
+    return;
+  }
+
+  if (!code) {
     res.status(400).end();
     return;
   }
 
-  const query = querystring.stringify({
-    code: code,
-    redirect_uri: "http://localhost:3000/oauth/callback",
-  });
-
   const response = await fetch(
-    "https://k8s.tijsgroenendaal.nl/idp/v1/auth/login?" + query,
+    "https://k8s.tijsgroenendaal.nl/idp/v1/auth/login/anonymous?" +
+      new URLSearchParams({ deviceId: code.toString() }),
     {
       method: "POST",
     },
@@ -51,6 +51,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     }),
   ]);
 
-  res.status(response.status);
+  res.status(200);
   res.end();
 }
