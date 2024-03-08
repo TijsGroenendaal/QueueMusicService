@@ -2,6 +2,7 @@ package nl.tijsgroenendaal.spotifyfacade.facades
 
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.responses.CreatePlaylistCommandResponse
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.tracks.GetTrackQueryResponse
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.users.GetMeQueryResponse
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.services.SpotifyApiClientService
 import nl.tijsgroenendaal.spotifyfacade.commands.QueueTrackCommand
 import nl.tijsgroenendaal.spotifyfacade.services.UserLinkService
@@ -32,5 +33,11 @@ class SpotifyApiFacade(
         val accessToken = userLinkFacade.getAccessToken(command.hostId)
 
         spotifyApiClientService.queueTrack(command.trackId, accessToken)
+    }
+
+    fun getSpotifyUserById(userId: UUID): GetMeQueryResponse {
+        val accessToken = userLinkFacade.getAccessToken(userId)
+
+        return spotifyApiClientService.getMe(accessToken)
     }
 }

@@ -33,6 +33,7 @@ class UserService(
         return userRepository.save(UserModel.new())
     }
 
+    @Transactional
     fun logout(userId: UUID) {
         val user = findById(userId).apply {
             this.userRefreshToken = null
@@ -41,6 +42,5 @@ class UserService(
         save(user)
     }
 
-    @Transactional
     fun save(userModel: UserModel): UserModel = userRepository.save(userModel)
 }

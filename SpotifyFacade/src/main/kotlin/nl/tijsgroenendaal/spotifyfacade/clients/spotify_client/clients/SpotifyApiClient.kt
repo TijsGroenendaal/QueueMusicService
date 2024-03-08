@@ -26,5 +26,7 @@ interface SpotifyApiClient {
 
     @PostMapping("/v1/me/player/queue")
     fun queueTrack(@RequestParam("uri") trackId: String, @RequestHeader("Authorization") token: String)
+    @GetMapping("/v1/me")
+    fun getSpotifyUserById(@RequestHeader("Authorization") token: String)
 
 }

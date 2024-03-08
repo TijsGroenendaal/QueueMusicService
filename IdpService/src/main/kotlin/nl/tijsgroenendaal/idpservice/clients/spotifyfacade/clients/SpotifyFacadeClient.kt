@@ -1,6 +1,7 @@
 package nl.tijsgroenendaal.idpservice.clients.spotifyfacade.clients
 
 import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.configuration.SpotifyFacadeConfiguration
+import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.query.responses.GetSpotifyMeQueryResponse
 import nl.tijsgroenendaal.idpservice.clients.spotifyfacade.query.responses.GetUserLinkByUserIdQueryResponse
 
 import org.springframework.cloud.openfeign.FeignClient
@@ -22,4 +23,7 @@ interface SpotifyFacadeClient {
 
     @GetMapping("/v1/user-link/user/{userId}")
     fun getByUserId(@PathVariable userId: UUID): GetUserLinkByUserIdQueryResponse
+
+    @GetMapping("/v1/spotify/user/{userId}")
+    fun getSpotifyUserById(@PathVariable userId: UUID): GetSpotifyMeQueryResponse
 }

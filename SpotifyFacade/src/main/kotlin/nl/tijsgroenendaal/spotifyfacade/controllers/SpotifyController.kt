@@ -2,6 +2,7 @@ package nl.tijsgroenendaal.spotifyfacade.controllers
 
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.commands.responses.CreatePlaylistCommandResponse
 import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.tracks.GetTrackQueryResponse
+import nl.tijsgroenendaal.spotifyfacade.clients.spotify_client.query.responses.users.GetMeQueryResponse
 import nl.tijsgroenendaal.spotifyfacade.commands.QueueTrackCommand
 import nl.tijsgroenendaal.spotifyfacade.facades.SpotifyApiFacade
 
@@ -38,6 +39,12 @@ class SpotifyController(
     @PostMapping("/player/queue")
     fun queueTrack(@RequestBody command: QueueTrackCommand) {
         spotifyFacade.queueTrack(command)
+    }
+
+    @PreAuthorize("hasAuthority('SPOTIFY')")
+    @GetMapping("/user/{userId}")
+    fun getSpotifyUserById(@PathVariable userId: UUID): GetMeQueryResponse {
+        return spotifyFacade.getSpotifyUserById(userId)
     }
 
 }
