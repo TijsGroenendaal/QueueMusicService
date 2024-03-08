@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import querystring from "querystring";
 import { stringifyCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { setCookies } from "@/helper/cookies.helper";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   const { code } = req.query;
@@ -30,26 +31,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
   const json = await response.json();
 
-  res.setHeader("Set-Cookie", [
-    stringifyCookie({
-      name: "AT",
-      value: json.token,
-      sameSite: "strict",
-      httpOnly: true,
-      path: "/",
-      secure: true,
-      maxAge: json.expires_in,
-    }),
-    stringifyCookie({
-      name: "RT",
-      value: json.refresh_token,
-      expires: new Date().setDate(new Date().getDate() + 90),
-      sameSite: "strict",
-      httpOnly: true,
-      path: "/",
-      secure: true,
-    }),
-  ]);
+  setCookies(res, json);
 
   res.status(response.status);
   res.end();
