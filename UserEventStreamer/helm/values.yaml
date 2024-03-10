@@ -2,7 +2,6 @@ image: ghcr.io/tijsgroenendaal/user-event-streamer
 imageTag: 1.0.14
 imagePullPolicy: "IfNotPresent"
 name: user-event-streamer
-replicaCount: 4
 profile: prd
 command:
   - /opt/entrypoint.sh
@@ -15,7 +14,7 @@ service:
 
 deployment:
   enabled: true
-  replicaCount: 3
+  replicaCount: 4
 
 environmentVariables:
   - name: RABBITMQ_HOST

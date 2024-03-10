@@ -6,7 +6,6 @@ import { createLogger, format, transports } from "winston";
 import * as crypto from "crypto";
 import minimist from "minimist";
 import { Props } from "./properties";
-import { setWsHeartbeat } from "ws-heartbeat/server";
 
 const args: {[key: string]: string} = minimist(process.argv.slice(2))
 const properties = Props[args['env'] ?? 'prd'] ?? Props.prd
@@ -29,7 +28,7 @@ const amqp_opt = {
     )
 }
 
-setupAMQPConnection()
+void setupAMQPConnection()
 
 const wss = new WebSocketServer({ port: properties.ws.port })
 const wsConnections = new Map<string, WebSocket[]>()
@@ -69,13 +68,13 @@ wss.on('connection', async (ws, request) => {
         const sessionId: string | undefined = new URL(request.url, `https://${request.headers.host}`).searchParams.get('session')
 
         if (!await verifyToken((request.headers["authentication"] as string).slice(7))) {
-            logger.warn("Invalid Authentication")
+            logger.warn("Connection - Failed Invalid Authentication")
             ws.close(1011, "Invalid Authentication")
             return
         }
 
         if (sessionId == undefined) {
-            logger.warn("No Session Provided")
+            logger.warn("Connection - Failed No Session Provided")
             ws.close(1007, "No Session Provided")
             return
         }
@@ -85,7 +84,7 @@ wss.on('connection', async (ws, request) => {
         if (sockets == undefined) wsConnections.set(sessionId, [ws])
         else sockets.push(ws)
 
-        logger.info(`WebSocket client connected for session - ${sessionId}`)
+        logger.info(`Connection - Connected WebSocket client For Session - '${sessionId}'`)
 
         ws.on('close', () => {
             try {
@@ -96,7 +95,7 @@ wss.on('connection', async (ws, request) => {
             } catch(err) {
                 logger.error(err)
             } finally {
-                logger.info(`WebSocket client disconnected for session - ${sessionId}`)
+                logger.info(`Connection - Disconnected WebSocket Client For Session - '${sessionId}'`)
             }
         })
     } catch (err) {
@@ -106,11 +105,31 @@ wss.on('connection', async (ws, request) => {
 })
 
 // Close connection after 60 seconds if no PING received
-setWsHeartbeat(wss, (ws, data) => {
-    if (data == "CLIENT: PING") {
-        ws.send('SERVER: PONG')
-    }
-})
+let checking: Array<WebSocket> = []
+
+setInterval(() => {
+    logger.info(`HealthCheck - Terminating '${checking.length}' WebSockets`)
+    checking.forEach((ws) => {
+        ws.terminate()
+    })
+
+    checking = Array.from(wss.clients).filter((ws) => {
+        ws.once('message', () => {
+            checking.splice(checking.indexOf(ws), 1)
+        })
+
+        return ws.readyState === WebSocket.OPEN
+    })
+
+    wss.on('pong', (ws: WebSocket) => {
+        checking.splice(checking.indexOf(ws), 1)
+    })
+
+    logger.info(`HealthCheck - Sending PING to '${checking.length}' WebSockets`)
+    checking.forEach((ws) => {
+        ws.ping()
+    })
+}, 10000)
 
 async function verifyToken(token: string): Promise<boolean> {
     const response = await fetch(`${properties.idp.url}/v1/secure/verify-jwt`, {
