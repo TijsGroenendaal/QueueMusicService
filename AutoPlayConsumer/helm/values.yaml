@@ -2,7 +2,6 @@ image: ghcr.io/tijsgroenendaal/autoplay-consumer
 imageTag: 0.0.14
 imagePullPolicy: "IfNotPresent"
 name: autoplay-consumer
-replicaCount: 2
 profile: prd
 command:
   - /opt/entrypoint.sh
@@ -10,9 +9,14 @@ command:
 extraArgs:
   - -XX:MaxRAMPercentage=70.0
   - -XX:+UseG1GC
+  - -XX:InitialRAMPercentage=70.0
 
 service:
   enabled: false
+
+deployment:
+  enabled: true
+  replicaCount: 2
 
 environmentVariables:
   - name: RABBITMQ_HOST
@@ -67,9 +71,3 @@ labels:
 
 ingress:
   enabled: false
-
-resources:
-  limits:
-    memory: 500mi
-  requests:
-    memory: 150mi

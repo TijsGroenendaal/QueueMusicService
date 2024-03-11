@@ -2,7 +2,6 @@ image: ghcr.io/tijsgroenendaal/spotify-facade
 imageTag: 0.0.21
 imagePullPolicy: "IfNotPresent"
 name: spotify-facade
-replicaCount: 1
 profile: prd
 command:
   - /opt/entrypoint.sh
@@ -10,12 +9,17 @@ command:
 extraArgs:
   - -XX:MaxRAMPercentage=70.0
   - -XX:+UseG1GC
+  - -XX:InitialRAMPercentage=70.0
 
 service:
   enabled: true
   servicePort: 80
   type: ClusterIP
-port: 8080
+  port: 8080
+
+deployment:
+  enabled: true
+  replicaCount: 2
 
 environmentVariables:
   # JWT Secrets
@@ -83,9 +87,3 @@ labels:
 
 ingress:
   enabled: false
-
-resources:
-  limits:
-    memory: 150Mi
-  requests:
-    memory: 50Mi

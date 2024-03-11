@@ -2,7 +2,6 @@ image: ghcr.io/tijsgroenendaal/queuemusic-facade
 imageTag: 0.0.24
 imagePullPolicy: "IfNotPresent"
 name: queuemusic-facade
-replicaCount: 2
 profile: prd
 command:
   - /opt/entrypoint.sh
@@ -10,12 +9,17 @@ command:
 extraArgs:
   - -XX:MaxRAMPercentage=70.0
   - -XX:+UseG1GC
+  - -XX:InitialRAMPercentage=70.0
 
 service:
   enabled: true
   servicePort: 80
   type: ClusterIP
-port: 8080
+  port: 8080
+
+deployment:
+  enabled: true
+  replicaCount: 2
 
 environmentVariables:
   # JWT Secrets
@@ -102,9 +106,3 @@ ingress:
     - secretName: idp-service-tijsgroenendaal-nl
       hosts:
         - k8s.tijsgroenendaal.nl
-
-resources:
-  limits:
-    memory: 500Mi
-  requests:
-    memory: 150Mi
