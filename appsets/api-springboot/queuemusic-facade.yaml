@@ -5,5 +5,5 @@ namespace: queuemusic
 appPath: QueueMusicFacade
 targetRevision: 0.0.25-queuemusic-facade
 helm:
-  chartVersion: 1.0.0
+  chartVersion: 1.1.0
   envValues: helm/values.yaml
