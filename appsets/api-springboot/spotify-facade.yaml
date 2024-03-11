@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: queuemusic
 appPath: SpotifyFacade
-targetRevision: 0.0.22-spotify-facade
+targetRevision: 0.0.23-spotify-facade
 helm:
   chartVersion: 1.1.0
   envValues: helm/values.yaml
