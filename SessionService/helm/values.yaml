@@ -15,7 +15,7 @@ service:
   enabled: true
   servicePort: 80
   type: ClusterIP
-  port: 8080
+  targetPort: 8080
 
 deployment:
   enabled: true
