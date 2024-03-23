@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: queuemusic
 appPath: UserEventStreamer
-targetRevision: 1.0.15-user-event-streamer
+targetRevision: 1.0.16-user-event-streamer
 helm:
   chartVersion: 1.3.0
   envValues: helm/values.yaml
