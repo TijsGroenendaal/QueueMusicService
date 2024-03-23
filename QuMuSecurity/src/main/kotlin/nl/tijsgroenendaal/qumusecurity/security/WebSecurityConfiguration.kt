@@ -7,9 +7,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -26,23 +24,11 @@ class WebSecurityConfiguration(
 ) {
 
     @Bean
-    fun webSecurityCustomizer() = WebSecurityCustomizer {
-        web: WebSecurity -> web.ignoring().requestMatchers(
-        "/",
-        "/error",
-        "/favicon.ico",
-        "/*.html",
-        "/*/*.html",
-        "/*/*.css",
-        "/*/*.js",
-        )
-    }
-
-    @Bean
     @Order(Ordered.LOWEST_PRECEDENCE)
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .authorizeHttpRequests {
+                it.requestMatchers(*permittedRequests).permitAll()
                 it.anyRequest().authenticated()
             }
             .csrf {
