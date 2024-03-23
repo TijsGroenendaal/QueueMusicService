@@ -8,6 +8,15 @@ profile: prd
 #  - /opt/run.sh
 #  - -Dspring.profiles.active=prd
 extraArgs:
+#  - --spring.datasource.url=jdbc:postgresql://example-app-db:5432/example-app
+
+#strategy:
+#  type: RollingUpdate
+#  rollingUpdate:
+#    maxSurge: 10
+#    maxUnavailable: 1
+#
+#podSecurityContext:
 
 environmentVariables:
 
@@ -18,7 +27,7 @@ annotations:
 podAnnotations:
 
 deployment:
-  enabled: false
+  enabled: true
 #  replicaCount: 1
 
 service:
@@ -46,3 +55,9 @@ ingress:
 #        - k8s.tijsgroenendaal.nl
 
 resources:
+#    limits:
+#        cpu: 100m
+#        memory: 128Mi
+#    requests:
+#        cpu: 100m
+#        memory: 128Mi

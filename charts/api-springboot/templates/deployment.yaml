@@ -22,8 +22,8 @@ spec:
       maxUnavailable: 0
 {{- else }}
   strategy:
-  {{toYaml .Values.strategy | indent 6}}
-  {{- end }}
+{{toYaml .Values.strategy | indent 6}}
+{{- end }}
   template:
     metadata:
       labels: {{ include "labels" . | indent 8 }}
@@ -34,11 +34,13 @@ spec:
     spec:
       imagePullSecrets:
         - name: ghcr-login-secret
+{{- if .Values.podSecurityContext }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+{{- toYaml .Values.podSecurityContext | nindent 8 }}
+{{- end }}
       containers:
       - name: {{ .Values.name }}
-        image: "{{ .Values.image }}:{{ .Values.imageTagOverride | default .Values.imageTag }}"
+        image: "{{ .Values.image }}:{{ .Values.imageTag }}"
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         ports:
           - containerPort: {{ default 80 .Values.port }}
@@ -54,12 +56,11 @@ spec:
 {{- if .Values.extraArgs }}
 {{ toYaml .Values.extraArgs | indent 8 }}
 {{- end }}
+{{- if .Values.resources }}
         resources:
-{{ toYaml .Values.resources | indent 10 -}}
+{{ toYaml .Values.resources | indent 10 }}
+{{- end }}
         env:
-{{- /*
-  # -- start environmentVariables injection
-*/}}
 {{- if .Values.environmentVariables }}
 {{- if typeIs "map[string]interface {}" .Values.environmentVariables }}
 {{- range $key, $value := .Values.environmentVariables }}
@@ -71,6 +72,3 @@ spec:
 {{- end }}
 {{- end }}
 {{- end -}}
-{{- /*
-# -- end environmentVariables injection
-  */}}
