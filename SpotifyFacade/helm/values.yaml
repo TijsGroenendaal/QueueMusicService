@@ -9,7 +9,6 @@ command:
 extraArgs:
   - -XX:MaxRAMPercentage=70.0
   - -XX:+UseG1GC
-  - -XX:InitialRAMPercentage=70.0
 
 service:
   enabled: true
@@ -87,3 +86,10 @@ labels:
 
 ingress:
   enabled: false
+
+resources:
+  requests:
+    memory: "350Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"

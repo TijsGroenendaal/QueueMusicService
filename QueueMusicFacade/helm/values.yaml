@@ -9,7 +9,6 @@ command:
 extraArgs:
   - -XX:MaxRAMPercentage=70.0
   - -XX:+UseG1GC
-  - -XX:InitialRAMPercentage=70.0
 
 service:
   enabled: true
@@ -106,3 +105,10 @@ ingress:
     - secretName: idp-service-tijsgroenendaal-nl
       hosts:
         - k8s.tijsgroenendaal.nl
+
+resources:
+  requests:
+    memory: "350Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"

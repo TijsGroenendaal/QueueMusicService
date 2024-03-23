@@ -14,7 +14,7 @@ service:
 
 deployment:
   enabled: true
-  replicaCount: 4
+  replicaCount: 3
 
 environmentVariables:
   - name: RABBITMQ_HOST
@@ -67,7 +67,7 @@ ingress:
         - k8s.tijsgroenendaal.nl
 
 resources:
-  limits:
-    memory: 200Mi
   requests:
     memory: 50Mi
+  limits:
+    memory: 150Mi
