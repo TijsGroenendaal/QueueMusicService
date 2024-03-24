@@ -26,7 +26,7 @@ class SessionController(
     private val sessionFacade: SessionFacade
 ) {
 
-    @PostMapping()
+    @PostMapping
     @PreAuthorize("hasAuthority('SPOTIFY')")
     fun createSession(
         @RequestBody command: CreateSessionFacadeCommand

@@ -28,8 +28,6 @@ class SessionModel(
     val endAt: LocalDateTime,
     val code: String,
     @Column(nullable = true)
-    val playListId: String?,
-    @Column(nullable = true)
     val autoplayAcceptance: Int?,
     @Column(name = "maximum_users")
     val maxUsers: Int,
@@ -46,7 +44,6 @@ class SessionModel(
                 LocalDateTime.now(ZoneOffset.UTC),
                 LocalDateTime.now(ZoneOffset.UTC).plusMinutes(command.duration),
                 command.code,
-                command.playlistId,
                 command.autoplayAcceptance,
                 command.maxUsers,
             )

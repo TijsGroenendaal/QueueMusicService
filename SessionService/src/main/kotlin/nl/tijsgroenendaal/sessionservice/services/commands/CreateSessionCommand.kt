@@ -3,7 +3,6 @@ package nl.tijsgroenendaal.sessionservice.services.commands
 import java.util.UUID
 
 data class CreateSessionCommand(
-    val playlistId: String?,
     val autoplayAcceptance: Int?,
     val code: String,
     val duration: Long,

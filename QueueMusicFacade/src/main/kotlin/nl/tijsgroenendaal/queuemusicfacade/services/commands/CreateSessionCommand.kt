@@ -7,6 +7,5 @@ data class CreateSessionCommand(
 )
 
 data class CreateSessionCommandAutoplay(
-		val playlistId: String,
 		val acceptance: Int
 )

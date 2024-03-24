@@ -40,7 +40,6 @@ class SessionFacade(
         val sessionCode = SessionModel.generateSessionCode()
 
         return sessionService.createSession(nl.tijsgroenendaal.sessionservice.services.commands.CreateSessionCommand(
-            command.autoplay?.playlistId,
             command.autoplay?.acceptance,
             sessionCode,
             command.duration,
