@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/spotify-facade
-imageTag: 0.0.24
+imageTag: 0.0.25
 imagePullPolicy: "IfNotPresent"
 name: spotify-facade
 profile: prd
