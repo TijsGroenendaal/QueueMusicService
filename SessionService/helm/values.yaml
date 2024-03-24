@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/session-service
-imageTag: 0.0.14
+imageTag: 0.0.15
 imagePullPolicy: "IfNotPresent"
 name: session-service
 profile: prd
