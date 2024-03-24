@@ -5,6 +5,3 @@ clients:
 spring:
   rabbitmq:
     host: localhost
-
-server:
-  port: 8083

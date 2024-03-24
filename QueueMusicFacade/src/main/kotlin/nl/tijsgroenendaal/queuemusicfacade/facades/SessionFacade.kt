@@ -44,7 +44,8 @@ class SessionFacade(
                 )}
             ), userId)
         } catch (e: Exception) {
-            TODO("If creation fails the spotifyplaylist should be deleted....")
+            // TODO If creation fails the spotifyplaylist should be deleted....
+            throw e
         }
     }
 

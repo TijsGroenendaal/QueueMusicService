@@ -13,7 +13,6 @@ class UserEventService(
 ) {
 
 	fun publish(task: UserEventTask) {
-		println("publihsing task")
 		rabbitTemplate.convertAndSend(exchange.name, "", task)
 	}
 }
