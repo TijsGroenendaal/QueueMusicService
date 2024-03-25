@@ -1,0 +1,19 @@
+githubConfigUrl: https://github.com/TijsGroenendaal/QueueMusicService
+
+githubConfigSecret:
+  githubConfigSecret: arc-github
+
+minRunners: 3
+maxRunners: 6
+
+containerMode:
+  type: "dind"
+
+template:
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

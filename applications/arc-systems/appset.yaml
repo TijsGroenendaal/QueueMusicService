@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: application-arc-systems
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - chart: arc
+      repoURL: 'oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller'
+      targetRevision: 0.8.3
+      helm:
+        valueFiles:
+          - $values/applications/arc-systems/values.yaml
+    - repoURL: 'https://github.com/TijsGroenendaal/QueueMusicService'
+      targetRevision: "k8s/argocd-apps"
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: arc-systems
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=false
+    automated:
+      prune: false
+      selfHeal: false
