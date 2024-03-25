@@ -17,3 +17,7 @@ template:
     requests:
       cpu: 100m
       memory: 128Mi
+
+controllerServiceAccount:
+   namespace: arc-systems
+   name: application-arc-systems-gha-rs-controller
