@@ -1,7 +1,6 @@
 githubConfigUrl: https://github.com/TijsGroenendaal/QueueMusicService
 
-githubConfigSecret:
-  githubConfigSecret: arc-github
+githubConfigSecret: arc-github
 
 minRunners: 3
 maxRunners: 6
