@@ -3,11 +3,13 @@ kind: Application
 metadata:
   name: application-arc-runners
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
-    - chart: arc-runners
-      repoURL: 'oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set'
+    - chart: gha-runner-scale-set
+      repoURL: 'https://tijsgroenendaal.github.io/QueueMusicService'
       targetRevision: 0.8.3
       helm:
         valueFiles:
