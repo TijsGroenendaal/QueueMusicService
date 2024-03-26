@@ -39,11 +39,11 @@ service:
 #    -
 
 servicemonitor:
-  enabled: false
-#  interval: 10s
-#  scrapeInterval: 10s
-#  port: 8081
-#  path: /manage/metrics
+  enabled: true
+  interval: 10s
+  scrapeInterval: 10s
+  port: 8081
+  path: /manage/metrics
 #  annotations:
 
 ingress:
