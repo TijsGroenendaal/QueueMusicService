@@ -32,5 +32,13 @@ spec:
     targetPort: {{ $port.targetPort | default $port.port }}
   {{- end }}
   {{- end }}
+  {{- if .Values.servicemonitor.enabled }}
+  - name: http-metrics
+    port: {{ default "8081" .Values.servicemonitor.port }}
+    protocol: TCP
+    targetPort: {{ default "8081" .Values.servicemonitor.port }}
+  {{- end }}
+  {{- if .Values.service.nodePort }}
+  {{- end }}
   type: "{{ .Values.service.type }}"
 {{- end }}

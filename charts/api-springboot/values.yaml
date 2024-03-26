@@ -7,7 +7,7 @@ profile: prd
 #command:
 #  - /opt/run.sh
 #  - -Dspring.profiles.active=prd
-extraArgs:
+#extraArgs:
 #  - --spring.datasource.url=jdbc:postgresql://example-app-db:5432/example-app
 
 #strategy:
@@ -37,6 +37,14 @@ service:
 #  type: ClusterIP
 #  externalIps:
 #    -
+
+servicemonitor:
+  enabled: false
+#  interval: 10s
+#  scrapeInterval: 10s
+#  port: 8081
+#  path: /manage/metrics
+#  annotations:
 
 ingress:
   enabled: false

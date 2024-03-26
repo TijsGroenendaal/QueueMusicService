@@ -1,0 +1,20 @@
+{{- if .Values.servicemonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.name | quote}}
+  namespace: 'monitoring'
+  annotations:
+    {{- range $key, $value := .Values.servicemonitor.annotations }}
+    {{ $key }}: {{ default "" $value | quote }}
+    {{- end }}
+spec:
+  selector:
+    matchLabels: {{ include "selector-labels" . | indent 6 }}
+  endpoints:
+  - port: {{ default "8081" .Values.servicemonitor.port | quote }}
+    scheme: {{ default "http" .Values.servicemonitor.scheme | quote }}
+    path: {{ default "/metrics" .Values.servicemonitor.path | quote }}
+    interval: {{  default "15s" .Values.servicemonitor.interval | quote }}
+    scrapeTimeout: {{ default "10s" .Values.servicemonitor.scrapeTimeout | quote }}
+{{- end -}}
