@@ -1,6 +1,18 @@
 clients:
   spotify-facade: ${SPOTIFY_FACADE_URL}
 
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus
+      base-path: '/manage'
+      path-mapping:
+        prometheus: 'metrics'
+
 spring:
   datasource:
     url: jdbc:postgresql://${IDP_S_POSTGRES_HOST}:5432/${IDP_S_POSTGRES_DB}?user=${IDP_S_POSTGRES_USER}&password=${IDP_S_POSTGRES_PASSWORD}

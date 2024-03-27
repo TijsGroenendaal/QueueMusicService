@@ -16,7 +16,8 @@ queuemusic:
     permitted: >
       /v1/secure/client-jwt,
       /v1/secure/verify-jwt,
-      /v1/auth/login/**
+      /v1/auth/login/**,
+      /manage/metrics
   encryption:
     algorithme: ${QUEUEMUSIC_ENCRYPTION_ALGORITHME}
     secret: ${QUEUEMUSIC_ENCRYPTION_SECRET}
