@@ -43,6 +43,6 @@ entries:
       description: Template for Springboot based API's.
       name: api-springboot
       urls:
-        - https://tijsgroenendaal.github.io/QueueMusicService/api-springboot-1.4.0-alpha.1.tgz
-      version: 1.4.0-alpha.1
+        - https://tijsgroenendaal.github.io/QueueMusicService/api-springboot-1.4.0-alpha.2.tgz
+      version: 1.4.0-alpha.2
 generated: 2023-10-29T17:40:00.499814565+01:00

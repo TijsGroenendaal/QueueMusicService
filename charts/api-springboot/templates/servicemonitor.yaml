@@ -3,7 +3,6 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ .Values.name | quote}}
-  namespace: 'monitoring'
   annotations:
     {{- range $key, $value := .Values.servicemonitor.annotations }}
     {{ $key }}: {{ default "" $value | quote }}
