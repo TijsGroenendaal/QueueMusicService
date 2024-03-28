@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: queuemusic
 appPath: IdpService
-targetRevision: 0.0.27-idp-service
+targetRevision: 0.0.28-idp-service
 helm:
   chartVersion: 1.4.0
   envValues: helm/values.yaml
