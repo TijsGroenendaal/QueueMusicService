@@ -2,6 +2,11 @@ certificate:
   enabled: true
   domain: argo.tijsgroenendaal.nl
 
+global:
+  configs:
+    cm:
+      timeout.hard.reconciliation: 10m
+
 server:
   ingress:
     enabled: true
