@@ -33,7 +33,7 @@ spec:
   {{- end }}
   {{- end }}
   {{- if .Values.servicemonitor.enabled }}
-  - name: http-metrics
+  - name: metrics
     port: {{ default "8081" .Values.servicemonitor.port }}
     protocol: TCP
     targetPort: {{ default "8081" .Values.servicemonitor.port }}
