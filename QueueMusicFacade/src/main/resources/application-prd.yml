@@ -1,3 +1,15 @@
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus
+      base-path: '/manage'
+      path-mapping:
+        prometheus: 'metrics'
+
 clients:
   spotify-facade: ${SPOTIFY_FACADE_URL}
   idp-service: ${IDP_SERVICE_URL}

@@ -16,6 +16,11 @@ service:
   type: ClusterIP
   targetPort: 8080
 
+servicemonitor:
+  enabled: true
+  port: 8081
+  path: /manage/metrics
+
 deployment:
   enabled: true
   replicaCount: 2

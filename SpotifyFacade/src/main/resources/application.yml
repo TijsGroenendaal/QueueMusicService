@@ -8,7 +8,9 @@ clients:
 
 queuemusic:
   security:
-    permitted: "/v1/auth/login/**"
+    permitted: >
+      /v1/auth/login/**,
+      /manage/metrics
   encryption:
     algorithme: ${QUEUEMUSIC_ENCRYPTION_ALGORITHME}
     secret: ${QUEUEMUSIC_ENCRYPTION_SECRET}

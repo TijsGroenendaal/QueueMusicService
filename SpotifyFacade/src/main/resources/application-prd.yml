@@ -15,5 +15,17 @@ spring:
       ddl-auto: update
     show-sql: false
 
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus
+      base-path: '/manage'
+      path-mapping:
+        prometheus: 'metrics'
+
 server:
   port: 8080

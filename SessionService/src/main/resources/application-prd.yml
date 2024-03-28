@@ -1,6 +1,18 @@
 clients:
   idp-service: ${IDP_SERVICE_URL}
 
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus
+      base-path: '/manage'
+      path-mapping:
+        prometheus: 'metrics'
+
 spring:
   rabbitmq:
     host: ${RABBITMQ_HOST}

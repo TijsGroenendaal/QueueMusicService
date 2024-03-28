@@ -1,6 +1,16 @@
 server:
   port: 8083
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus
+      base-path: '/manage'
+      path-mapping:
+        prometheus: 'metrics'
+
 clients:
   idp-service: localhost:8082
 

@@ -5,6 +5,7 @@ spring:
 queuemusic:
   security:
     permitted: >
+      /manage/metrics
   jwt:
     public-secret: ${QUEUEMUSIC_JWT_PUBLIC_SECRET}
     refresh:

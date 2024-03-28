@@ -1,3 +1,13 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - prometheus
+      base-path: '/manage'
+      path-mapping:
+        prometheus: 'metrics'
+
 clients:
   spotify-facade: localhost:8081
   idp-service: localhost:8082
