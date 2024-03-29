@@ -3,6 +3,8 @@ crds:
 
 grafana:
   ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     enabled: true
     hosts:
       - grafana.tijsgroenendaal.nl
