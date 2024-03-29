@@ -1,0 +1,32 @@
+crds:
+  enabled: false
+
+grafana:
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.tijsgroenendaal.nl
+    tls:
+      - secretName: grafana-secret-tls
+        hosts:
+          - grafana.tijsgroenendaal.nl
+
+  persistence:
+    enabled: true
+    type: sts
+    storageClassName: "local-storage"
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+    finalizers:
+      - kubernetes.io/pvc-protection
+
+prometheus:
+  prometheusSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-storage
+          resources:
+            requests:
+              storage: 10Gi
