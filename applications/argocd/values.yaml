@@ -5,7 +5,7 @@ certificate:
 global:
   configs:
     cm:
-      timeout.hard.reconciliation: 10m
+      timeout.hard.reconciliation: 1h
 
 server:
   ingress:
