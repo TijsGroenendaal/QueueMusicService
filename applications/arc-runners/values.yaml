@@ -5,19 +5,23 @@ githubConfigSecret: arc-github
 minRunners: 2
 maxRunners: 6
 
-containerMode:
-  type: "kubernetes"
-  kubernetesModeWorkVolumeClaim:
-      accessModes: ["ReadWriteOnce"]
-      storageClassName: "local-storage"
-      resources:
-        requests:
-          storage: 1Gi
-
 template:
   spec:
     securityContext:
-      fsGroup: 1001
+      privileged: true
+    containers:
+      - name: runner
+        image: ghcr.io/actions/actions-runner:latest
+        command: [ "/home/runner/run.sh" ]
+        env:
+          - name: ACTIONS_RUNNER_CONTAINER_HOOKS
+            value: /home/runner/k8s/index.js
+          - name: ACTIONS_RUNNER_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: ACTIONS_RUNNER_REQUIRE_JOB_CONTAINER
+            value: "false"
 
 controllerServiceAccount:
    namespace: arc-systems
