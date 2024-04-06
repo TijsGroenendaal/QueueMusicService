@@ -25,6 +25,7 @@ grafana:
 
 prometheus:
   prometheusSpec:
+    secrets: ['etcd-client-cert']
     serviceMonitorSelectorNilUsesHelmValues: false
     storage:
       volumeClaimTemplate:
@@ -33,3 +34,12 @@ prometheus:
           resources:
             requests:
               storage: 10Gi
+
+kubeEtcd:
+  serviceMonitor:
+    scheme: https
+    insecureSkipVerify: false
+    serverName: localhost
+    caFile: /etc/prometheus/secrets/etcd-client-cert/ca.crt
+    certFile: /etc/prometheus/secrets/etcd-client-cert/healthcheck-client.crt
+    keyFile: /etc/prometheus/secrets/etcd-client-cert/healthcheck-client.key
