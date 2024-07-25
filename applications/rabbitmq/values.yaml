@@ -1,0 +1,25 @@
+global:
+  defaultStorageClass: local-storage
+
+replicaCount: 1
+
+auth:
+  username: QueueMusicService
+  existingPasswordSecret: rabbitmq-secrets
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hostname: rabbit.tijsgroenendaal.nl
+  annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+  tls: true
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+  prometheusRule:
+    enabled: true
+    namespace: monitoring
