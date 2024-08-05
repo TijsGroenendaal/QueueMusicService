@@ -1,0 +1,34 @@
+global:
+  prometheus:
+    enabled: true
+  grafana:
+    enabled: false
+    proxy: false
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - kubecost.tijsgroenendaal.nl
+  tls:
+    - secretName: kubecost-tls
+      hosts:
+        - kubecost.tijsgroenendaal.nl
+
+prometheus:
+  server:
+    persistentVolume:
+      enabled: true
+      storageClass: local-storage
+      size: 10Gi
+
+persistentVolume:
+  storageClass: local-storage
+  size: 10Gi
+
+serviceMonitor:
+  enabled: true
+prometheusRule:
+  enabled: true
