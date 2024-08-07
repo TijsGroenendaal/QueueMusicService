@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/frontend
-imageTag: 0.1.0
+imageTag: v0.1.1
 imagePullPolicy: "IfNotPresent"
 name: frontend
 replicaCount: 2
