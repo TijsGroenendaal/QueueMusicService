@@ -28,7 +28,6 @@ spec:
       sources:
         - repoURL: "https://github.com/TijsGroenendaal/QueueMusicService"
           targetRevision: "{{ .targetRevision }}"
-          path: "{{ .appPath }}"
           ref: values
         - chart: api-springboot
           repoURL: https://tijsgroenendaal.github.io/QueueMusicService/
