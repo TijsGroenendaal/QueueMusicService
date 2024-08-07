@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: queuemusic
 appPath: frontend
-targetRevision: 0.1.2-frontend
+targetRevision: 0.1.3-frontend
 helm:
   chartVersion: 1.4.0
   envValues: helm/values.yaml
