@@ -4,6 +4,8 @@ imagePullPolicy: "IfNotPresent"
 name: frontend
 replicaCount: 2
 profile: prd
+command:
+  - /opt/entrypoint.sh
 
 service:
   enabled: true
