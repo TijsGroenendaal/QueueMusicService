@@ -15,7 +15,7 @@ environmentVariables:
 
 labels:
   app: frontend
-  chart: frontend
+  chart: api-springboot
   release: latest
 
 ingress:
@@ -29,8 +29,7 @@ ingress:
     ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
   tls:
-    - secretName: idp-service-tijsgroenendaal-nl
+    - secretName: queuemusic-tijsgroenendaal-nl
       hosts:
         - queuemusic.tijsgroenendaal.nl
