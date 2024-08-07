@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubecost
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - chart: cost-analyzer
+      repoURL: 'https://kubecost.github.io/cost-analyzer'
+      targetRevision: "2.2"
+      helm:
+        valueFiles:
+          - $values/applications/kubecost/values.yaml
+    - repoURL: 'https://github.com/TijsGroenendaal/QueueMusicService'
+      targetRevision: "k8s/argocd-apps"
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kubecost
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: false
+      selfHeal: false
