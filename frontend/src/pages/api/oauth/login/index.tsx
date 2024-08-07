@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import querystring from "querystring";
-import { stringifyCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { setCookies } from "@/helper/cookies.helper";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -13,7 +12,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
   const query = querystring.stringify({
     code: code,
-    redirect_uri: "http://localhost:3000/oauth/callback",
+    redirect_uri: process.env.AUTH_REDIRECT_URI,
   });
 
   const response = await fetch(

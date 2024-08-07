@@ -13,7 +13,7 @@ export const Header = () => {
       client_id: "6fc4af4cd47c4469a54683368d50d48e",
       scope:
         "user-read-playback-state app-remote-control user-modify-playback-state playlist-read-private user-follow-modify playlist-read-collaborative user-follow-read user-read-currently-playing user-read-playback-position user-library-modify playlist-modify-private playlist-modify-public user-read-email user-top-read streaming user-read-recently-played user-read-private user-library-read",
-      redirect_uri: "http://localhost:3000/oauth/callback",
+      redirect_uri: `${window.origin}/oauth/callback`,
     });
 
     await router.push("https://accounts.spotify.com/authorize?" + query);

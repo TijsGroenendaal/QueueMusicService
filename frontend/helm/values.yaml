@@ -2,18 +2,25 @@ image: ghcr.io/tijsgroenendaal/frontend
 imageTag: 0.1.3
 imagePullPolicy: "IfNotPresent"
 name: frontend
-replicaCount: 2
 profile: prd
 command:
   - /opt/entrypoint.sh
+
+port: 3000
 
 service:
   enabled: true
   type: ClusterIP
   servicePort: 80
-  targetPort: 80
+  targetPort: 3000
+
+deployment:
+  enabled: true
+  replicaCount: 2
 
 environmentVariables:
+  - name: AUTH_REDIRECT_URI
+    value: https://queuemusic.tijsgroenendaal.nl/oauth/callback
 
 labels:
   app: frontend
