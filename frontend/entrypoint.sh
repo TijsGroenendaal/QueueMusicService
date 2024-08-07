@@ -1,3 +1,2 @@
 #!/bin/sh
-cd app
-node server.js
+node /app/server.js
