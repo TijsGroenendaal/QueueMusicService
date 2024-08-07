@@ -1,0 +1,9 @@
+name: frontend
+releaseName: ''
+project: default
+namespace: queuemusic
+appPath: frontend
+targetRevision: v0.1.1-frontend
+helm:
+  chartVersion: 1.4.0
+  envValues: helm/values.yaml
