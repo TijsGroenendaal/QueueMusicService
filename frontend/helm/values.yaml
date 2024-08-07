@@ -22,7 +22,7 @@ ingress:
   enabled: true
   hosts:
     - queuemusic.tijsgroenendaal.nl
-  path:
+  path: /
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
