@@ -1,6 +1,6 @@
-package nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands
+package nl.tijsgroenendaal.sessionservice.song
 
-data class AddSessionSongCommand(
+data class AddSongControllerRequest(
     val trackId: String?,
     val trackAlbum: String,
     val trackName: String,

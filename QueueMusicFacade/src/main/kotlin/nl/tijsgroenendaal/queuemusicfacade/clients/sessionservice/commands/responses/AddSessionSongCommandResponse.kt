@@ -1,17 +1,17 @@
 package nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses
 
-import java.time.LocalDateTime
+import java.time.Instant
 import java.util.UUID
 
 data class AddSessionSongCommandResponse(
-		val id: UUID,
-		val user: AddSessionSongCommandResponseUser,
-		val session: AddSessionSongCommandResponseSession,
-		val trackId: String?,
-		val title: String,
-		val album: String,
-		val authors: String,
-		val createdAt: LocalDateTime,
+    val id: UUID,
+    val user: AddSessionSongCommandResponseUser,
+    val session: AddSessionSongCommandResponseSession,
+    val trackId: String?,
+    val title: String,
+    val album: String,
+    val authors: String,
+    val createdAt: Instant,
 )
 
 data class AddSessionSongCommandResponseUser(
@@ -20,7 +20,7 @@ data class AddSessionSongCommandResponseUser(
 
 data class AddSessionSongCommandResponseSession(
     val id: UUID,
-    val createdAt: LocalDateTime,
-    val endAt: LocalDateTime,
+    val createdAt: Instant,
+    val endAt: Instant,
     val code: String
 )

@@ -5,10 +5,7 @@ export interface UserEventTask {
     sessionId: string,
     type: UserEventTaskType,
     song: {
-        id: string,
-        title: string,
-        authors: string,
-        album: string
+        id: string
     },
     user: string,
     voters: [
