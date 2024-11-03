@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: queuemusic
 appPath: QueueMusicFacade
-targetRevision: 0.0.30-queuemusic-facade
+targetRevision: 0.0.31-queuemusic-facade
 helm:
   chartVersion: 1.4.0
   envValues: helm/values.yaml
