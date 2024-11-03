@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: maven
       - name: 'Test AutoPlayConsumer'
         working-directory: ./AutoPlayConsumer
@@ -52,6 +52,12 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git pull
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx

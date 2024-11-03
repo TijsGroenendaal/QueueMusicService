@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: maven
       - name: 'Test QuMu'
         working-directory: ./QuMu
@@ -53,7 +53,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: maven
       - name: 'Increment Package Version'
         working-directory: ./QuMu
