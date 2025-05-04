@@ -33,6 +33,7 @@ export async function refreshTokenFetch(
     ...init,
     headers: {
       ...init?.headers,
+      "Content-Type": "application/json",
       Authorization: `Bearer ${refreshJson.token}`,
     },
   };

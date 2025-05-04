@@ -2,9 +2,11 @@ import { DefaultButton } from "@/components/actions/buttons/default-button";
 import Page from "@/components/features/page/page";
 import { AuthContext, isSpotified } from "@/context/auth-context";
 import { useContext } from "react";
+import {useRouter} from "next/router";
 
 export default function Home() {
   const context = useContext(AuthContext);
+  const router = useRouter();
 
   return (
     <>
@@ -13,7 +15,7 @@ export default function Home() {
           {isSpotified(context) && (
             <DefaultButton
               onClick={() => {
-                console.log("Click");
+                router.push("/session/create")
               }}
             >
               <h1>Create Session</h1>

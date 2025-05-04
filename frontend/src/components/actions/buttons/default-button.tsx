@@ -10,7 +10,7 @@ export const DefaultButton: FC<DefaultButtonProps> = ({
   children,
 }) => {
   return (
-    <button className="bg-indigo rounded-md px-4 py-2" onClick={onClick}>
+    <button className="hover:border-gray-300 active:border-black hover:border-2 rounded-md px-4 py-2 hover:cursor-pointer" onClick={onClick}>
       {children}
     </button>
   );

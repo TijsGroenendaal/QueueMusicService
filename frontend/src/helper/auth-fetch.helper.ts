@@ -19,7 +19,14 @@ export const authFetch: AuthFetch = (req, res) => {
       return refreshTokenFetch(input, init, RT, res);
     }
 
-    const response = await fetch(input, init);
+    const response = await fetch(input, {
+        ...init,
+        headers: {
+            ...init?.headers,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${AT}`,
+        },
+    });
     if (response.status == 403) {
       return refreshTokenFetch(input, init, RT, res);
     }

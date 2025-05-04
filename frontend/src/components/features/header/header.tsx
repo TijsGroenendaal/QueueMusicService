@@ -28,7 +28,7 @@ export const Header = () => {
         <div>
           {!isSpotified(authContext) && (
             <button
-              className="rounded-md bg-thistle py-2 px-4 w-full text-center text-white font-bold"
+              className="rounded-md bg-thistle py-2 px-4 w-full text-center font-bold cursor-pointer"
               onClick={handleLogin}
             >
               Login
