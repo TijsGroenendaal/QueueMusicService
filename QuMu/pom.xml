@@ -13,7 +13,6 @@
         <serialization.version>1.6.3</serialization.version>
     </properties>
 
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
