@@ -100,7 +100,8 @@ enum class SessionErrorCodes(
     ALREADY_JOINED("SESS0006", 400, "User has already joined this session."),
     USER_NOT_JOINED("SESS0007", 403, "User has not joined this session."),
     NOT_HOST("SESS0008", 403, "User is not the host."),
-    NEGATIVE_AUTOPLAY_ACCEPTANCE("SESS0009", 400, "Autoplay acceptance needs to be positive");
+    NEGATIVE_AUTOPLAY_ACCEPTANCE("SESS0009", 400, "Autoplay acceptance needs to be positive"),
+    USER_ALREADY_JOINED_OTHER("SESS0010", 400, "User has already joined another session."),;
 
     override fun getCode(): String {
         return this.code
