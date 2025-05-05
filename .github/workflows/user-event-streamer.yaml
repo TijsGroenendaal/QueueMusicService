@@ -25,7 +25,7 @@ jobs:
     outputs:
       NEW_VERSION: ${{ steps.increment-version.outputs.NEW_VERSION }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4.2.2
       - run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
