@@ -1,5 +1,5 @@
 image: ghcr.io/tijsgroenendaal/queuemusic-facade
-imageTag: 0.0.31
+imageTag: 0.0.32
 imagePullPolicy: "IfNotPresent"
 name: queuemusic-facade
 profile: prd
