@@ -44,6 +44,9 @@ class SessionService(
     }
 
     fun findByUser(userId: UUID): SessionModel? {
-        return sessionRepository.findByUser(userId)
+        val joined = sessionRepository.findByUser(userId)
+        val hosting = sessionRepository.findByHost(userId)
+
+        return hosting ?: joined
     }
 }

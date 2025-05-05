@@ -23,10 +23,18 @@ interface SessionRepository : PagingAndSortingRepository<SessionModel, UUID>, Jp
         SELECT su.session
         FROM queuemusic_session_user su
         WHERE su.user = :user
-        AND su.session.endAt < :endAt
+        AND su.session.endAt > :endAt
         AND su.session.manualEnded = false
     """
     )
     fun findByUser(user: UUID, endAt: Instant = Instant.now()): SessionModel?
+
+    @Query("""
+        FROM queuemusic_session s
+        WHERE s.host = :host
+        AND s.endAt > :endAt
+        AND s.manualEnded = false
+    """)
+    fun findByHost(host: UUID, endAt: Instant = Instant.now()): SessionModel?
 
 }

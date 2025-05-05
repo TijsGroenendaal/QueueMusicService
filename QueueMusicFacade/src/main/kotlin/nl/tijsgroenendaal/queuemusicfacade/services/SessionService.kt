@@ -13,6 +13,7 @@ import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.respo
 import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.CreateSessionCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.JoinSessionCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.VoteSessionSongCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.query.responses.GetSessionResponse
 import nl.tijsgroenendaal.queuemusicfacade.services.commands.CreateSessionCommand
 import nl.tijsgroenendaal.qumu.helper.catchingFeignRequest
 
@@ -62,5 +63,13 @@ class SessionService(
 
 	fun acceptSessionSong(command: AcceptSessionSongCommand, userId: UUID) {
 		return catchingFeignRequest { sessionSongClient.acceptSong(command.sessionId, command.songId, userId) }
+	}
+
+	fun getCurrent(userId: UUID): GetSessionResponse {
+		return catchingFeignRequest { sessionClient.getCurrent(userId) }
+	}
+
+	fun getSession(sessionId: UUID, userId: UUID): GetSessionResponse {
+		return catchingFeignRequest { sessionClient.getSession(sessionId, userId) }
 	}
 }

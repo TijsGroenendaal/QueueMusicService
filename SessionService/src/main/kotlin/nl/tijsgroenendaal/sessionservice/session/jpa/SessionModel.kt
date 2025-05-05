@@ -70,6 +70,10 @@ class SessionModel(
         return sessionUsers.any { it.user == user }
     }
 
+    fun partOfSession(user: UUID): Boolean {
+        return hasJoined(user) || isHost(user)
+    }
+
     fun isHost(user: UUID): Boolean = this.host == user
 
     fun end() {

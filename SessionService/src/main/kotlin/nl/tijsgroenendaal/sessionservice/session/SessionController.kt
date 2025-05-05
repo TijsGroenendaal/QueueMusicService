@@ -1,7 +1,7 @@
 package nl.tijsgroenendaal.sessionservice.session
 
 import nl.tijsgroenendaal.sessionservice.requests.responses.CreateSessionResponse
-import nl.tijsgroenendaal.sessionservice.requests.responses.GetCurrentSessionResponse
+import nl.tijsgroenendaal.sessionservice.requests.responses.GetSessionResponse
 import nl.tijsgroenendaal.sessionservice.requests.responses.JoinSessionResponse
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -61,8 +61,17 @@ class SessionController(
     @GetMapping("/current")
     fun current(
         @RequestParam userId: UUID
-    ) {
-        GetCurrentSessionResponse(sessionFacade.current(userId))
+    ): GetSessionResponse {
+        val session = sessionFacade.current(userId)
+        return GetSessionResponse(session)
+    }
 
+    @GetMapping("/{sessionId}")
+    fun getSession(
+        @PathVariable sessionId: UUID,
+        @RequestParam userId: UUID
+    ): GetSessionResponse {
+        val session = sessionFacade.getSession(sessionId, userId)
+        return GetSessionResponse(session)
     }
 }

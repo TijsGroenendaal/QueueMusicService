@@ -2,12 +2,14 @@ package nl.tijsgroenendaal.queuemusicfacade.controllers
 
 import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.CreateSessionCommandResponse
 import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.commands.responses.JoinSessionCommandResponse
+import nl.tijsgroenendaal.queuemusicfacade.clients.sessionservice.query.responses.GetSessionResponse
 import nl.tijsgroenendaal.queuemusicfacade.facades.SessionFacade
 
 import java.util.UUID
 
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -60,6 +62,18 @@ class SessionController(
         sessionFacade.endSession(EndSessionFacadeCommand(
             sessionId
         ))
+    }
+
+    @GetMapping("/current")
+    fun getCurrent(): GetSessionResponse {
+        return sessionFacade.getCurrent()
+    }
+
+    @GetMapping("/{sessionId}")
+    fun getSession(
+        @PathVariable sessionId: UUID
+    ): GetSessionResponse {
+        return sessionFacade.getSession(sessionId)
     }
 
 }

@@ -11,7 +11,6 @@ import java.util.UUID
 
 
 private const val MAX_SECONDS_DURATION = 14400L
-private const val MAX_ACTIVE_SESSION = 1
 private const val MAX_USERS = 50
 
 @Service
@@ -30,9 +29,13 @@ class SessionFacade(
         if (command.autoplay != null && command.autoplay.acceptance < 1)
             throw BadRequestException(SessionErrorCodes.NEGATIVE_AUTOPLAY_ACCEPTANCE)
 
-        val activeSessions = sessionService.getActiveSessionsByUser(userId).size
-        if (activeSessions >= MAX_ACTIVE_SESSION)
-            throw BadRequestException(SessionErrorCodes.HOSTING_SESSIONS_EXCEEDED)
+        val activeSessions = sessionService.findByUser(userId)
+        if (activeSessions != null) {
+            if (activeSessions.isHost(userId))
+                throw BadRequestException(SessionErrorCodes.HOSTING_SESSIONS_EXCEEDED)
+            if (activeSessions.hasJoined(userId))
+                throw BadRequestException(SessionErrorCodes.USER_ALREADY_JOINED_OTHER)
+        }
 
         val sessionCode = SessionModel.generateSessionCode()
 
@@ -88,8 +91,19 @@ class SessionFacade(
     }
 
     fun current(userId: UUID): SessionModel {
-        val session =
-            sessionService.findByUser(userId) ?: throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
+        val session = sessionService.findByUser(userId) ?:
+            throw BadRequestException(SessionErrorCodes.SESSION_NOT_FOUND)
+
+        return session
+    }
+
+    fun getSession(sessionId: UUID, userId: UUID): SessionModel {
+        val session = sessionService.findSessionById(sessionId)
+
+        if (!session.isActive())
+            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
+        if (!session.partOfSession(userId))
+            throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
 
         return session
     }
