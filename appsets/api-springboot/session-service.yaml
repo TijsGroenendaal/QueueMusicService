@@ -3,7 +3,7 @@ releaseName: ''
 project: default
 namespace: queuemusic
 appPath: SessionService
-targetRevision: 0.0.19-session-service
+targetRevision: 0.0.20-session-service
 helm:
   chartVersion: 1.4.0
   envValues: helm/values.yaml
