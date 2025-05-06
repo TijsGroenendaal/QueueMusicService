@@ -1,14 +1,13 @@
 import Page from "@/components/features/page/page";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
+import { SessionStartPage } from "@/components/pages/session-start-page/session-start-page";
 
 export default function Index() {
-    const router = useRouter()
-
-    return (
-        <>
-            <Page>
-                <h1>{router.query.id}</h1>
-            </Page>
-        </>
-    );
+  return (
+    <>
+      <Page>
+        <SessionStartPage />
+      </Page>
+    </>
+  );
 }

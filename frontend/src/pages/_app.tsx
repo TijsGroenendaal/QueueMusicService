@@ -25,8 +25,6 @@ export default function App({ Component, pageProps }: AppProps) {
         ...authContext,
         user: me,
       });
-
-      console.log(authContext);
     });
   }, []);
 

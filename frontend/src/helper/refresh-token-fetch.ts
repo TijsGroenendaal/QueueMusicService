@@ -9,7 +9,7 @@ export async function refreshTokenFetch(
   res: NextApiResponse,
 ): Promise<Response> {
   if (!RT) {
-    return createJsonResponse({}, { status: 403 });
+    return createJsonResponse({}, { status: 401 });
   }
 
   const refreshResponse = await fetch(
@@ -24,7 +24,7 @@ export async function refreshTokenFetch(
   );
 
   if (!refreshResponse.ok) {
-    return createJsonResponse({}, { status: 403 });
+    return createJsonResponse({}, { status: 401 });
   }
 
   const refreshJson = (await refreshResponse.json()) as LoginResponse;
