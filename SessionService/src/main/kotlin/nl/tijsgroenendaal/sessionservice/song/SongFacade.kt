@@ -11,6 +11,7 @@ import nl.tijsgroenendaal.sessionservice.queue.AutoplayUpdateTask
 import nl.tijsgroenendaal.sessionservice.queue.UserEventService
 import nl.tijsgroenendaal.sessionservice.queue.UserEventTask
 import nl.tijsgroenendaal.sessionservice.queue.UserEventTaskType
+import nl.tijsgroenendaal.sessionservice.requests.responses.GetSongsRequestResponse
 import nl.tijsgroenendaal.sessionservice.session.SessionService
 import nl.tijsgroenendaal.sessionservice.session.jpa.SessionModel
 import nl.tijsgroenendaal.sessionservice.song.jpa.SongModel
@@ -109,6 +110,29 @@ class SongFacade(
 
         launch { createUserEventMessage(UserEventTaskType.ADD, sessionSong, listOf()) }
         return sessionSong
+    }
+
+    fun getSongs(sessionId: UUID, userId: UUID): List<GetSongsRequestResponse> {
+        val session = sessionService.findSessionById(sessionId)
+
+        if (!session.isActive())
+            throw BadRequestException(SessionErrorCodes.SESSION_ENDED)
+        if (!session.partOfSession(userId))
+            throw BadRequestException(SessionErrorCodes.USER_NOT_JOINED)
+
+        return songService.getSongs(sessionId).map {
+            GetSongsRequestResponse(
+                it.id,
+                it.user,
+                it.trackId,
+                it.title,
+                it.album,
+                it.authors,
+                it.votes,
+                it.createdAt,
+                it.state
+            )
+        }
     }
 
     private fun createAutoplayMessage(trackId: String, hostId: UUID) {

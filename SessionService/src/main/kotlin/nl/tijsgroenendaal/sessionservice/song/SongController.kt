@@ -1,11 +1,13 @@
 package nl.tijsgroenendaal.sessionservice.song
 
 import nl.tijsgroenendaal.sessionservice.requests.responses.AddSessionSongResponse
+import nl.tijsgroenendaal.sessionservice.requests.responses.GetSongsRequestResponse
 import nl.tijsgroenendaal.sessionservice.requests.responses.VoteSessionSongResponse
 import nl.tijsgroenendaal.sessionservice.songvote.jpa.VoteEnum
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -71,6 +73,14 @@ class SongController(
         @RequestParam userId: UUID
     ) {
         songFacade.acceptSong(sessionId, songId, userId)
+    }
+
+    @GetMapping
+    fun getSongs(
+        @PathVariable sessionId: UUID,
+        @RequestParam userId: UUID
+    ): List<GetSongsRequestResponse> {
+        return songFacade.getSongs(sessionId, userId)
     }
 
 }

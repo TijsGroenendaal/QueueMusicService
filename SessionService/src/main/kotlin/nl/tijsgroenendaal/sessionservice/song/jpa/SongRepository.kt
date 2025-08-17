@@ -10,4 +10,6 @@ import java.util.UUID
 interface SongRepository : JpaRepository<SongModel, UUID> {
 
     fun countByUserAndCreatedAtAfter(userId: UUID, createdAt: Instant): Int
+
+    fun findAllBySessionId(sessionId: UUID): List<SongModel>
 }
