@@ -1,7 +1,7 @@
 image: ghcr.io/tijsgroenendaal/kaili-portfolio
 imageTag: 0.0.1
 imagePullPolicy: "IfNotPresent"
-name: frontend
+name: kaili-portfolio
 profile: prd
 command:
   - node
