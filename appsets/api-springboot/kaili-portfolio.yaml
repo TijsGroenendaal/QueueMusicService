@@ -1,0 +1,9 @@
+name: kaili-portfolio
+releaseName: ''
+project: default
+namespace: queuemusic
+appPath: kaili-portfolio
+targetRevision: main
+helm:
+  chartVersion: 1.4.0
+  envValues: helm/values.yaml
