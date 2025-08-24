@@ -1,0 +1,44 @@
+image: ghcr.io/tijsgroenendaal/kaili-portfolio
+imageTag: 0.0.1
+imagePullPolicy: "IfNotPresent"
+name: frontend
+profile: prd
+command:
+  - node
+  - server.js
+
+port: 3000
+
+service:
+  enabled: true
+  type: ClusterIP
+  servicePort: 80
+  targetPort: 3000
+
+deployment:
+  enabled: true
+  replicaCount: 2
+
+environmentVariables:
+
+
+labels:
+  app: kaili-portfolio
+  chart: api-springboot
+  release: latest
+
+ingress:
+  enabled: true
+  hosts:
+    - kaili.tijsgroenendaal.nl
+  path: /
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  tls:
+    - secretName: kaili-tijsgroenendaal-nl
+      hosts:
+        - kaili.tijsgroenendaal.nl
