@@ -1,0 +1,35 @@
+name: queuemusic
+description: Queuemusic Hetzner Cloud Infrastructure
+runtime:
+  name: nodejs
+  options:
+    packagemanager: yarn
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: typescript
+  queuemusic:nodes:
+    - name: queuemusic-master
+      config:
+        type: cax21
+        location: hel1
+        image: ubuntu-22.04
+        publicNet:
+          ipv4: true
+        controlPlane: true
+    - name: queuemusic-worker1
+      config:
+        type: cax21
+        location: hel1
+        image: ubuntu-22.04
+        publicNet:
+          ipv4: true
+        controlPlane: false
+  queuemusic:apps:
+    value:
+      argocd:
+        version: 9.1.9
+        values: {}
+      certManager:
+        version: 1.12.4
+        values: {}
