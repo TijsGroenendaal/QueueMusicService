@@ -25,11 +25,9 @@ config:
         publicNet:
           ipv4: true
         controlPlane: false
-  queuemusic:apps:
-    value:
-      argocd:
-        version: 9.1.9
-        values: {}
-      certManager:
-        version: 1.12.4
-        values: {}
+  queuemusic:argocd-version: 9.4.2
+  queuemusic:argocd-values: {}
+  queuemusic:certmanager-version: 1.19.3
+  queuemusic:certmanager-values: {}
+  queuemusic:traefik-version: 39.0.1
+  queuemusic:traefik-values: {}

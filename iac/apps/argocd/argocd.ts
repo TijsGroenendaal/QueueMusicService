@@ -17,28 +17,29 @@ export const install = ({
 }) => {
 
     const baseValues = {
-        global: {
-            domain: "argocd.tijsgroenendaal.nl",
-        },
-        redis: {
-            enabled: false,
-        },
         server: {
-            gateway: {
+            httproute: {
                 enabled: true,
-                hostNames: [
+                hostnames: [
                     "argocd.tijsgroenendaal.nl"
                 ],
                 annotations: {
                     "cert-manager.io/issuer": "letsencrypt-production",
-                }
+                },
+                parentRefs: [
+                    {
+                        name: "traefik",
+                        namespace: namespace.id,
+                        sectionName: "websecure",
+                    }
+                ]
             }
         }
     }
 
     const merged = deepMerge(baseValues, values)
 
-    new k8s.helm.v4.Chart("argocd", {
+    new k8s.helm.v3.Release("argocd", {
         namespace: namespace.id,
         version: version,
         name: "argocd",
@@ -46,6 +47,6 @@ export const install = ({
         repositoryOpts: {
             repo: "https://argoproj.github.io/argo-helm",
         },
-        values: merged,
+        values: merged
     }, { provider, dependsOn })
 }

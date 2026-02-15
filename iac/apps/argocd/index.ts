@@ -3,17 +3,14 @@ import * as k8s from "@pulumi/kubernetes";
 import * as components from '../components';
 import { Input, Resource } from "@pulumi/pulumi";
 
-export interface ArgocdConfig {
-    version: string
-    values: any
-}
-
 export const install = ({
-    config,
+    values,
+    version,
     provider,
     dependsOn,
 }: {
-    config: ArgocdConfig
+    version: string
+    values: any
     provider: k8s.Provider
     dependsOn: Input<Input<Resource>[]>
 }) => {
@@ -21,11 +18,11 @@ export const install = ({
         name: "argocd",
         provider,
         dependsOn,
-    });
+    })
 
     argocd.install({
-        values: config.values,
-        version: config.version,
+        values: values,
+        version: version,
         provider,
         namespace: ns,
         dependsOn: [ns],
